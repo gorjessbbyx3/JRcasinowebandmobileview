@@ -388,7 +388,10 @@
                 </div>
                 @endif
             </div>
-            <div class="mob-header__logo">Jade Royale</div>
+            <div class="mob-header__logo">
+                <img src="/woocasino/images/logo.png" alt="Jade Royale" onerror="this.style.display='none'">
+                <span class="mob-header__logo-text">Jade Royale</span>
+            </div>
         </header>
 
         <!-- BODY: sidebar + scrollable content -->
@@ -475,7 +478,7 @@
                     <a class="mob-game-card" data-cat="{{ $mobCat }}"
                        href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $mobGame->name) }}?api_exit=/@else{{ route('frontend.game.go', $mobGame->name) }}/prego?api_exit=/@endif">
                         <div class="mob-game-card__wrap">
-                            <img class="mob-game-card__img" src="/frontend/Default/ico/{{ $mobGame->name }}.jpg" alt="{{ $mobGame->title }}" loading="lazy">
+                            <img class="mob-game-card__img" src="{{ $mobGame->thumbnail ?? '/frontend/Default/ico/'.$mobGame->name.'.jpg' }}" alt="{{ $mobGame->title }}" loading="lazy" onerror="this.src='/woocasino/mslider1.gif'">
                             @if($mobGame->label)<span class="mob-game-card__badge">{{ $mobGame->label }}</span>@endif
                             <div class="mob-game-card__overlay">
                                 <svg viewBox="0 0 24 24" fill="white" width="32" height="32"><polygon points="8,5 19,12 8,19"/></svg>
@@ -489,98 +492,160 @@
 
         <!-- FIXED BOTTOM NAVIGATION -->
         <nav class="mob-bottom-nav">
-            <!-- PROFILE -->
+            <!-- PROFILE — Dragon Crown User -->
             <button class="mob-nav-item" ng-click="openModal($event, '#my-account')">
-                <div class="mob-nav-icon-wrap" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);box-shadow:0 3px 12px rgba(124,58,237,0.55);">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="8" r="4" fill="#e0d7ff"/>
-                        <ellipse cx="12" cy="19" rx="7" ry="4" fill="#c4b5fd"/>
-                        <circle cx="12" cy="8" r="3" fill="#fff"/>
-                        <ellipse cx="12" cy="19" rx="5.5" ry="2.8" fill="#ede9fe"/>
-                        <circle cx="12" cy="4.5" r="6" fill="none" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="2 2"/>
+                <div class="mob-nav-icon-wrap">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Crown -->
+                        <polygon points="6,16 10,8 18,13 26,8 30,16 28,18 8,18" fill="#FFD700" opacity="0.95"/>
+                        <polygon points="8,17 18,12 28,17" fill="#FFC107" opacity="0.7"/>
+                        <!-- Crown jewels -->
+                        <circle cx="18" cy="9" r="2" fill="#FF1744"/>
+                        <circle cx="10" cy="10" r="1.3" fill="#00E5FF"/>
+                        <circle cx="26" cy="10" r="1.3" fill="#00E676"/>
+                        <!-- Body -->
+                        <ellipse cx="18" cy="30" rx="9" ry="5" fill="#C4B5FD" opacity="0.6"/>
+                        <circle cx="18" cy="22" r="5.5" fill="#EDE9FE"/>
+                        <!-- Face highlight -->
+                        <circle cx="18" cy="22" r="4.5" fill="#fff" opacity="0.9"/>
                     </svg>
                 </div>
                 <span>PROFILE</span>
             </button>
-            <!-- ALERTS -->
+            <!-- ALERTS — Ornate Chinese Bell -->
             <button class="mob-nav-item" onclick="openMoreModal()">
-                <div class="mob-nav-icon-wrap" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);box-shadow:0 3px 12px rgba(14,165,233,0.55);">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 3C8.7 3 6 5.7 6 9v5l-2 2v1h16v-1l-2-2V9c0-3.3-2.7-6-6-6z" fill="#bae6fd"/>
-                        <path d="M6 14v2h12v-2l-2-2V9a6 6 0 00-4-5.6V3.5a2 2 0 00-4 0V3.4A6 6 0 006 9v5z" fill="#e0f2fe"/>
-                        <circle cx="12" cy="19.5" r="1.5" fill="#fcd34d"/>
-                        <circle cx="18" cy="5" r="3" fill="#ef4444"/>
-                        <circle cx="18" cy="5" r="1.8" fill="#fca5a5"/>
+                <div class="mob-nav-icon-wrap">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Bell body -->
+                        <path d="M18 4 C11 4 8 10 8 16 L8 24 L28 24 L28 16 C28 10 25 4 18 4Z" fill="#00E5FF" opacity="0.85"/>
+                        <!-- Bell inner shade -->
+                        <path d="M18 6 C12 6 10 11 10 16 L10 22 L26 22 L26 16 C26 11 24 6 18 6Z" fill="#67E8F9" opacity="0.5"/>
+                        <!-- Bell top ring -->
+                        <rect x="16" y="2" width="4" height="4" rx="2" fill="#FFD700"/>
+                        <!-- Bell rim -->
+                        <rect x="6" y="23" width="24" height="3" rx="1.5" fill="#0891B2"/>
+                        <!-- Bell clapper -->
+                        <circle cx="18" cy="30" r="2.5" fill="#FFD700"/>
+                        <line x1="18" y1="26" x2="18" y2="28" stroke="#FFD700" stroke-width="1.5"/>
+                        <!-- Alert dot -->
+                        <circle cx="28" cy="6" r="4" fill="#FF1744"/>
+                        <circle cx="28" cy="6" r="2.2" fill="#FF6B7A"/>
                     </svg>
                 </div>
                 <span>ALERTS</span>
             </button>
-            <!-- DEPOSIT -->
+            <!-- DEPOSIT — Gold Coin Stack -->
             <button class="mob-nav-item mob-nav-item--deposit" ng-click="openModal($event, '#my-account')">
-                <div class="mob-nav-icon-wrap" style="background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 3px 12px rgba(16,185,129,0.6);">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="14" width="18" height="7" rx="2" fill="#6ee7b7"/>
-                        <rect x="5" y="16" width="14" height="3" rx="1" fill="#d1fae5"/>
-                        <circle cx="12" cy="14" r="6" fill="#34d399"/>
-                        <circle cx="12" cy="14" r="5" fill="#6ee7b7"/>
-                        <text x="12" y="18" text-anchor="middle" font-size="9" font-weight="bold" fill="#065f46">$</text>
-                        <path d="M12 6v8M9 11l3 3 3-3" stroke="#065f46" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <div class="mob-nav-icon-wrap">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Coin stacks -->
+                        <ellipse cx="18" cy="28" rx="10" ry="3" fill="#00874A"/>
+                        <rect x="8" y="22" width="20" height="6" rx="0" fill="#00C853"/>
+                        <ellipse cx="18" cy="22" rx="10" ry="3" fill="#69F0AE"/>
+                        <rect x="8" y="17" width="20" height="5" rx="0" fill="#00E676"/>
+                        <ellipse cx="18" cy="17" rx="10" ry="3" fill="#B9F6CA"/>
+                        <ellipse cx="18" cy="14" rx="10" ry="3" fill="#FFD700"/>
+                        <!-- Sheen on top coin -->
+                        <ellipse cx="15" cy="13" rx="3.5" ry="1.2" fill="#FFF9C4" opacity="0.6"/>
+                        <!-- Up arrow -->
+                        <path d="M18 4 L14 10 L17 10 L17 14 L19 14 L19 10 L22 10 Z" fill="#FFD700" opacity="0.95"/>
                     </svg>
                 </div>
                 <span>DEPOSIT</span>
             </button>
-            <!-- SPIN -->
+            <!-- SPIN — Dragon Fortune Wheel -->
             <button class="mob-nav-item mob-nav-item--spin" onclick="openBonusModal(); switchBonusTab('wheel')">
-                <div class="mob-nav-icon-wrap" style="background:linear-gradient(135deg,#b45309,#f59e0b);box-shadow:0 3px 14px rgba(245,158,11,0.7);animation:spinIconGlow 2s ease-in-out infinite;">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="9" fill="#fef3c7" stroke="#fbbf24" stroke-width="1.5"/>
-                        <path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M12 12l-6-6" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M12 12l4-4" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M12 12l3 5" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
-                        <path d="M12 12l-5 3" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/>
-                        <circle cx="12" cy="12" r="2.5" fill="#fbbf24" stroke="#92400e" stroke-width="1"/>
-                        <circle cx="12" cy="12" r="1.2" fill="#fff"/>
+                <div class="mob-nav-icon-wrap">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Outer ring -->
+                        <circle cx="18" cy="18" r="15" fill="none" stroke="#FFD700" stroke-width="2"/>
+                        <!-- Wheel sectors -->
+                        <path d="M18 18 L18 3 A15 15 0 0 1 30.99 10.5 Z" fill="#FF1744" opacity="0.9"/>
+                        <path d="M18 18 L30.99 10.5 A15 15 0 0 1 30.99 25.5 Z" fill="#FFD700" opacity="0.9"/>
+                        <path d="M18 18 L30.99 25.5 A15 15 0 0 1 18 33 Z" fill="#00E676" opacity="0.9"/>
+                        <path d="M18 18 L18 33 A15 15 0 0 1 5.01 25.5 Z" fill="#FF1744" opacity="0.9"/>
+                        <path d="M18 18 L5.01 25.5 A15 15 0 0 1 5.01 10.5 Z" fill="#FFD700" opacity="0.9"/>
+                        <path d="M18 18 L5.01 10.5 A15 15 0 0 1 18 3 Z" fill="#00E5FF" opacity="0.9"/>
+                        <!-- Inner ring -->
+                        <circle cx="18" cy="18" r="6" fill="#1a0a00"/>
+                        <circle cx="18" cy="18" r="5" fill="#FFD700"/>
+                        <circle cx="18" cy="18" r="3.5" fill="#B8860B"/>
+                        <!-- Center star -->
+                        <polygon points="18,13.5 19.2,16.8 22.7,16.8 19.95,18.75 21,22 18,20.1 15,22 16.05,18.75 13.3,16.8 16.8,16.8" fill="#FFD700"/>
+                        <!-- Pointer -->
+                        <polygon points="18,2 16.5,5 19.5,5" fill="#fff"/>
                     </svg>
                 </div>
                 <span>SPIN</span>
             </button>
-            <!-- CASHOUT -->
+            <!-- CASHOUT — Dragon Red Withdraw -->
             <button class="mob-nav-item mob-nav-item--cashout" ng-click="openModal($event, '#my-account')">
-                <div class="mob-nav-icon-wrap" style="background:linear-gradient(135deg,#9f1239,#ef4444);box-shadow:0 3px 12px rgba(239,68,68,0.55);">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="3" width="18" height="7" rx="2" fill="#fca5a5"/>
-                        <rect x="5" y="5" width="14" height="3" rx="1" fill="#fee2e2"/>
-                        <circle cx="12" cy="17" r="5" fill="#f87171"/>
-                        <circle cx="12" cy="17" r="4" fill="#fca5a5"/>
-                        <path d="M12 13v8M9 16l3-3 3 3" stroke="#7f1d1d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <div class="mob-nav-icon-wrap">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Banknote base -->
+                        <rect x="3" y="10" width="30" height="16" rx="3" fill="#FCA5A5"/>
+                        <rect x="5" y="12" width="26" height="12" rx="2" fill="#FECACA"/>
+                        <!-- Center dollar circle -->
+                        <circle cx="18" cy="18" r="5" fill="#FF1744"/>
+                        <circle cx="18" cy="18" r="4" fill="#FF6B7A"/>
+                        <text x="18" y="21.5" text-anchor="middle" font-size="7" font-weight="900" fill="#fff">$</text>
+                        <!-- Corner marks -->
+                        <circle cx="8" cy="15" r="2" fill="#FF1744" opacity="0.6"/>
+                        <circle cx="28" cy="21" r="2" fill="#FF1744" opacity="0.6"/>
+                        <!-- Up arrow -->
+                        <path d="M18 4 L15 8 L17 8 L17 11 L19 11 L19 8 L21 8 Z" fill="#FFD700"/>
+                        <!-- Dragon wing ornament left -->
+                        <path d="M3 14 Q0 18 3 22" stroke="#FF1744" stroke-width="1.5" fill="none" opacity="0.7"/>
+                        <path d="M33 14 Q36 18 33 22" stroke="#FF1744" stroke-width="1.5" fill="none" opacity="0.7"/>
                     </svg>
                 </div>
                 <span>CASHOUT</span>
             </button>
-            <!-- BONUS -->
+            <!-- BONUS — Treasure Chest -->
             <button class="mob-nav-item" onclick="openBonusModal()">
-                <div class="mob-nav-icon-wrap" style="background:linear-gradient(135deg,#9333ea,#c026d3);box-shadow:0 3px 12px rgba(192,38,211,0.6);">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="10" width="18" height="11" rx="2" fill="#e879f9"/>
-                        <rect x="3" y="8" width="18" height="4" rx="1.5" fill="#f0abfc"/>
-                        <rect x="10.5" y="8" width="3" height="13" fill="#fbbf24"/>
-                        <path d="M12 8C12 8 8 5 9.5 3C11 1 12 4 12 8z" fill="#fbbf24"/>
-                        <path d="M12 8C12 8 16 5 14.5 3C13 1 12 4 12 8z" fill="#fcd34d"/>
-                        <circle cx="18" cy="5" r="2" fill="#fbbf24"/>
-                        <circle cx="6" cy="5" r="2" fill="#fcd34d"/>
+                <div class="mob-nav-icon-wrap">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Chest base -->
+                        <rect x="4" y="18" width="28" height="14" rx="3" fill="#92400E"/>
+                        <rect x="5" y="19" width="26" height="12" rx="2" fill="#B45309"/>
+                        <!-- Chest lid -->
+                        <rect x="4" y="10" width="28" height="10" rx="3" fill="#A16207"/>
+                        <rect x="5" y="11" width="26" height="8" rx="2" fill="#CA8A04"/>
+                        <!-- Gold band -->
+                        <rect x="4" y="16.5" width="28" height="3" rx="0" fill="#FFD700"/>
+                        <!-- Lock -->
+                        <rect x="14" y="14" width="8" height="7" rx="2" fill="#FFD700"/>
+                        <circle cx="18" cy="17" r="2" fill="#B8860B"/>
+                        <!-- Gold coins spilling -->
+                        <ellipse cx="18" cy="12" rx="4" ry="2" fill="#FFD700" opacity="0.9"/>
+                        <circle cx="12" cy="10" r="2.5" fill="#FFD700"/>
+                        <circle cx="24" cy="10" r="2.5" fill="#FFC107"/>
+                        <circle cx="18" cy="8" r="2.5" fill="#FFD700"/>
+                        <!-- Shine on coins -->
+                        <ellipse cx="11.5" cy="9" rx="1" ry="0.5" fill="#FFF9C4" opacity="0.8"/>
+                        <ellipse cx="23.5" cy="9" rx="1" ry="0.5" fill="#FFF9C4" opacity="0.8"/>
+                        <!-- Stars/sparkle -->
+                        <path d="M8 6 L8.6 7.8 L10.5 7.8 L9 8.8 L9.6 10.5 L8 9.4 L6.4 10.5 L7 8.8 L5.5 7.8 L7.4 7.8Z" fill="#FFD700" opacity="0.85"/>
+                        <path d="M28 4 L28.4 5.2 L29.7 5.2 L28.7 5.9 L29.1 7.1 L28 6.4 L26.9 7.1 L27.3 5.9 L26.3 5.2 L27.6 5.2Z" fill="#FFD700" opacity="0.85"/>
                     </svg>
                 </div>
                 <span>BONUS</span>
             </button>
-            <!-- SETTINGS -->
+            <!-- SETTINGS — Jade Gear -->
             <button class="mob-nav-item" onclick="openMoreModal(); switchMoreTab('settings')">
-                <div class="mob-nav-icon-wrap" style="background:linear-gradient(135deg,#374151,#6b7280);box-shadow:0 3px 12px rgba(107,114,128,0.5);">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="3" fill="#fbbf24"/>
-                        <circle cx="12" cy="12" r="2" fill="#fef3c7"/>
-                        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M16.9 16.9l2.1 2.1M4.9 19.1l2.1-2.1M16.9 7.1l2.1-2.1" stroke="#d1d5db" stroke-width="1.8" stroke-linecap="round"/>
-                        <circle cx="12" cy="12" r="5.5" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
+                <div class="mob-nav-icon-wrap">
+                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Gear teeth -->
+                        <path d="M15 3 L17 7 L19 7 L21 3 L21 3 Q24 3.5 26.5 5.5 L24.5 9 L25.8 10.5 L30 9.5 Q31.5 12 32 15 L28 16.5 L28 19.5 L32 21 Q31.5 24 30 26.5 L25.8 25.5 L24.5 27 L26.5 30.5 Q24 32.5 21 33 L19 29 L17 29 L15 33 Q12 32.5 9.5 30.5 L11.5 27 L10.2 25.5 L6 26.5 Q4.5 24 4 21 L8 19.5 L8 16.5 L4 15 Q4.5 12 6 9.5 L10.2 10.5 L11.5 9 L9.5 5.5 Q12 3.5 15 3Z" fill="#374151"/>
+                        <path d="M15 5 L17 8.5 L19 8.5 L21 5 Q23.5 5.5 25.5 7 L23.5 10.5 L25.5 12.5 L29.5 11 Q30.5 13 31 15.5 L27 17 L27 19 L31 20.5 Q30.5 23 29.5 25 L25.5 23.5 L23.5 25.5 L25.5 29 Q23.5 30.5 21 31 L19 27.5 L17 27.5 L15 31 Q12.5 30.5 10.5 29 L12.5 25.5 L10.5 23.5 L6.5 25 Q5.5 23 5 20.5 L9 19 L9 17 L5 15.5 Q5.5 13 6.5 11 L10.5 12.5 L12.5 10.5 L10.5 7 Q12.5 5.5 15 5Z" fill="#4B5563"/>
+                        <!-- Jade center gem -->
+                        <circle cx="18" cy="18" r="7" fill="#00C853"/>
+                        <circle cx="18" cy="18" r="5.5" fill="#00E676"/>
+                        <circle cx="18" cy="18" r="4" fill="#69F0AE"/>
+                        <!-- Gem facet highlight -->
+                        <ellipse cx="16.5" cy="16.5" rx="2" ry="1.2" fill="#B9F6CA" opacity="0.8" transform="rotate(-30 16.5 16.5)"/>
+                        <!-- Inner hex pattern -->
+                        <polygon points="18,13.5 21.5,15.8 21.5,20.2 18,22.5 14.5,20.2 14.5,15.8" fill="none" stroke="#00A040" stroke-width="0.8" opacity="0.6"/>
                     </svg>
                 </div>
                 <span>SETTINGS</span>
@@ -596,7 +661,7 @@
     <!-- ===================== DESKTOP NAVBAR ===================== -->
     <nav class="desktop-navbar" id="desktopNavbar">
         <a href="/" class="desktop-navbar__logo">
-            <img class="desktop-navbar__logo-img" src="/woocasino/logo.png" alt="Jade Royale" onerror="this.style.display='none'">
+            <img class="desktop-navbar__logo-img" src="/woocasino/images/logo.png" alt="Jade Royale" onerror="this.style.display='none'">
             <span class="desktop-navbar__logo-text">Jade Royale</span>
         </a>
         <div class="desktop-navbar__nav">
@@ -1659,7 +1724,7 @@
                                 <div class="netflix-carousel__row" id="slots-row-1">
                                     @foreach($slotRow1 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
+                                        <img class="netflix-game-card__image" src="{{ $game->thumbnail ?? '/frontend/Default/ico/'.$game->name.'.jpg' }}" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1675,7 +1740,7 @@
                                 <div class="netflix-carousel__row" id="slots-row-2">
                                     @foreach($slotRow2 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
+                                        <img class="netflix-game-card__image" src="{{ $game->thumbnail ?? '/frontend/Default/ico/'.$game->name.'.jpg' }}" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1698,7 +1763,7 @@
                                 <div class="netflix-carousel__row" id="fish-row-1">
                                     @foreach($fishRow1 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
+                                        <img class="netflix-game-card__image" src="{{ $game->thumbnail ?? '/frontend/Default/ico/'.$game->name.'.jpg' }}" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1714,7 +1779,7 @@
                                 <div class="netflix-carousel__row" id="fish-row-2">
                                     @foreach($fishRow2 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
+                                        <img class="netflix-game-card__image" src="{{ $game->thumbnail ?? '/frontend/Default/ico/'.$game->name.'.jpg' }}" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1737,7 +1802,7 @@
                                 <div class="netflix-carousel__row" id="table-row-1">
                                     @foreach($tableRow1 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
+                                        <img class="netflix-game-card__image" src="{{ $game->thumbnail ?? '/frontend/Default/ico/'.$game->name.'.jpg' }}" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1753,7 +1818,7 @@
                                 <div class="netflix-carousel__row" id="table-row-2">
                                     @foreach($tableRow2 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
+                                        <img class="netflix-game-card__image" src="{{ $game->thumbnail ?? '/frontend/Default/ico/'.$game->name.'.jpg' }}" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
