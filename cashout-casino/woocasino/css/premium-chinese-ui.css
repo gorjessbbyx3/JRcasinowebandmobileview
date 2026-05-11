@@ -129,37 +129,22 @@
     text-decoration: none !important;
   }
 
-  /* Dragon logo image */
+  /* Neon logo image — screen blend removes the dark purple bg */
   .desktop-navbar__logo-img {
-    height: 46px !important;
-    width: 46px !important;
+    height: 52px !important;
+    width: auto !important;
+    max-width: 260px !important;
     object-fit: contain !important;
     display: block !important;
-    animation: dragonLogoGlow 6s ease-in-out infinite !important;
+    mix-blend-mode: screen !important;
+    filter: brightness(1.1) drop-shadow(0 0 12px rgba(255,130,200,0.6)) !important;
+    animation: neonLogoPulse 3s ease-in-out infinite !important;
     flex-shrink: 0 !important;
   }
 
-  /* The main "JADE ROYALE" neon sign text */
-  .desktop-navbar__logo-text {
-    font-family: 'Noto Serif SC', 'Inter', serif !important;
-    font-size: 19px !important;
-    font-weight: 900 !important;
-    letter-spacing: 5px !important;
-    text-transform: uppercase !important;
-    animation: dragonCycleText 6s ease-in-out infinite !important;
-    position: relative !important;
-    line-height: 1 !important;
-  }
-
-  /* Thin underline on logo text */
-  .desktop-navbar__logo-text::after {
-    content: '';
-    position: absolute;
-    bottom: -3px; left: 0; right: 0;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.45;
-    border-radius: 1px;
+  @keyframes neonLogoPulse {
+    0%, 100% { filter: brightness(1.05) drop-shadow(0 0 10px rgba(255,130,200,0.55)) drop-shadow(0 0 25px rgba(255,80,180,0.3)); }
+    50%       { filter: brightness(1.2)  drop-shadow(0 0 18px rgba(255,150,220,0.85)) drop-shadow(0 0 40px rgba(255,80,180,0.5)); }
   }
 
   /* Nav links — active state */
@@ -447,30 +432,26 @@
     transform: translate(-50%, -50%) !important;
     display: flex !important;
     align-items: center !important;
-    gap: 7px !important;
     pointer-events: none !important;
+    background: transparent !important;
+    background-image: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+    -webkit-text-fill-color: unset !important;
+    filter: none !important;
+    animation: none !important;
   }
 
-  /* Dragon logo image */
-  .mob-header__logo img {
-    height: 32px !important;
-    width: 32px !important;
+  /* Neon logo image in mobile header */
+  .mob-header__logo-neon {
+    height: 38px !important;
+    width: auto !important;
+    max-width: 200px !important;
     object-fit: contain !important;
-    animation: dragonLogoGlow 6s ease-in-out infinite !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* Jade Royale text */
-  .mob-header__logo-text,
-  .mob-header__logo span {
-    font-family: 'Noto Serif SC', 'Inter', serif !important;
-    font-size: 15px !important;
-    font-weight: 900 !important;
-    letter-spacing: 3px !important;
-    text-transform: uppercase !important;
-    animation: dragonCycleText 6s ease-in-out infinite !important;
-    white-space: nowrap !important;
     display: block !important;
+    mix-blend-mode: screen !important;
+    animation: neonLogoPulse 3s ease-in-out infinite !important;
+    flex-shrink: 0 !important;
   }
 
   /* User pill */

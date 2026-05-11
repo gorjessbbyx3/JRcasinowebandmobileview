@@ -389,8 +389,7 @@
                 @endif
             </div>
             <div class="mob-header__logo">
-                <img src="/woocasino/images/logo.png" alt="Jade Royale" onerror="this.style.display='none'">
-                <span class="mob-header__logo-text">Jade Royale</span>
+                <img src="/woocasino/images/jade-royale-logo.jpeg" alt="Jade Royale" class="mob-header__logo-neon">
             </div>
         </header>
 
@@ -661,8 +660,7 @@
     <!-- ===================== DESKTOP NAVBAR ===================== -->
     <nav class="desktop-navbar" id="desktopNavbar">
         <a href="/" class="desktop-navbar__logo">
-            <img class="desktop-navbar__logo-img" src="/woocasino/images/logo.png" alt="Jade Royale" onerror="this.style.display='none'">
-            <span class="desktop-navbar__logo-text">Jade Royale</span>
+            <img class="desktop-navbar__logo-img" src="/woocasino/images/jade-royale-logo.jpeg" alt="Jade Royale">
         </a>
         <div class="desktop-navbar__nav">
             <a href="/" class="desktop-navbar__nav-link active">All Games</a>
