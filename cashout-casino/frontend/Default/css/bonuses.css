@@ -1,0 +1,1033 @@
+/* Premium Casino Bonus Styles */
+
+/* Bonus Page Container */
+.bonus-page-premium {
+    padding: 40px 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+}
+
+.bonus-page-premium .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Page Header */
+.bonus-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.bonus-header__title {
+    font-size: 48px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6B00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+    text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+    animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.bonus-header__subtitle {
+    color: #b8b8d1;
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@keyframes glow-pulse {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2); }
+}
+
+/* Featured Bonus Banner */
+.featured-bonus {
+    background: linear-gradient(135deg, #2d1b69 0%, #11998e 100%);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(17, 153, 142, 0.3);
+    animation: float 6s ease-in-out infinite;
+}
+
+.featured-bonus::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.featured-bonus__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.featured-bonus__text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.featured-bonus__badge {
+    display: inline-block;
+    background: rgba(255, 215, 0, 0.2);
+    color: #FFD700;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.featured-bonus__title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.featured-bonus__title span {
+    color: #FFD700;
+    display: block;
+    font-size: 56px;
+}
+
+.featured-bonus__desc {
+    color: rgba(255,255,255,0.8);
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+.featured-bonus__cta {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #1a1a2e;
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 165, 0, 0.4);
+}
+
+.featured-bonus__cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255, 165, 0, 0.5);
+}
+
+.featured-bonus__visual {
+    position: relative;
+    width: 250px;
+    height: 250px;
+}
+
+.featured-bonus__circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.1);
+    border: 3px solid rgba(255, 215, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse-ring 2s ease-out infinite;
+}
+
+.featured-bonus__amount {
+    font-size: 72px;
+    font-weight: 800;
+    color: #FFD700;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+}
+
+/* Bonus Cards Grid */
+.bonus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+/* Premium Bonus Card */
+.bonus-card {
+    background: linear-gradient(145deg, #1e1e3f 0%, #151530 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bonus-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+.bonus-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FFD700, #FF6B00, #FF1493, #9400D3);
+    background-size: 300% 100%;
+    animation: gradient-flow 3s linear infinite;
+}
+
+@keyframes gradient-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+}
+
+.bonus-card__header {
+    padding: 30px;
+    text-align: center;
+    position: relative;
+}
+
+.bonus-card__icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 107, 0, 0.2) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.bonus-card__type {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFD700;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.bonus-card__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.bonus-card__value {
+    font-size: 48px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #FFD700 0%, #FF6B00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bonus-card__body {
+    padding: 0 30px 30px;
+}
+
+.bonus-card__details {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px;
+}
+
+.bonus-card__details li {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #b8b8d1;
+    font-size: 14px;
+}
+
+.bonus-card__details li:last-child {
+    border-bottom: none;
+}
+
+.bonus-card__details li span:last-child {
+    color: #fff;
+    font-weight: 600;
+}
+
+.bonus-card__btn {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #1a1a2e;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.bonus-card__btn:hover {
+    background: linear-gradient(135deg, #FFA500 0%, #FF6B00 100%);
+    transform: scale(1.02);
+}
+
+/* Bonus Card Variants */
+.bonus-card--welcome .bonus-card__icon { background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); }
+.bonus-card--happyhour .bonus-card__icon { background: linear-gradient(135deg, #e17055 0%, #fdcb6e 100%); }
+.bonus-card--wheel .bonus-card__icon { background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%); }
+.bonus-card--jackpot .bonus-card__icon { background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%); }
+.bonus-card--daily .bonus-card__icon { background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%); }
+.bonus-card--progress .bonus-card__icon { background: linear-gradient(135deg, #00b894 0%, #55efc4 100%); }
+.bonus-card--sms .bonus-card__icon { background: linear-gradient(135deg, #e17055 0%, #fab1a0 100%); }
+
+/* Wheel of Fortune Section */
+.wheel-section {
+    text-align: center;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #2d1b69 0%, #1a1a2e 100%);
+    border-radius: 24px;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.wheel-container {
+    position: relative;
+    width: 350px;
+    height: 350px;
+    margin: 0 auto 40px;
+}
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    box-shadow: 0 0 0 10px rgba(255, 215, 0, 0.3), 
+                0 0 0 15px rgba(255, 215, 0, 0.2),
+                0 0 60px rgba(255, 215, 0, 0.3);
+}
+
+.wheel.spinning {
+    animation: none;
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 40px solid #FFD700;
+    filter: drop-shadow(0 5px 10px rgba(255, 215, 0, 0.5));
+    z-index: 10;
+}
+
+.wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a2e;
+    box-shadow: 0 5px 20px rgba(255, 165, 0, 0.5);
+    z-index: 5;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.wheel-center:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.spin-btn {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #1a1a2e;
+    border: none;
+    padding: 18px 50px;
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(255, 165, 0, 0.4);
+}
+
+.spin-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 50px rgba(255, 165, 0, 0.5);
+}
+
+.spin-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Jackpot Display */
+.jackpot-section {
+    margin-bottom: 50px;
+}
+
+.jackpot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.jackpot-card {
+    background: linear-gradient(145deg, #1e1e3f 0%, #151530 100%);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.jackpot-card:hover {
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: scale(1.02);
+}
+
+.jackpot-card--mini { border-top: 3px solid #74b9ff; }
+.jackpot-card--minor { border-top: 3px solid #55efc4; }
+.jackpot-card--major { border-top: 3px solid #ffeaa7; }
+.jackpot-card--grand { border-top: 3px solid #fd79a8; }
+
+.jackpot-card__label {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    color: #b8b8d1;
+}
+
+.jackpot-card--mini .jackpot-card__label { color: #74b9ff; }
+.jackpot-card--minor .jackpot-card__label { color: #55efc4; }
+.jackpot-card--major .jackpot-card__label { color: #ffeaa7; }
+.jackpot-card--grand .jackpot-card__label { color: #fd79a8; }
+
+.jackpot-card__amount {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+}
+
+.jackpot-card__amount span {
+    display: inline-block;
+    animation: number-tick 0.1s ease-in-out;
+}
+
+@keyframes number-tick {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+
+.jackpot-card__trigger {
+    font-size: 12px;
+    color: #6c6c8a;
+}
+
+/* Daily Bonus Streak */
+.daily-bonus-section {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 24px;
+    padding: 40px;
+    margin-bottom: 50px;
+}
+
+.daily-bonus__header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.daily-bonus__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.daily-bonus__subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+}
+
+.daily-streak {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.daily-day {
+    width: 100px;
+    text-align: center;
+    padding: 20px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.daily-day--claimed {
+    background: linear-gradient(135deg, #00b894 0%, #55efc4 100%);
+}
+
+.daily-day--today {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    animation: pulse 2s ease-in-out infinite;
+    transform: scale(1.1);
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+    50% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
+}
+
+.daily-day--locked {
+    opacity: 0.5;
+}
+
+.daily-day__number {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 10px;
+}
+
+.daily-day--claimed .daily-day__number,
+.daily-day--today .daily-day__number {
+    color: #1a1a2e;
+}
+
+.daily-day__reward {
+    font-size: 24px;
+    font-weight: 800;
+    color: #fff;
+}
+
+.daily-day--claimed .daily-day__reward,
+.daily-day--today .daily-day__reward {
+    color: #1a1a2e;
+}
+
+.daily-day__check {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00b894;
+    font-size: 14px;
+}
+
+/* Progress/Achievements */
+.achievements-section {
+    margin-bottom: 50px;
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.achievement-card {
+    background: linear-gradient(145deg, #1e1e3f 0%, #151530 100%);
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.achievement-card:hover {
+    transform: translateX(5px);
+    border-color: rgba(255, 215, 0, 0.2);
+}
+
+.achievement-card--completed {
+    border-color: rgba(0, 184, 148, 0.3);
+    background: linear-gradient(145deg, rgba(0, 184, 148, 0.1) 0%, #151530 100%);
+}
+
+.achievement__icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 107, 0, 0.2) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    flex-shrink: 0;
+}
+
+.achievement-card--completed .achievement__icon {
+    background: linear-gradient(135deg, #00b894 0%, #55efc4 100%);
+}
+
+.achievement__content {
+    flex: 1;
+}
+
+.achievement__name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.achievement__desc {
+    font-size: 14px;
+    color: #6c6c8a;
+    margin-bottom: 12px;
+}
+
+.achievement__progress {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.achievement__progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.achievement__stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #6c6c8a;
+}
+
+.achievement__reward {
+    color: #FFD700;
+    font-weight: 600;
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+    .bonus-page-premium {
+        padding: 30px 0;
+    }
+    
+    .bonus-page-premium .container {
+        padding: 0 15px;
+    }
+    
+    .bonus-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .jackpot-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .achievements-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+    .bonus-page-premium {
+        padding: 20px 0;
+    }
+    
+    .bonus-page-premium .container {
+        padding: 0 12px;
+    }
+    
+    .bonus-header {
+        margin-bottom: 30px;
+    }
+    
+    .bonus-header__title {
+        font-size: 24px;
+        letter-spacing: 1px;
+    }
+    
+    .bonus-header__subtitle {
+        font-size: 14px;
+        padding: 0 10px;
+    }
+    
+    .featured-bonus {
+        padding: 20px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .featured-bonus__content {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+    
+    .featured-bonus__text {
+        min-width: 100%;
+    }
+    
+    .featured-bonus__badge {
+        font-size: 11px;
+        padding: 6px 14px;
+    }
+    
+    .featured-bonus__title {
+        font-size: 22px;
+    }
+    
+    .featured-bonus__title span {
+        font-size: 32px;
+    }
+    
+    .featured-bonus__desc {
+        font-size: 14px;
+    }
+    
+    .featured-bonus__cta {
+        padding: 12px 30px;
+        font-size: 14px;
+    }
+    
+    .featured-bonus__visual {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .featured-bonus__amount {
+        font-size: 42px;
+    }
+    
+    /* Bonus Cards - Single Column on Mobile */
+    .bonus-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .bonus-card {
+        border-radius: 16px;
+    }
+    
+    .bonus-card__header {
+        padding: 20px;
+    }
+    
+    .bonus-card__icon {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+    
+    .bonus-card__type {
+        font-size: 10px;
+        padding: 4px 12px;
+    }
+    
+    .bonus-card__title {
+        font-size: 18px;
+    }
+    
+    .bonus-card__value {
+        font-size: 36px;
+    }
+    
+    .bonus-card__body {
+        padding: 0 20px 20px;
+    }
+    
+    .bonus-card__details li {
+        font-size: 13px;
+        padding: 10px 0;
+    }
+    
+    .bonus-card__btn {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    
+    /* Wheel Section Mobile */
+    .wheel-section {
+        padding: 30px 20px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .wheel-container {
+        width: 260px;
+        height: 260px;
+        margin-bottom: 30px;
+    }
+    
+    .wheel-center {
+        width: 60px;
+        height: 60px;
+        font-size: 18px;
+    }
+    
+    .wheel-pointer {
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 30px solid #FFD700;
+        top: -15px;
+    }
+    
+    .spin-btn {
+        padding: 14px 35px;
+        font-size: 16px;
+    }
+    
+    /* Jackpot Section Mobile */
+    .jackpot-section {
+        margin-bottom: 30px;
+    }
+    
+    .jackpot-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    
+    .jackpot-card {
+        padding: 16px;
+        border-radius: 14px;
+    }
+    
+    .jackpot-card__label {
+        font-size: 11px;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
+    
+    .jackpot-card__amount {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+    
+    .jackpot-card__trigger {
+        font-size: 10px;
+    }
+    
+    /* Daily Bonus Mobile */
+    .daily-bonus-section {
+        padding: 25px 15px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+    }
+    
+    .daily-bonus__header {
+        margin-bottom: 25px;
+    }
+    
+    .daily-bonus__title {
+        font-size: 22px;
+    }
+    
+    .daily-bonus__subtitle {
+        font-size: 13px;
+    }
+    
+    .daily-streak {
+        gap: 8px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        flex-wrap: nowrap;
+    }
+    
+    .daily-day {
+        width: 65px;
+        min-width: 65px;
+        padding: 12px 8px;
+        border-radius: 12px;
+    }
+    
+    .daily-day--today {
+        transform: scale(1.05);
+    }
+    
+    .daily-day__number {
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+    
+    .daily-day__reward {
+        font-size: 16px;
+    }
+    
+    .daily-day__check {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        top: -5px;
+        right: -5px;
+    }
+    
+    /* Achievements Mobile */
+    .achievements-section {
+        margin-bottom: 30px;
+    }
+    
+    .achievements-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .achievement-card {
+        padding: 16px;
+        border-radius: 14px;
+        gap: 14px;
+    }
+    
+    .achievement__icon {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+    }
+    
+    .achievement__name {
+        font-size: 15px;
+    }
+    
+    .achievement__desc {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .achievement__progress {
+        height: 6px;
+        margin-bottom: 6px;
+    }
+    
+    .achievement__stats {
+        font-size: 11px;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 400px) {
+    .bonus-header__title {
+        font-size: 20px;
+    }
+    
+    .featured-bonus__title {
+        font-size: 18px;
+    }
+    
+    .featured-bonus__title span {
+        font-size: 26px;
+    }
+    
+    .featured-bonus__visual {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .featured-bonus__amount {
+        font-size: 36px;
+    }
+    
+    .wheel-container {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .jackpot-card__amount {
+        font-size: 16px;
+    }
+    
+    .daily-day {
+        width: 55px;
+        min-width: 55px;
+    }
+    
+    .daily-day__reward {
+        font-size: 14px;
+    }
+}

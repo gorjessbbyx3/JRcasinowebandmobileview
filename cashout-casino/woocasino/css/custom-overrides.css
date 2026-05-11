@@ -1,0 +1,36 @@
+/* Custom Overrides for Jade Royale */
+
+/* Black header background */
+.header {
+    background: #000000 !important;
+}
+
+@media (min-width: 992px) {
+    .header {
+        background: #000000 !important;
+    }
+}
+
+/* Larger logo */
+.header__logo-img {
+    height: 80px !important;
+    max-height: none !important;
+}
+
+@media (min-width: 992px) {
+    .header__logo-img {
+        height: 120px !important;
+        width: auto !important;
+        max-width: 200px;
+    }
+    
+    .header__logo {
+        padding: 15px 0 !important;
+    }
+}
+
+/* Ensure logo container has proper spacing */
+.header__logo-link {
+    display: flex;
+    align-items: center;
+}

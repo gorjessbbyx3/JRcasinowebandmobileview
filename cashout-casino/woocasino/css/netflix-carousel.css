@@ -1,0 +1,575 @@
+/* BADASS MOBILE-FIRST GAME CAROUSELS */
+
+/* ============================================
+   MOBILE FIRST - Base styles (phones)
+   ============================================ */
+
+/* Category section base - padding-top handled in separator section below */
+
+/* Neon Category Header - Left aligned in carousel */
+.category-header--neon {
+    display: none;
+}
+
+.category-header__neon-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 4px;
+    border-radius: 12px;
+    background: transparent;
+    animation: rainbowBorderPulse 4s linear infinite;
+}
+
+.category-header__neon-icon-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #00bfff, #8b00ff, #ff00ff, #ff0000);
+    background-size: 400% 100%;
+    z-index: -1;
+    animation: rainbowBorderFlow 3s linear infinite;
+    filter: blur(4px);
+    opacity: 0.7;
+}
+
+@keyframes rainbowBorderFlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+}
+
+@keyframes rainbowBorderPulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 128, 0.4), 0 0 30px rgba(0, 255, 255, 0.2); }
+    50% { box-shadow: 0 0 15px rgba(0, 255, 128, 0.4), 0 0 30px rgba(255, 0, 255, 0.2); }
+}
+
+.category-header__neon-icon {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
+    transition: transform 0.3s ease;
+}
+
+/* Netflix Carousel Container */
+.netflix-carousel {
+    position: relative;
+    padding: 0;
+}
+
+.netflix-carousel__track-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 8px;
+    gap: 8px;
+}
+
+.netflix-carousel__track-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.netflix-carousel__track {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+.netflix-carousel__track--double {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.netflix-carousel__row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+
+/* Game Cards - Mobile First */
+.netflix-game-card {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 75px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    text-decoration: none;
+    scroll-snap-align: start;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #1a1a2e;
+    border: 1.5px solid transparent;
+    background-clip: padding-box;
+}
+
+.netflix-game-card::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 9px;
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0080ff, #8b00ff, #ff00ff, #ff0000);
+    background-size: 400% 100%;
+    z-index: -1;
+    animation: rainbowBorderFlow 4s linear infinite;
+}
+
+.netflix-game-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.netflix-game-card__badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    padding: 2px 5px;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    border-radius: 4px;
+    z-index: 2;
+}
+
+.netflix-game-card__overlay {
+    display: none;
+}
+
+/* ============================================
+   SEE ALL CARD - End of carousel
+   ============================================ */
+.carousel-see-all-card {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 75px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    scroll-snap-align: start;
+    background: linear-gradient(135deg, rgba(20, 20, 40, 0.9), rgba(30, 30, 60, 0.8));
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.carousel-see-all-card::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #00bfff, #8b00ff, #ff00ff, #ff0000);
+    background-size: 300% 100%;
+    z-index: -1;
+    animation: rainbowBorderFlow 4s linear infinite;
+    opacity: 0.8;
+}
+
+.carousel-see-all-card::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #0a0a18, #15152a);
+    z-index: -1;
+}
+
+.see-all-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    z-index: 1;
+}
+
+.see-all-icon {
+    width: 24px;
+    height: 24px;
+    animation: pulseIcon 2s ease-in-out infinite;
+}
+
+.see-all-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: #fff;
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+}
+
+@keyframes pulseIcon {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+.see-all-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+    line-height: 1.2;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Color variants for See All cards */
+.carousel-see-all-card--slots::before { background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24); background-size: 200% 100%; }
+.carousel-see-all-card--fish::before { background: linear-gradient(90deg, #06b6d4, #0ea5e9, #06b6d4); background-size: 200% 100%; }
+.carousel-see-all-card--table::before { background: linear-gradient(90deg, #10b981, #059669, #10b981); background-size: 200% 100%; }
+
+/* Navigation Arrows - Hidden on mobile */
+.netflix-carousel__nav {
+    display: none;
+}
+
+/* Hide old See All button */
+.category-header__see-all {
+    display: none;
+}
+
+/* ============================================
+   TABLET - 600px+
+   ============================================ */
+@media (min-width: 600px) {
+    .category-section {
+        margin-bottom: 10px;
+    }
+    
+    .category-header__neon-icon {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .netflix-game-card {
+        width: 130px;
+        height: 97px;
+        border-radius: 10px;
+    }
+    
+    .carousel-see-all-card {
+        width: 130px;
+        height: 97px;
+    }
+    
+    .see-all-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .see-all-text {
+        font-size: 10px;
+    }
+    
+    .netflix-carousel__track-wrapper {
+        gap: 10px;
+        padding: 6px 12px;
+    }
+    
+    .netflix-carousel__track,
+    .netflix-carousel__row {
+        gap: 10px;
+    }
+}
+
+/* ============================================
+   DESKTOP - 1024px+
+   ============================================ */
+@media (min-width: 1024px) {
+    .category-section {
+        margin-bottom: 12px;
+    }
+    
+    .category-header__neon-icon {
+        width: 160px;
+        height: 160px;
+    }
+    
+    .category-header__neon-icon-wrap::before {
+        filter: blur(6px);
+    }
+    
+    .netflix-game-card {
+        width: 160px;
+        height: 120px;
+        border-radius: 12px;
+    }
+    
+    .netflix-game-card:hover {
+        transform: scale(1.08);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.3);
+        z-index: 10;
+    }
+    
+    .netflix-game-card:hover .netflix-game-card__image {
+        transform: scale(1.05);
+    }
+    
+    .carousel-see-all-card {
+        width: 160px;
+        height: 120px;
+    }
+    
+    .carousel-see-all-card:hover {
+        transform: scale(1.08);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 255, 0.4);
+    }
+    
+    .see-all-icon {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .see-all-text {
+        font-size: 11px;
+    }
+    
+    .netflix-carousel__track-wrapper {
+        gap: 12px;
+        padding: 8px 20px;
+    }
+    
+    .netflix-carousel__track,
+    .netflix-carousel__row {
+        gap: 12px;
+    }
+    
+    /* Show nav arrows on desktop */
+    .netflix-carousel__nav {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        opacity: 0;
+        transition: opacity 0.3s ease, background 0.3s ease;
+    }
+    
+    .netflix-carousel:hover .netflix-carousel__nav {
+        opacity: 1;
+    }
+    
+    .netflix-carousel__nav:hover {
+        background: rgba(139, 92, 246, 0.8);
+    }
+    
+    .netflix-carousel__nav svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .netflix-carousel__nav--left {
+        left: 10px;
+    }
+    
+    .netflix-carousel__nav--right {
+        right: 10px;
+    }
+}
+
+/* ============================================
+   LARGE DESKTOP - 1400px+
+   ============================================ */
+@media (min-width: 1400px) {
+    .category-header__neon-icon {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .netflix-game-card {
+        width: 180px;
+        height: 135px;
+    }
+    
+    .carousel-see-all-card {
+        width: 180px;
+        height: 135px;
+    }
+    
+    .see-all-icon {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .see-all-text {
+        font-size: 12px;
+    }
+}
+
+/* ============================================
+   SPECIAL EFFECTS
+   ============================================ */
+
+/* Slots category glow */
+.category-section--slots .netflix-game-card:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(251, 191, 36, 0.4);
+}
+
+/* Fish category glow */
+.category-section--fish .netflix-game-card:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(6, 182, 212, 0.4);
+}
+
+/* Table category glow */
+.category-section--table .netflix-game-card:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.4);
+}
+
+/* Gradient definitions for SVG */
+.category-header svg defs {
+    --slots-gradient: linear-gradient(135deg, #fbbf24, #f59e0b);
+    --fish-gradient: linear-gradient(135deg, #06b6d4, #0ea5e9);
+    --table-gradient: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* ============================================
+   SLEEK CATEGORY SEPARATOR - Premium Neon Divider
+   ============================================ */
+.category-section {
+    position: relative;
+    padding-top: 12px;
+    margin-bottom: 6px;
+}
+
+.category-section:first-of-type {
+    margin-top: 20px;
+}
+
+.category-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(139, 92, 246, 0.3) 15%,
+        rgba(139, 92, 246, 0.8) 35%,
+        rgba(16, 185, 129, 0.9) 50%,
+        rgba(251, 191, 36, 0.8) 65%,
+        rgba(251, 191, 36, 0.3) 85%,
+        transparent 100%
+    );
+    opacity: 0.8;
+}
+
+/* Hide separator on first category */
+.category-section:first-of-type::before {
+    display: none;
+}
+
+/* Category-specific separator colors */
+.category-section--slots::before {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(251, 191, 36, 0.2) 20%,
+        rgba(251, 191, 36, 0.7) 50%,
+        rgba(251, 191, 36, 0.2) 80%,
+        transparent 100%
+    );
+}
+
+.category-section--fish::before {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(6, 182, 212, 0.2) 20%,
+        rgba(6, 182, 212, 0.7) 50%,
+        rgba(6, 182, 212, 0.2) 80%,
+        transparent 100%
+    );
+}
+
+.category-section--table::before {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(16, 185, 129, 0.2) 20%,
+        rgba(16, 185, 129, 0.7) 50%,
+        rgba(16, 185, 129, 0.2) 80%,
+        transparent 100%
+    );
+}
+
+/* ============================================
+   CATEGORY TITLE BADGE - Floating Glass Label
+   ============================================ */
+.category-title-badge {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding: 4px 16px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    background: rgba(10, 10, 20, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Category-specific title colors */
+.category-section--slots .category-title-badge {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.1));
+    border-color: rgba(251, 191, 36, 0.4);
+    color: #fbbf24;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.category-section--fish .category-title-badge {
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(14, 165, 233, 0.1));
+    border-color: rgba(6, 182, 212, 0.4);
+    color: #06b6d4;
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.category-section--table .category-title-badge {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #10b981;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+/* Responsive sizes for category title badge */
+@media (min-width: 600px) {
+    .category-title-badge {
+        font-size: 11px;
+        padding: 5px 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .category-title-badge {
+        font-size: 12px;
+        padding: 6px 24px;
+        letter-spacing: 3px;
+    }
+}

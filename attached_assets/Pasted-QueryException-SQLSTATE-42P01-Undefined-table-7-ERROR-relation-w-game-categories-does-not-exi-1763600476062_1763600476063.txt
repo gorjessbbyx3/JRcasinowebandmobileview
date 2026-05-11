@@ -1,0 +1,83 @@
+QueryException
+SQLSTATE[42P01]: Undefined table: 7 ERROR: relation "w_game_categories" does not exist LINE 1: select "category_id" from "w_game_categories" where 0 = 1 gr... ^ (Connection: mysql, SQL: select "category_id" from "w_game_categories" where 0 = 1 group by "category_id")
+app/Http/Controllers/Web/Frontend/GamesController.php :540
+                if( $games ) 
+                {
+                    $cat_ids = \VanguardLTE\GameCategory::whereIn('game_id', \VanguardLTE\Game::where([
+                        'view' => 1, 
+                        'shop_id' => $shop_id
+                    ])->pluck('original_id'))->groupBy('category_id')->pluck('category_id');
+                    if( count($cat_ids) ) 
+                    {
+                        $categories = \VanguardLTE\Category::whereIn('id', $cat_ids)->orderBy('position', 'ASC')->first();
+                        if( $categories ) 
+                        {
+                            $category1 = $categories->href;
+                            return $this->do_redirect($request, ['category1' => $category1], $error);
+                        }
+                    }
+                }
+            }
+Request
+GET /
+Headers
+host
+ac8aa719-cdec-4d5f-99c8-e56bd9ca9702-00-309ylu5cpolqb.spock.replit.dev
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding
+identity, gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9,fr;q=0.8,ja;q=0.7,ru;q=0.6,hu;q=0.5,zh-CN;q=0.4,zh;q=0.3,no;q=0.2
+cookie
+XSRF-TOKEN=eyJpdiI6IkJVS2Q4OTlTNDVZRVBIUnlYUS9nd1E9PSIsInZhbHVlIjoidDVxc0ltNytCb0ZZb1RGUXphUFZXUURpbFhKV3N4NlRwVUtvRURXVm5TNzhXRzg1QXVOM2FhcUhQNFFYK1IzZ29qdEZBQm9IMEQ4c0tpZWVOakROcnZhTGd4b0gwTUVoYlNFWlE4Mmx5b1hMK1hteHoyN25HYkUxZHRXVXNDM2EiLCJtYWMiOiI4NmFkZWUwNThmOTg5M2ViODM4ZDhlNDdiMmVlM2M2ZGUxZjVkM2ZiNzQxMWQ3Zjg3ZjE3MGFhMWViOGY0YzYzIiwidGFnIjoiIn0%3D; cashoutcasino_session=eyJpdiI6IkdabmVRTHA1VDhPcEVaZ2xHQjdFQUE9PSIsInZhbHVlIjoieFZmRkoyY2lUbUpuSEQzNnJxMHNZQ0c0QTEyZmptMUNiTHFCcDNQUVpQbUh2Z2FuOHJkdHFkKzNwdGpLdVB4aDk3ZDRiVnN2MGZrZmJDTjN6aEF6NVA2SUgrdmxIVUt3WUJDNGNxYk51aENRcVJIZU9VMVA1bmdmak05QzFLSmEiLCJtYWMiOiJhOTgzNTQ4OTE4NTQ3MTU4Y2RmNjg2Yjg1MjQ4MDMzZmJjMWEwMGZjOWNiZGY3YmYxNjc5Y2RmYzcxMWU4MmM1IiwidGFnIjoiIn0%3D
+referer
+https://ac8aa719-cdec-4d5f-99c8-e56bd9ca9702-00-309ylu5cpolqb.spock.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar4d5%3A
+sec-ch-ua
+"Not)A;Brand";v="8", "Chromium";v="138", "Opera";v="122"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+iframe
+sec-fetch-mode
+navigate
+sec-fetch-site
+same-origin
+sec-fetch-storage-access
+active
+upgrade-insecure-requests
+1
+x-forwarded-for
+72.130.149.127, 10.82.10.237
+x-forwarded-proto
+https
+x-replit-user-bio
+x-replit-user-id
+x-replit-user-name
+x-replit-user-profile-image
+x-replit-user-roles
+x-replit-user-teams
+x-replit-user-url
+Body
+No body data
+Application
+Routing
+controller
+VanguardLTE\Http\Controllers\Web\Frontend\GamesController@index
+route name
+frontend.game.list
+middleware
+web, siteisclosed, checker
+Database Queries
+mysql
+select * from "w_settings"
+mysql
+select * from "w_shops" where "w_shops"."id" = 1 limit 1
+mysql
+select * from "w_games" where ("view" = 1 and "shop_id" = 0) and "device" in (1, 2)
+mysql
+select "original_id" from "w_games" where ("view" 

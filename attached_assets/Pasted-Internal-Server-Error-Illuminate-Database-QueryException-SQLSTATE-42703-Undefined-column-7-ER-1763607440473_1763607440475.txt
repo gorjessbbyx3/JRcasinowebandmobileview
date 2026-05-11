@@ -1,0 +1,114 @@
+Internal Server Error
+
+Illuminate\Database\QueryException
+SQLSTATE[42703]: Undefined column: 7 ERROR: column "href" does not exist LINE 1: select * from "w_categories" where ("href" = $1) limit 1 ^ (Connection: mysql, SQL: select * from "w_categories" where ("href" = all) limit 1)
+GET ac8aa719-cdec-4d5f-99c8-e56bd9ca9702-00-309ylu5cpolqb.spock.replit.dev
+PHP 8.2.23 — Laravel 11.38.2
+
+Expand
+vendor frames
+10 vendor frames collapsed
+
+VanguardLTE\Http\Controllers\Web\Frontend\GamesController
+:50
+index
+6 vendor frames collapsed
+
+VanguardLTE\Http\Middleware\Checker
+:10
+handle
+1 vendor frame collapsed
+
+VanguardLTE\Http\Middleware\SiteIsClosed
+:20
+handle
+1 vendor frame collapsed
+
+VanguardLTE\Http\Middleware\SelectLanguage
+:22
+handle
+35 vendor frames collapsed
+
+VanguardLTE\Http\Middleware\VerifyInstallation
+:16
+handle
+5 vendor frames collapsed
+app/Http/Controllers/Web/Frontend/GamesController.php :50
+            }
+            
+            \Illuminate\Support\Facades\Cookie::queue('currentCategory' . (\Illuminate\Support\Facades\Auth::check() ? auth()->user()->id : 0), $category1, 2678400);
+            if( $category1 != '' ) 
+            {
+                $cat1 = \VanguardLTE\Category::where(['href' => $category1])->first();
+                if( !$cat1 && !in_array($category1, [
+                    'all', 
+                    'my_games', 
+                    'new', 
+                    'hot'
+                ]) ) 
+                {
+                    abort(404);
+                }
+                if( $category2 != '' ) 
+                {
+Request
+GET /categories/all
+Headers
+host
+ac8aa719-cdec-4d5f-99c8-e56bd9ca9702-00-309ylu5cpolqb.spock.replit.dev
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9,fr;q=0.8,ja;q=0.7,ru;q=0.6,hu;q=0.5,zh-CN;q=0.4,zh;q=0.3,no;q=0.2
+cookie
+XSRF-TOKEN=eyJpdiI6ImQ3bmh4YVNaVXhwMmVrcnRxM3pWQXc9PSIsInZhbHVlIjoiNjQ5VE9aaFlnV0lXR0ZnQ04yaldqdDh0Rk11TStpUUxFSUhvejZ4cGhRcWpQNy9nNmR2TVE3V2FNWWkrRHY0V2hja1Z1YjBvU3pNSUI4TkNnUVlKUC9wQWRhNTVvMXI4Q2Fvb1JNOHFhUGlkdmwwbTM2U0tSRUcyck0vWWRaZEkiLCJtYWMiOiIzOTc1ODUzMjVlNTQ0ZDY3MWY2MWMyODJjMTliYWRhYzMyMDZlYWJmODQ3Y2NlNTAzYWE2MzFlNDRmYmQzMDc5IiwidGFnIjoiIn0%3D; cashoutcasino_session=eyJpdiI6IkI0ODY1dUVobHp5UHh0R2VtNVlRemc9PSIsInZhbHVlIjoiNTVzWDFMc0k0allkTUZYbk1iZUFFSWN0Sll4TkpWQ3p0T2NmbkpWaGNFWk96UWw4T2lNdEZHSzBFV2t4N1RwUXJaTDdNSkhiOHRlVE1hMWsrYjN0MUc0N3psekF1bEpSR0ExS2MxM2RMQ1I3SzRYdFg1QzVESzFCUkEwcXRreUgiLCJtYWMiOiJhMjVmNjkzOWQ0MTA2NzUzZTNhYTViOWQyNWI2NzBmNGE2NzEyMzdkNjExZjkzYmUyNDEyMDE4Mjc1YWRjMGYyIiwidGFnIjoiIn0%3D; currentCategory0=eyJpdiI6Iks5eEJaYlJJbVdhV2JETndFQ0d1Q0E9PSIsInZhbHVlIjoiUmFqM21VL0RydmlnRmVOK2xUMGhkeEcwRlBzbkRyUHNSV2JjUGdPMVNSUmYvZDQ3YmFnV05BR3FmZGVQS0JnbSIsIm1hYyI6ImNlNGFmNzU4MTQ4YWYzYzY2NGExYWFiZTIwZTI4NjZiNDE3OTNhYjVlOTg5MzVmMWNlZmJmMDAzMWFhYTkxNTUiLCJ0YWciOiIifQ%3D%3D
+sec-ch-ua
+"Not)A;Brand";v="8", "Chromium";v="138", "Opera";v="122"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+document
+sec-fetch-mode
+navigate
+sec-fetch-site
+cross-site
+sec-fetch-user
+?1
+upgrade-insecure-requests
+1
+x-forwarded-for
+72.130.149.127, 10.82.6.71
+x-forwarded-proto
+https
+x-replit-user-bio
+x-replit-user-id
+x-replit-user-name
+x-replit-user-profile-image
+x-replit-user-roles
+x-replit-user-teams
+x-replit-user-url
+Body
+No body data
+Application
+Routing
+controller
+VanguardLTE\Http\Controllers\Web\Frontend\GamesController@index
+route name
+frontend.game.list.category
+middleware
+web, siteisclosed, checker
+Routing Parameters
+{
+    "category1": "all"
+}
+Database Queries
+mysql (412.12 ms)
+select * from "w_settings"
+mysql (58.22 ms)
+select * from "w_shops" where "w_shops"."id" = 1 limit 1

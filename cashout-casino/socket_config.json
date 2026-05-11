@@ -1,0 +1,8 @@
+{
+"port":"22154/slots",
+"host":"cashout.realconnect.online",
+"prefix":"https://",
+"host_ws":"cashout.realconnect.online",
+"prefix_ws":"wss://",
+"ssl":true
+}

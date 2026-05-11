@@ -1,0 +1,35 @@
+modules = ["php-8.2", "web", "nodejs-20", "postgresql-16"]
+[agent]
+expertMode = true
+
+[nix]
+packages = ["gh", "php82Packages.composer"]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start Casino"
+
+[[workflows.workflow]]
+name = "Start Casino"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd cashout-casino && php -S 0.0.0.0:5000 -t ."
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80

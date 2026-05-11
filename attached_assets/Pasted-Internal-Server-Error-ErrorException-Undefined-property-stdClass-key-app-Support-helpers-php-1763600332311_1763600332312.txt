@@ -1,0 +1,87 @@
+Internal Server Error
+
+ErrorException
+Undefined property: stdClass::$key
+app/Support/helpers.php :20
+    {
+        if (is_null($key)) {
+            return app('anlutro\LaravelSettings\SettingStore');
+        }
+ 
+        return app('anlutro\LaravelSettings\SettingStore')->get($key, $default);
+    }
+}
+ 
+function encoded($str)
+{
+    return base64_encode(base64_encode($str));
+}
+function decoded($str)
+{
+    return base64_decode(base64_decode($str));
+}
+Request
+GET /
+Headers
+host
+ac8aa719-cdec-4d5f-99c8-e56bd9ca9702-00-309ylu5cpolqb.spock.replit.dev
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0
+accept
+text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+accept-encoding
+identity, gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9,fr;q=0.8,ja;q=0.7,ru;q=0.6,hu;q=0.5,zh-CN;q=0.4,zh;q=0.3,no;q=0.2
+cookie
+XSRF-TOKEN=eyJpdiI6Ik1DU0MwaGNpbFRMbDFaQzZic2FzbUE9PSIsInZhbHVlIjoiY0gyUHQ3RkdXSDNOTWRORlpOYWJjd1hCbjFsKzBMSmVicXJmOEVIcWpqckQybkVPRk1GOWp6OWhybUxTdzdlRHREdVZWOUdJM0xqdHYzRDJvcmRCWEJLSmxXWUFJajB5bWRHUi9JWEhBcWRvMVJiSXZzSFZmdXRoaW4yeElCSm8iLCJtYWMiOiJiMWRlNjY5ZTZhZDg0YWMyZjI0ODI4YjViMTJhMTA3Y2IzMTQyZDFlZjViZGE2ODEzODlmNzk4MjI5ODY5OWNlIiwidGFnIjoiIn0%3D; cashoutcasino_session=eyJpdiI6IjVuZ3ZvNXJBblpqVHdsSnM5ckFyM1E9PSIsInZhbHVlIjoiYWgxeUU5UERpNkdQYmxNYnZKYUhYRnNtTzdEaFIxZ1hqUGtyWVpGTFltcWxrdGtqTjh4ckI3bmRYQ2dIUXR1Zk4xSWltTHpwY0dWcXdHTlVxb3lzU3NZOWMycHpXWTh5OUhKQWFQVk9tWThIb2lucTMwcER2VXEwenUyeFpZSlgiLCJtYWMiOiJlNDZlZDM5MjQ4OWJlMzIwMWY3ZDlhNmMzZjBkMjIwZTE0YzIwMzM2OTcxMjQwNjA3ZjY3ZDZlODM3ZDQyMWNhIiwidGFnIjoiIn0%3D
+referer
+https://ac8aa719-cdec-4d5f-99c8-e56bd9ca9702-00-309ylu5cpolqb.spock.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Ar48k%3A
+sec-ch-ua
+"Not)A;Brand";v="8", "Chromium";v="138", "Opera";v="122"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+iframe
+sec-fetch-mode
+navigate
+sec-fetch-site
+same-origin
+sec-fetch-storage-access
+active
+upgrade-insecure-requests
+1
+x-forwarded-for
+72.130.149.127, 10.82.10.237
+x-forwarded-proto
+https
+x-replit-user-bio
+x-replit-user-id
+x-replit-user-name
+x-replit-user-profile-image
+x-replit-user-roles
+x-replit-user-teams
+x-replit-user-url
+Body
+No body data
+Application
+Routing
+controller
+VanguardLTE\Http\Controllers\Web\Frontend\GamesController@index
+route name
+frontend.game.list
+middleware
+web, siteisclosed, checker
+Database Queries
+mysql
+select * from "w_settings"
+mysql
+select * from "w_settings"
+mysql
+select * from "w_settings"
+mysql
+select * from "w_settings"
+mysql
+select * from "w_settings"
