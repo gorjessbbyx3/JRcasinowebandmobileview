@@ -185,7 +185,7 @@
            DESKTOP BACKGROUND — aggressive override to ensure dark bg
         ══════════════════════════════════════════════════════════ */
         @media (min-width: 769px) {
-            html { background: #0d0821 !important; }
+            html { background: #000 !important; }
             body {
                 background: transparent !important;
                 background-color: transparent !important;
@@ -200,7 +200,8 @@
             .background-layer-rainbow, .background-layer-particles { display: none !important; }
             .carcass, .carcass__body, .carcass__inner, .carcass__content,
             .main-content, .contain, .main, section.main,
-            .ng-scope > div { background: transparent !important; }
+            .ng-scope > div:not(.main-slider__img):not(.mobile-slider__img) { background: transparent !important; }
+            .main-slider__img, .mobile-slider__img { background-color: #0a0a0a !important; }
             .footer { background: rgba(8, 4, 20, 0.95) !important; }
         }
 
@@ -589,8 +590,39 @@
     <!-- ===================== END MOBILE CASINO LAYOUT ===================== -->
 
     <!-- ===================== DESKTOP 3D ANIMATED BACKGROUND ===================== -->
-    <canvas id="casino-bg-canvas"></canvas>
+    <canvas id="casino-bg-canvas" style="display:none!important"></canvas>
     <!-- ===================== END DESKTOP 3D BACKGROUND ===================== -->
+
+    <!-- ===================== DESKTOP NAVBAR ===================== -->
+    <nav class="desktop-navbar" id="desktopNavbar">
+        <a href="/" class="desktop-navbar__logo">
+            <img class="desktop-navbar__logo-img" src="/woocasino/logo.png" alt="Jade Royale" onerror="this.style.display='none'">
+            <span class="desktop-navbar__logo-text">Jade Royale</span>
+        </a>
+        <div class="desktop-navbar__nav">
+            <a href="/" class="desktop-navbar__nav-link active">All Games</a>
+            <a href="{{ route('frontend.game.list.category', 'slots') }}" class="desktop-navbar__nav-link">Slots</a>
+            <a href="{{ route('frontend.game.list.category', 'all') }}" class="desktop-navbar__nav-link">Fish &amp; Arcade</a>
+            <a href="{{ route('frontend.game.list.category', 'roulette') }}" class="desktop-navbar__nav-link">Table Games</a>
+        </div>
+        <div class="desktop-navbar__auth">
+            @if(Auth::check())
+            <span class="desktop-navbar__balance">
+                {{ number_format(auth()->user()->balance, 2, '.', ',') }} {{ $currency ?? 'PHP' }}
+            </span>
+            <a href="#" class="desktop-navbar__deposit-btn" ng-click="openModal($event, '#my-account')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                Deposit
+            </a>
+            @else
+            <a href="#" class="desktop-navbar__login-btn" ng-click="openModal($event, '#login-modal')">Log In</a>
+            @endif
+        </div>
+    </nav>
+    <style>
+    @media (max-width: 768px) { .desktop-navbar { display: none !important; } }
+    </style>
+    <!-- ===================== END DESKTOP NAVBAR ===================== -->
 
     <!-- BLOCK WITH GAMES -->
     <main class="carcass__body">
@@ -1592,6 +1624,31 @@
                     }
                 @endphp
 
+                <!-- DESKTOP FILTER CHIPS -->
+                <div class="desktop-filter-chips" style="display:none" id="desktopFilterChips">
+                    <a href="/" class="desktop-filter-chip active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                        All Games
+                    </a>
+                    <a href="{{ route('frontend.game.list.category', 'slots') }}" class="desktop-filter-chip">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M16.9 16.9l2.1 2.1M4.9 19.1l2.1-2.1M16.9 7.1l2.1-2.1"/></svg>
+                        Slots
+                    </a>
+                    <a href="{{ route('frontend.game.list.category', 'all') }}" class="desktop-filter-chip">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 16.5a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0z"/><path d="M6 8h.01M8 4h.01M12 2h.01M16 4h.01M18 8h.01"/></svg>
+                        Fish &amp; Arcade
+                    </a>
+                    <a href="{{ route('frontend.game.list.category', 'roulette') }}" class="desktop-filter-chip">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/></svg>
+                        Table Games
+                    </a>
+                </div>
+                <script>
+                if (window.innerWidth >= 769) {
+                    document.getElementById('desktopFilterChips').style.display = 'flex';
+                }
+                </script>
+
                 <!-- SLOTS CAROUSEL - 2 Rows -->
                 @if(count($slotGames) > 0)
                 <section class="category-section category-section--slots">
@@ -1602,7 +1659,7 @@
                                 <div class="netflix-carousel__row" id="slots-row-1">
                                     @foreach($slotRow1 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy">
+                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1618,7 +1675,7 @@
                                 <div class="netflix-carousel__row" id="slots-row-2">
                                     @foreach($slotRow2 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy">
+                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1641,7 +1698,7 @@
                                 <div class="netflix-carousel__row" id="fish-row-1">
                                     @foreach($fishRow1 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy">
+                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1657,7 +1714,7 @@
                                 <div class="netflix-carousel__row" id="fish-row-2">
                                     @foreach($fishRow2 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy">
+                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1680,7 +1737,7 @@
                                 <div class="netflix-carousel__row" id="table-row-1">
                                     @foreach($tableRow1 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy">
+                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach
@@ -1696,7 +1753,7 @@
                                 <div class="netflix-carousel__row" id="table-row-2">
                                     @foreach($tableRow2 as $game)
                                     <a href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $game->name) }}?api_exit=/@else{{ route('frontend.game.go', $game->name) }}/prego?api_exit=/@endif" class="netflix-game-card">
-                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy">
+                                        <img class="netflix-game-card__image" src="/frontend/Default/ico/{{ $game->name }}.jpg" alt="{{ $game->title }}" loading="lazy" onerror="this.onerror=null;this.src='/woocasino/mslider1.gif'">
                                         @if($game->label)<span class="netflix-game-card__badge">{{ $game->label }}</span>@endif
                                     </a>
                                     @endforeach

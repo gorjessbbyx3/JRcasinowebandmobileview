@@ -1,0 +1,590 @@
+/* ============================================================
+   DESKTOP REDESIGN — cashout.realconnect.online style
+   Pure black background, red #e50914 accent, Inter font
+   Applied on screens 769px and above
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ── 1. GLOBAL RESET FOR DESKTOP ─────────────────────────── */
+@media (min-width: 769px) {
+
+html, body {
+    background: #000 !important;
+    font-family: 'Inter', sans-serif !important;
+    color: #fff !important;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Kill the 3D rainbow canvas */
+#casino-bg-canvas {
+    display: none !important;
+}
+
+/* Hide ALL the old VanguardLTE chrome on desktop */
+#woocasino .header,
+#woocasino .carcass__sidebar,
+#woocasino .sidebar,
+.navbar-default,
+.top-winners-bar,
+.player-action-bar,
+.category-badge-icons-row,
+.sticky-games-menu-mob,
+.mobile-slider,
+.mobile-casino-layout {
+    display: none !important;
+}
+
+/* Collapse the old wrapper */
+#woocasino {
+    background: #000 !important;
+    min-height: 100vh;
+}
+
+/* ── 2. OUR NEW STICKY NAVBAR ─────────────────────────────── */
+.desktop-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 64px;
+    z-index: 9999;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 32px;
+}
+
+.desktop-navbar__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.desktop-navbar__logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.desktop-navbar__logo-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #e50914;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.desktop-navbar__nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+
+.desktop-navbar__nav-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+}
+
+.desktop-navbar__nav-link:hover,
+.desktop-navbar__nav-link.active {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
+.desktop-navbar__nav-link.active {
+    color: #e50914;
+}
+
+.desktop-navbar__auth {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+.desktop-navbar__balance {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.desktop-navbar__login-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 22px;
+    background: #e50914;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.15s ease;
+    white-space: nowrap;
+}
+
+.desktop-navbar__login-btn:hover {
+    background: #f40612;
+    transform: translateY(-1px);
+    color: #fff;
+    text-decoration: none;
+}
+
+.desktop-navbar__deposit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    background: #e50914;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+}
+
+.desktop-navbar__deposit-btn:hover {
+    background: #f40612;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ── 3. PAGE BODY OFFSET for fixed navbar ─────────────────── */
+.carcass__body {
+    padding-top: 64px !important;
+    background: #000 !important;
+    min-height: 100vh;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    left: 0 !important;
+}
+
+.carcass,
+.carcass__inner,
+.carcass__content,
+.main-content,
+.contain {
+    background: #000 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ── 3b. FIX ng-scope background override — the template has .ng-scope > div { background: transparent } which kills slider images */
+.main-slider__img,
+div.main-slider__img,
+.ng-scope .main-slider__img,
+.ng-scope > .main-slider__img {
+    background-color: #111 !important;
+}
+
+/* ── 4. HERO BANNER — Main Slider ────────────────────────── */
+.main-content__first-screen {
+    display: block !important;
+    position: relative;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.main-content__slider {
+    display: block !important;
+    width: 100%;
+    position: relative;
+}
+
+.main-content__slider .carousel-fade {
+    display: block !important;
+}
+
+.main-content__slider .carousel-inner {
+    height: 65vh;
+    min-height: 400px;
+}
+
+.main-content__slider .carousel-inner .item {
+    height: 100%;
+    text-align: left !important;
+}
+
+.main-slider__img {
+    width: 100% !important;
+    height: 65vh !important;
+    min-height: 400px !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    position: relative !important;
+}
+
+/* Left gradient overlay on hero */
+.main-slider__img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
+}
+
+/* Promo text — hide since the GIFs already have promotional content */
+.main-slider__promo,
+.main-slider__promo-wrp,
+.main-slider__promo-txt,
+.main-slider__btn-wrp {
+    display: none !important;
+}
+
+/* Carousel indicators */
+.main-content__slider .carousel-indicators {
+    bottom: 16px;
+}
+
+.main-content__slider .carousel-indicators li {
+    background: rgba(255,255,255,0.4);
+    border: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 4px;
+}
+
+.main-content__slider .carousel-indicators li.active {
+    background: #e50914;
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* Hide carousel arrows on the main slider */
+.main-content__slider .carousel-control {
+    display: none;
+}
+
+/* ── 5. CATEGORY FILTER CHIPS ─────────────────────────────── */
+.desktop-filter-chips {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 40px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.desktop-filter-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.desktop-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.desktop-filter-chip:hover {
+    background: rgba(255,255,255,0.13);
+    color: #fff;
+    border-color: rgba(255,255,255,0.25);
+    text-decoration: none;
+}
+
+.desktop-filter-chip.active {
+    background: #e50914;
+    border-color: #e50914;
+    color: #fff;
+}
+
+.desktop-filter-chip svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/* ── 6. CATEGORY SECTIONS — Clean ────────────────────────── */
+.category-section {
+    padding: 24px 40px 8px !important;
+    margin-bottom: 0 !important;
+}
+
+/* Remove the rainbow/neon separator line */
+.category-section::before {
+    display: none !important;
+}
+
+/* Category title badge — replace centered badge with left title */
+.category-title-badge {
+    position: static !important;
+    transform: none !important;
+    display: inline-block !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #fff !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    padding: 0 0 12px 0 !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    text-shadow: none !important;
+}
+
+/* Red left border accent before category title */
+.category-section--slots .category-title-badge,
+.category-section--fish .category-title-badge,
+.category-section--table .category-title-badge {
+    color: #fff !important;
+    text-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.category-section--slots .category-title-badge::before,
+.category-section--fish .category-title-badge::before,
+.category-section--table .category-title-badge::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: #e50914;
+    border-radius: 2px;
+    margin-right: 10px;
+    vertical-align: middle;
+    margin-top: -2px;
+}
+
+/* ── 7. GAME CARDS — Kill rainbow, clean dark style ────────── */
+.netflix-game-card {
+    width: 160px !important;
+    height: 120px !important;
+    border-radius: 8px !important;
+    border: 1.5px solid rgba(255,255,255,0.08) !important;
+    background: #111 !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* KILL the rainbow border pseudo-element */
+.netflix-game-card::before {
+    display: none !important;
+    animation: none !important;
+}
+
+.netflix-game-card:hover {
+    transform: scale(1.06) !important;
+    border-color: rgba(229,9,20,0.6) !important;
+    box-shadow: 0 8px 32px rgba(229,9,20,0.25), 0 4px 16px rgba(0,0,0,0.6) !important;
+    z-index: 10;
+}
+
+.netflix-game-card__badge {
+    background: #e50914 !important;
+    font-size: 9px !important;
+}
+
+/* ── 8. SEE ALL CARD — Kill rainbow ───────────────────────── */
+.carousel-see-all-card {
+    width: 160px !important;
+    height: 120px !important;
+    border-radius: 8px !important;
+    background: rgba(255,255,255,0.04) !important;
+    border: 1.5px solid rgba(255,255,255,0.12) !important;
+    transition: all 0.2s ease !important;
+}
+
+/* KILL rainbow pseudo-elements */
+.carousel-see-all-card::before,
+.carousel-see-all-card::after {
+    display: none !important;
+    animation: none !important;
+}
+
+.carousel-see-all-card:hover {
+    background: rgba(229,9,20,0.1) !important;
+    border-color: rgba(229,9,20,0.5) !important;
+    transform: scale(1.04) !important;
+    box-shadow: 0 4px 20px rgba(229,9,20,0.2) !important;
+}
+
+/* See all text/icon — use red */
+.see-all-icon svg {
+    stroke: #e50914 !important;
+    filter: drop-shadow(0 0 6px rgba(229,9,20,0.5)) !important;
+}
+
+.see-all-text {
+    color: rgba(255,255,255,0.8) !important;
+    text-shadow: none !important;
+    font-size: 11px !important;
+}
+
+/* Color variant overrides — kill rainbow */
+.carousel-see-all-card--slots::before,
+.carousel-see-all-card--fish::before,
+.carousel-see-all-card--table::before {
+    display: none !important;
+    animation: none !important;
+}
+
+/* ── 9. CAROUSEL TRACK ───────────────────────────────────── */
+.netflix-carousel__track-wrapper {
+    padding: 4px 0 12px !important;
+    gap: 10px !important;
+}
+
+.netflix-carousel__row {
+    gap: 10px !important;
+}
+
+/* Nav arrows — red accent */
+.netflix-carousel__nav {
+    background: rgba(0,0,0,0.8) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+}
+
+.netflix-carousel__nav:hover {
+    background: #e50914 !important;
+    border-color: #e50914 !important;
+}
+
+/* ── 10. LATEST WINNERS PANEL — clean dark card ────────────── */
+.main-content__latest-winners,
+.glass-winners {
+    background: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    border-radius: 12px !important;
+    margin: 0 40px 24px !important;
+}
+
+/* ── 11. HIDE LEFTOVER STUFF ON DESKTOP ───────────────────── */
+.jackpot-bar,
+.top-bar,
+.carcass__sidebar,
+.aside,
+aside,
+.providers,
+.providers__toggler,
+.mobile-slider__content .slideshow-login-wrap,
+.slideshow-action-bar,
+.bonus-icons-row,
+.player-action-bar,
+.player-action-bar--centered,
+.glass-winners,
+.main-content__latest-winners {
+    display: none !important;
+}
+
+/* Bonus/wheel/jackpot sections inside first-screen — keep but style */
+.main-content__first-screen > :not(.main-content__slider) {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+/* ── 12. FOOTER ──────────────────────────────────────────── */
+footer,
+.footer {
+    background: #0a0a0a !important;
+    border-top: 1px solid rgba(255,255,255,0.07) !important;
+    padding: 32px 40px !important;
+    color: rgba(255,255,255,0.5) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 13px !important;
+}
+
+/* ── 13. SCROLLBAR styling ───────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.25); }
+
+/* ── 14. WINNERS LATEST SECTION ─────────────────────────── */
+.latest-winners-section {
+    padding: 0 40px 24px;
+}
+
+/* ── 15. GAME SEARCH & player action bar — hidden desktop ─── */
+.desktop-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 40px 0;
+}
+
+.desktop-search-input {
+    flex: 1;
+    max-width: 380px;
+    height: 44px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 0 16px 0 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #fff;
+    outline: none;
+    transition: border-color 0.2s ease;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    background-size: 16px;
+}
+
+.desktop-search-input:focus {
+    border-color: rgba(229,9,20,0.5);
+    background-color: rgba(255,255,255,0.08);
+}
+
+.desktop-search-input::placeholder {
+    color: rgba(255,255,255,0.35);
+}
+
+} /* end @media (min-width: 769px) */
