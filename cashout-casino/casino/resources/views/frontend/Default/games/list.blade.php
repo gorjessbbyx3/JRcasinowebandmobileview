@@ -186,7 +186,8 @@
            Replaces the legacy spaced-out modal with a tight glass-
            morphism card matching the rest of the app.
         ══════════════════════════════════════════════════════════ */
-        #login-modal .modal-dialog {
+        #login-modal .modal-dialog,
+        #login-modal.modal-login .modal-dialog {
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -195,6 +196,8 @@
             padding: 16px !important;
             max-width: none !important;
             width: 100% !important;
+            background: transparent !important;     /* kill legacy .modal-login white panel */
+            box-shadow: none !important;
         }
         #login-modal .modal-content {
             background: transparent !important;
