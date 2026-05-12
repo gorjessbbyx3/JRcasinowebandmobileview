@@ -725,6 +725,64 @@ phpdebugbar,
   box-shadow: 0 0 8px rgba(212,175,55,0.6);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP / TABLET LANDSCAPE — Netflix-style horizontal carousel
+   Applies to ANY landscape viewport that's tall enough to NOT be a
+   phone (≥501px tall). Sidebar stays, slider stays at the top, but
+   the games render as compact 16:10 thumbnails in TWO stacked rows
+   that scroll horizontally — true Netflix style.
+   ═══════════════════════════════════════════════════════════════ */
+@media (orientation: landscape) and (min-height: 501px) {
+  :root {
+    --jr-card-w: 220px;          /* Netflix-style thumbnail width */
+    --jr-card-h: 138px;          /* 16:10 aspect ratio */
+    --jr-gap:    12px;
+  }
+
+  /* Trim the slider on landscape desktop so 2 rows of Netflix thumbnails
+     fit on screen without scrolling. (Portrait keeps the full-size slider.) */
+  .jr-slider { max-height: 200px; aspect-ratio: 4.2 / 1; }
+
+  /* Tighten the bonus strip + jackpot tiles for landscape — gives the
+     carousel ~70 more pixels of breathing room. */
+  .jr-bonus-strip   { padding: 4px 14px !important; gap: 14px !important; }
+  .jr-bonus-icon__circle { width: 36px !important; height: 36px !important; }
+  .jr-bonus-icon__circle svg { width: 18px !important; height: 18px !important; }
+  .jr-bonus-icon__lbl    { font-size: 9px !important; margin-top: 2px !important; }
+  .jr-jackpots      { padding: 4px 14px !important; gap: 8px !important; }
+  .jr-jackpots > *  { padding: 4px 8px !important; }
+
+  /* Carousel: pure horizontal scroll, top-aligned so cards keep their
+     fixed Netflix-thumbnail size instead of stretching to fill height. */
+  .jr-carousel {
+    padding: 10px 14px !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+  /* Each .jr-col holds 2 stacked thumbnails for that column */
+  .jr-col {
+    gap: 12px !important;
+    flex-direction: column;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+  /* Lock card dimensions — no stretching, no aspect-ratio override */
+  .jr-card,
+  .jr-card__inner {
+    width:  220px !important;
+    height: 138px !important;
+    aspect-ratio: auto !important;
+    border-radius: 10px !important;
+    flex-shrink: 0;
+  }
+  .jr-card__title  { font-size: 12px; bottom: 6px; left: 8px; right: 28px; }
+  .jr-card__fav    { width: 22px; height: 22px; top: 6px; right: 6px; }
+  .jr-card__badge  { font-size: 9px; padding: 2px 6px; }
+}
+
 /* ── PHONE LANDSCAPE — Netflix-style horizontal carousel ──────── */
 /* In landscape on a phone the screen is short (≤500px tall). The previous
    layout stretched a single row of tall cards to fill the entire height —
