@@ -1399,3 +1399,42 @@ html, body { overscroll-behavior-y: contain; }
   padding: 0 4px;
   line-height: 1;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   STACKED SECTIONS — RESPONSIVE GRID FOR ALL VIEWPORTS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Desktop / tablet: auto-fill multi-column grid (cards ~190px wide) */
+@media (min-width: 800px) {
+  .jr-section__grid {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)) !important;
+    gap: 14px !important;
+  }
+  .jr-section { margin: 0 0 22px !important; }
+  .jr-section__title { font-size: 16px !important; letter-spacing: 1.6px !important; }
+  .jr-section__count { font-size: 11px !important; padding: 3px 10px !important; }
+  .jr-section__head { padding: 10px 6px 12px !important; }
+
+  /* Hide the cat-bar on desktop too — each section now owns its header */
+  .jr-cat-bar { display: none !important; }
+
+  /* Carousel becomes a vertical scroll container with stacked sections */
+  .jr-carousel.jr-portrait-mode {
+    padding: 12px 18px 24px !important;
+  }
+  .jr-carousel.jr-portrait-mode .jr-section__grid .jr-card,
+  .jr-carousel.jr-portrait-mode .jr-section__grid .jr-card__inner {
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+  }
+}
+
+/* Tablet landscape between 600-900: 3-col grid feels best */
+@media (min-width: 600px) and (max-width: 999px) {
+  .jr-section__grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Smooth-scroll the carousel itself when jumping to anchors */
+.jr-carousel.jr-portrait-mode { scroll-behavior: smooth; }

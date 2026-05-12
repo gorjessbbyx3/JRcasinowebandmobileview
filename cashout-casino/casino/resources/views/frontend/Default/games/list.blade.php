@@ -788,9 +788,9 @@
                 });
             }
 
-            function jrIsPortrait() {
-                return window.matchMedia('(orientation: portrait) and (max-width: 799px)').matches;
-            }
+            /* Always render the stacked multi-section feed (was portrait-only).
+               Sidebar / bottom-nav tabs scroll to the corresponding section. */
+            function jrIsPortrait() { return true; }
 
             window.jrSelectCat = function(cat, btn) {
                 /* Sync ALL nav buttons (sidebar + bottom nav) */
