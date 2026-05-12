@@ -76,6 +76,20 @@ footer {
   display: none !important;
 }
 
+/* Kill debugbar completely */
+#phpdebugbar,
+#phpdebugbar-toggler,
+.phpdebugbar-indicator,
+phpdebugbar,
+[class*="phpdebugbar"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+}
+
 /* ── APP SHELL ───────────────────────────────────────────────── */
 .jr-app {
   position: fixed !important;
@@ -769,4 +783,138 @@ footer {
   pointer-events: none;
   z-index: 15;
   transition: height 0.05s ease;
+}
+
+/* ── CAROUSEL TRAY — frames the game grid ───────────────────── */
+.jr-carousel-wrap {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(10,5,20,0.55) 0%, rgba(4,1,10,0.82) 100%);
+  position: relative;
+}
+.jr-carousel-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.14) 40%, rgba(212,175,55,0.14) 60%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── WIN TICKER STRIP ───────────────────────────────────────── */
+.jr-ticker {
+  height: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: rgba(212,175,55,0.05);
+  border-bottom: 1px solid rgba(212,175,55,0.09);
+  position: relative;
+  z-index: 2;
+}
+.jr-ticker__prefix {
+  font-size: 11px;
+  padding: 0 6px 0 8px;
+  flex-shrink: 0;
+  color: rgba(212,175,55,0.55);
+  line-height: 1;
+}
+.jr-ticker__track {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.jr-ticker__inner {
+  display: inline-block;
+  animation: jrTickerScroll 34s linear infinite;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(212,175,55,0.58);
+  letter-spacing: 0.2px;
+}
+@keyframes jrTickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── CAT-BAR — per-category neon color theming ──────────────── */
+.jr-cat-bar { transition: border-bottom-color 0.22s ease; }
+
+.jr-cat-bar[data-cat="hot"]       { border-bottom-color: rgba(255,107,53,0.4); }
+.jr-cat-bar[data-cat="slots"]     { border-bottom-color: rgba(255,215,0,0.38); }
+.jr-cat-bar[data-cat="fish"]      { border-bottom-color: rgba(0,153,255,0.4);  }
+.jr-cat-bar[data-cat="table"]     { border-bottom-color: rgba(160,32,240,0.4); }
+.jr-cat-bar[data-cat="favorites"] { border-bottom-color: rgba(255,20,147,0.4); }
+
+.jr-cat-bar[data-cat="hot"]       .jr-cat-bar__title { color: #FF6B35; text-shadow: 0 0 14px rgba(255,107,53,0.55); }
+.jr-cat-bar[data-cat="slots"]     .jr-cat-bar__title { color: #FFD700; text-shadow: 0 0 14px rgba(255,215,0,0.55);  }
+.jr-cat-bar[data-cat="fish"]      .jr-cat-bar__title { color: #0099FF; text-shadow: 0 0 14px rgba(0,153,255,0.55);  }
+.jr-cat-bar[data-cat="table"]     .jr-cat-bar__title { color: #A020F0; text-shadow: 0 0 14px rgba(160,32,240,0.55); }
+.jr-cat-bar[data-cat="favorites"] .jr-cat-bar__title { color: #FF1493; text-shadow: 0 0 14px rgba(255,20,147,0.55); }
+
+.jr-cat-bar[data-cat="hot"]       .jr-cat-bar__count { background: rgba(255,107,53,0.15); color: rgba(255,107,53,0.85); }
+.jr-cat-bar[data-cat="slots"]     .jr-cat-bar__count { background: rgba(255,215,0,0.12);  color: rgba(255,215,0,0.85);  }
+.jr-cat-bar[data-cat="fish"]      .jr-cat-bar__count { background: rgba(0,153,255,0.15);  color: rgba(0,153,255,0.85);  }
+.jr-cat-bar[data-cat="table"]     .jr-cat-bar__count { background: rgba(160,32,240,0.15); color: rgba(160,32,240,0.85); }
+.jr-cat-bar[data-cat="favorites"] .jr-cat-bar__count { background: rgba(255,20,147,0.15); color: rgba(255,20,147,0.85); }
+
+/* ── CAROUSEL CROSSFADE ON CAT SWITCH ───────────────────────── */
+@keyframes jrCatFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.jr-carousel.jr-fading  { opacity: 0; transition: opacity 0.09s ease; pointer-events: none; }
+.jr-carousel.jr-showing { animation: jrCatFadeIn 0.2s ease forwards; }
+
+/* ── COUNT BADGE on nav + sidebar buttons ───────────────────── */
+.jr-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 13px;
+  padding: 0 4px;
+  border-radius: 7px;
+  font-size: 8px;
+  font-weight: 800;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.45);
+  line-height: 1;
+  letter-spacing: 0;
+  transition: all 0.15s ease;
+}
+.jr-sidebar__btn.active .jr-count-badge,
+.jr-bnav__btn.active .jr-count-badge {
+  background: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.9);
+}
+
+/* ── GUEST SHIMMER PILL ─────────────────────────────────────── */
+.jr-guest-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(212,175,55,0.22);
+  background: linear-gradient(90deg,
+    rgba(212,175,55,0.05) 0%,
+    rgba(212,175,55,0.13) 50%,
+    rgba(212,175,55,0.05) 100%);
+  background-size: 200% 100%;
+  animation: jrGuestShimmer 2.8s ease-in-out infinite;
+  color: rgba(212,175,55,0.55);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+@keyframes jrGuestShimmer {
+  0%,100% { background-position: 200% 0; }
+  50%     { background-position: -200% 0; }
 }
