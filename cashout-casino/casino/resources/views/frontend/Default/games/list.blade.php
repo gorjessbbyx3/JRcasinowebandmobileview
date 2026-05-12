@@ -600,8 +600,6 @@
         </div><!-- end .jr-layout -->
 
         <!-- PULL-DOWN FULLSCREEN INDICATOR -->
-        <div class="jr-pull-indicator" id="jrPullIndicator"></div>
-        <div class="jr-pull-ripple"    id="jrPullRipple"></div>
 
         <!-- BOTTOM NAV — shown in phone landscape (Game Vault style) -->
         <nav class="jr-bottom-nav" id="jrBottomNav">
@@ -1141,262 +1139,74 @@
                 jrInitScrollProgress();
             });
 
-            /* ── PULL-DOWN FULLSCREEN GESTURE (rewritten) ─────────── */
-            (function() {
-                var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-                var isAndroid = /Android/i.test(navigator.userAgent);
-                if (!isIOS && !isAndroid) return;
-
-                var indicator = document.getElementById('jrPullIndicator');
-                var ripple    = document.getElementById('jrPullRipple');
-                var startY = null, pulling = false, threshCrossed = false;
-                var THRESHOLD = 75;
-                var TRIGGER_ZONE = 110;          /* generous top zone — finger lands here */
-                var hapticFired = false;
-
-                function showToast(html, ms) {
-                    var t = document.getElementById('jrFsToast');
-                    if (!t) return;
-                    t.innerHTML = html;
-                    t.classList.add('jr-show');
-                    clearTimeout(t._hideT);
-                    t._hideT = setTimeout(function() { t.classList.remove('jr-show'); }, ms || 3200);
-                }
-
-                function tryEnterFullscreen() {
-                    var isLandscape = window.matchMedia('(orientation: landscape)').matches;
-
-                    /* Try the real Fullscreen API first on every platform that supports
-                       it (Android Chrome/Firefox, desktop browsers). iOS Safari returns
-                       no requestFullscreen on documentElement — we fall through to the
-                       toast below. */
-                    var el = document.documentElement;
-                    var req = el.requestFullscreen || el.webkitRequestFullscreen
-                           || el.mozRequestFullScreen || el.msRequestFullscreen;
-                    if (req && !isIOS) {
-                        try {
-                            var p = req.call(el);
-                            if (p && p.then) {
-                                p.then(function() {
-                                    localStorage.setItem('jr_fs_dismissed', '1');
-                                    var bar = document.getElementById('jrFsBar');
-                                    if (bar) bar.classList.remove('jr-fs-show');
-                                    if (screen.orientation && screen.orientation.lock) {
-                                        screen.orientation.lock('landscape').catch(function(){});
-                                    }
-                                }).catch(function() {
-                                    /* Permission denied or unsupported — show toast */
-                                    showToast('Tap the <strong style="color:#D4AF37">⛶ Fullscreen</strong> button below to enter fullscreen mode.');
-                                });
-                                return;
-                            }
-                            /* No promise returned — assume sync success */
-                            return;
-                        } catch (err) { /* fall through */ }
-                    }
-
-                    /* iOS path (or Fullscreen API missing) — show contextual toast.
-                       This is what makes the gesture work in landscape on iPhone:
-                       the persistent banner is suppressed in landscape, but the
-                       toast pops in the center of the screen so the user gets
-                       feedback that their swipe registered. */
-                    if (isIOS) {
-                        if (isLandscape) {
-                            showToast('To play fullscreen on iPhone:<br><br>'
-                                + '1. Rotate to portrait<br>'
-                                + '2. Tap <strong style="color:#D4AF37">Share</strong> in Safari<br>'
-                                + '3. Tap <strong style="color:#D4AF37">Add to Home Screen</strong>',
-                                4500);
-                        } else {
-                            /* Portrait — surface the existing banner */
-                            var bar = document.getElementById('jrFsBar');
-                            if (bar) {
-                                bar.classList.add('jr-fs-show');
-                                bar.style.animation = 'none';
-                                /* eslint-disable-next-line no-unused-expressions */
-                                bar.offsetWidth;
-                                bar.style.animation = 'jrFadeIn 0.4s ease';
-                            }
-                        }
-                        return;
-                    }
-
-                    /* Last-resort fallback */
-                    showToast('Fullscreen mode is not supported on this browser.');
-                }
-
-                function reset() {
-                    if (indicator) {
-                        indicator.classList.remove('jr-pull-active', 'pulling');
-                        indicator.style.width = '';
-                        indicator.style.opacity = '';
-                        indicator.style.height = '';
-                    }
-                    if (ripple) ripple.style.height = '0';
-                    pulling = false;
-                    startY = null;
-                    threshCrossed = false;
-                    hapticFired = false;
-                }
-
-                document.addEventListener('touchstart', function(e) {
-                    /* Only arm if at top of page AND finger landed in top zone */
-                    if (window.scrollY > 4) return;
-                    var y = e.touches[0].clientY;
-                    if (y < TRIGGER_ZONE) {
-                        startY = y;
-                        pulling = true;
-                        threshCrossed = false;
-                        hapticFired = false;
-                        if (indicator) indicator.classList.add('jr-pull-active');
-                    }
-                }, { passive: true });
-
-                /* NON-passive — must preventDefault to block native pull-to-refresh */
-                document.addEventListener('touchmove', function(e) {
-                    if (!pulling || startY === null) return;
-                    var dy = e.touches[0].clientY - startY;
-                    if (dy < 0) { reset(); return; }
-
-                    /* We own this gesture now — block browser pull-to-refresh */
-                    if (e.cancelable) e.preventDefault();
-
-                    var pct = Math.min(dy / THRESHOLD, 1.4);
-
-                    if (indicator) {
-                        indicator.style.width  = (80 + pct * 180) + 'px';
-                        indicator.style.height = (3 + pct * 4) + 'px';
-                        indicator.style.opacity = String(0.35 + Math.min(pct, 1) * 0.65);
-                        indicator.classList.toggle('pulling', pct >= 1);
-                    }
-                    if (ripple) {
-                        ripple.style.height = Math.min(dy * 0.55, 140) + 'px';
-                    }
-
-                    /* Haptic feedback when threshold crossed */
-                    if (pct >= 1 && !hapticFired) {
-                        hapticFired = true;
-                        threshCrossed = true;
-                        if (navigator.vibrate) navigator.vibrate(12);
-                    }
-                }, { passive: false });
-
-                document.addEventListener('touchend', function(e) {
-                    if (!pulling || startY === null) return;
-                    var dy = e.changedTouches[0].clientY - startY;
-                    if (dy >= THRESHOLD) tryEnterFullscreen();
-                    reset();
-                }, { passive: true });
-
-                document.addEventListener('touchcancel', reset, { passive: true });
-            })();
         })();
         </script>
 
-        <!-- FULLSCREEN HANDLER -->
-        <div id="jrFsBar" style="display:none">
-            <span id="jrFsMsg"></span>
-            <button id="jrFsBtn" onclick="jrEnterFullscreen()"></button>
-            <button id="jrFsDismiss" onclick="jrDismissFs()">✕</button>
-        </div>
-        <!-- Transient toast used by swipe gesture (esp. in landscape on iOS where the
-             persistent banner is suppressed and the Fullscreen API is unavailable). -->
-        <div id="jrFsToast"></div>
+        <!-- ═══════════════════════════════════════════════════════════════
+             FLOATING FULLSCREEN BUTTON
+             A small transparent circular button that appears in the
+             bottom-right corner ONLY on mobile devices when the page is
+             not already in fullscreen / installed-PWA mode. Tapping it
+             requests fullscreen via the Fullscreen API (Android, modern
+             mobile browsers). On iOS Safari (which has no Fullscreen
+             API), tapping shows the "Add to Home Screen" instructions.
+             The button hides itself once fullscreen is active and
+             reappears if the user exits fullscreen.
+           ═══════════════════════════════════════════════════════════════ -->
+        <button id="jrFsFloatBtn" type="button" aria-label="Enter fullscreen" hidden>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9V3h6"/>
+                <path d="M21 9V3h-6"/>
+                <path d="M3 15v6h6"/>
+                <path d="M21 15v6h-6"/>
+            </svg>
+        </button>
 
         <style>
-        /* The banner is hidden by default (inline style="display:none") and only revealed
-           by JS when isMobile && !standalone && !dismissed. The 'jr-fs-show' class is
-           toggled to actually display it — never use !important here, otherwise the
-           banner blackouts the page before JS fills its text. */
-        #jrFsBar {
+        /* Transparent floating fullscreen toggle. Glass-morphism, gold accent
+           — matches the rest of the JadeRoyale UI. Hidden by default; the
+           script below toggles `[hidden]` based on viewport state. */
+        #jrFsFloatBtn {
             position: fixed;
-            bottom: env(safe-area-inset-bottom, 0);
-            left: 0; right: 0;
-            z-index: 50;
-            background: rgba(10,5,20,0.97);
-            border-top: 1px solid rgba(212,175,55,0.4);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            right: calc(14px + env(safe-area-inset-right, 0px));
+            bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: rgba(10, 5, 20, 0.42);
+            border: 1px solid rgba(212, 175, 55, 0.55);
+            color: rgba(255, 235, 180, 0.92);
+            display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
-            animation: jrFadeIn 0.4s ease;
-        }
-        #jrFsBar.jr-fs-show { display: flex; }
-        /* On phone widths the .jr-bottom-nav (54px) is visible — lift the banner above it
-           so it does NOT cover the Hot/Slots/Fish/Tables/Favorites category buttons. */
-        @media (max-width: 480px) {
-            #jrFsBar {
-                bottom: calc(54px + env(safe-area-inset-bottom, 0px));
-            }
-        }
-        #jrFsMsg {
-            flex: 1;
-            font-size: 13px;
-            color: rgba(255,255,255,0.85);
-            line-height: 1.35;
-        }
-        #jrFsBtn {
-            background: linear-gradient(135deg, #D4AF37, #B8860B);
-            border: none;
-            border-radius: 8px;
-            padding: 8px 14px;
-            color: #000;
-            font-size: 12px;
-            font-weight: 800;
+            justify-content: center;
             cursor: pointer;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        #jrFsDismiss {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 6px;
-            color: rgba(255,255,255,0.5);
-            font-size: 13px;
-            width: 28px; height: 28px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
+            z-index: 9500;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(212, 175, 55, 0.18);
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
             padding: 0;
         }
-        /* Safe-area padding for iPhone notch/home bar */
-        .jr-app {
-            padding-bottom: env(safe-area-inset-bottom);
+        #jrFsFloatBtn:active {
+            transform: scale(0.92);
+            background: rgba(212, 175, 55, 0.22);
+            border-color: rgba(255, 215, 90, 0.8);
         }
-        /* In landscape we hide the persistent banner — the swipe gesture itself
-           triggers the fullscreen action, no need for the always-on prompt. */
-        @media (orientation: landscape) {
-            #jrFsBar.jr-fs-show { display: none; }
-            /* Transient swipe-confirmation toast (used in landscape too) */
+        /* When the bottom-nav is visible (phone portrait + landscape) lift
+           the button above it so it never overlaps the category buttons. */
+        @media (orientation: portrait) and (max-width: 799px) {
+            #jrFsFloatBtn { bottom: calc(58px + env(safe-area-inset-bottom, 0px) + 10px); }
         }
-        /* Floating toast used by the swipe gesture in landscape (iOS Safari has no
-           Fullscreen API, so we fall back to a brief on-screen instruction). */
-        #jrFsToast {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            z-index: 100000;
-            background: rgba(10,5,20,0.96);
-            border: 1px solid rgba(212,175,55,0.55);
-            border-radius: 14px;
-            padding: 18px 22px;
-            color: #fff;
-            font-size: 14px;
-            line-height: 1.45;
-            text-align: center;
-            max-width: 86vw;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 24px rgba(212,175,55,0.25);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease, transform 0.25s ease;
+        @media (orientation: landscape) and (max-height: 540px) {
+            #jrFsFloatBtn {
+                bottom: calc(40px + env(safe-area-inset-bottom, 0px) + 8px);
+                width: 40px; height: 40px;
+            }
+            #jrFsFloatBtn svg { width: 18px; height: 18px; }
         }
-        #jrFsToast.jr-show {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
+        /* Safe-area padding for iPhone notch/home bar on the app shell. */
+        .jr-app { padding-bottom: env(safe-area-inset-bottom); }
         </style>
 
         <script>
@@ -1404,54 +1214,62 @@
             var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             var isAndroid = /Android/i.test(navigator.userAgent);
             var isMobile  = isIOS || isAndroid;
-            var standalone = window.navigator.standalone === true
-                          || window.matchMedia('(display-mode: fullscreen)').matches
-                          || window.matchMedia('(display-mode: standalone)').matches;
+            if (!isMobile) return;                       /* mobile-only */
 
-            if (!isMobile || standalone) return;
-            if (localStorage.getItem('jr_fs_dismissed') === '1') return;
+            var btn = document.getElementById('jrFsFloatBtn');
+            if (!btn) return;
 
-            var bar = document.getElementById('jrFsBar');
-            var msg = document.getElementById('jrFsMsg');
-            var btn = document.getElementById('jrFsBtn');
-
-            window.jrDismissFs = function() {
-                localStorage.setItem('jr_fs_dismissed', '1');
-                if (bar) bar.classList.remove('jr-fs-show');
-            };
-
-            if (isIOS) {
-                msg.innerHTML = 'For the best experience, tap <strong style="color:#D4AF37">Share</strong> then <strong style="color:#D4AF37">Add to Home Screen</strong> — launches in fullscreen.';
-                btn.textContent = '📲 How to';
-                btn.onclick = function() {
-                    alert('To play fullscreen on iPhone:\n\n1. Tap the Share button (□↑) in Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap Add — then open the app from your home screen');
-                };
-                setTimeout(function() {
-                    if (bar) bar.classList.add('jr-fs-show');
-                }, 2500);
-            } else if (isAndroid) {
-                msg.textContent = 'Tap Fullscreen for the best gaming experience.';
-                btn.textContent = '⛶ Fullscreen';
-                window.jrEnterFullscreen = function() {
-                    var el = document.documentElement;
-                    var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-                    if (req) {
-                        req.call(el).then(function() {
-                            if (bar) bar.classList.remove('jr-fs-show');
-                            localStorage.setItem('jr_fs_dismissed', '1');
-                        }).catch(function() {});
-                    }
-                };
-                setTimeout(function() {
-                    if (bar) bar.classList.add('jr-fs-show');
-                }, 1500);
-
-                document.addEventListener('fullscreenchange', function() {
-                    if (!document.fullscreenElement && bar) {
-                        bar.classList.add('jr-fs-show');
-                    }
-                });
+            function inFullscreen() {
+                return !!(document.fullscreenElement
+                       || document.webkitFullscreenElement
+                       || window.navigator.standalone === true
+                       || window.matchMedia('(display-mode: fullscreen)').matches
+                       || window.matchMedia('(display-mode: standalone)').matches);
             }
+
+            function refresh() {
+                btn.hidden = inFullscreen();
+            }
+
+            btn.addEventListener('click', function() {
+                /* iOS Safari has no Fullscreen API on document — instruct the user
+                   to add to home screen for a fullscreen-style PWA experience. */
+                if (isIOS && !document.documentElement.requestFullscreen
+                          && !document.documentElement.webkitRequestFullscreen) {
+                    alert('To play fullscreen on iPhone:\n\n'
+                        + '1. Tap the Share button in Safari\n'
+                        + '2. Scroll down and tap "Add to Home Screen"\n'
+                        + '3. Open the app from your home screen — it will launch fullscreen.');
+                    return;
+                }
+
+                var el = document.documentElement;
+                var req = el.requestFullscreen
+                       || el.webkitRequestFullscreen
+                       || el.mozRequestFullScreen
+                       || el.msRequestFullscreen;
+                if (!req) return;
+
+                try {
+                    var p = req.call(el);
+                    if (p && p.then) {
+                        p.then(function() {
+                            refresh();
+                            if (screen.orientation && screen.orientation.lock) {
+                                screen.orientation.lock('landscape').catch(function(){});
+                            }
+                        }).catch(function(){});
+                    } else {
+                        refresh();
+                    }
+                } catch (err) { /* swallow */ }
+            });
+
+            document.addEventListener('fullscreenchange',       refresh);
+            document.addEventListener('webkitfullscreenchange', refresh);
+            window.addEventListener('resize',                   refresh);
+
+            refresh();
         })();
         </script>
 

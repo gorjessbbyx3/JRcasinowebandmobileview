@@ -978,7 +978,7 @@ phpdebugbar,
 }
 
 /* ── PULL-DOWN FULLSCREEN INDICATOR ─────────────────────────── */
-.jr-pull-indicator {
+.jr-pull-indicator-DEPRECATED-UNUSED {
   position: fixed;
   top: 0; left: 50%;
   transform: translateX(-50%);
