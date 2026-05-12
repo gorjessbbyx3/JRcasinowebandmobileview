@@ -1,6 +1,6 @@
 <!-- UNIT WITH POPP WINDOWS, BEGINNING -->
 <!-- POPUP REGISTRATION AND AUTHORIZATION -->
-<div tabindex="-1" role="dialog" class="modal modal-login" id="login-modal" style="background: transparent; display: none;">
+<div tabindex="-1" role="dialog" class="modal modal-login" id="login-modal" style="display: none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-base ng-scope">

@@ -185,7 +185,6 @@
         } catch (e) {}
         /* Manual fallback — show the modal directly. */
         modal.style.display    = 'block';
-        modal.style.background = 'transparent';
         document.body.classList.add('modal-open');
         if (!document.querySelector('.modal-backdrop')) {
             var bd = document.createElement('div');

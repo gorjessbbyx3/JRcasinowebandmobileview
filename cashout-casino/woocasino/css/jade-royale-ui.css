@@ -4,7 +4,24 @@
    PREMIUM LOGIN MODAL REDESIGN
    ============================================ */
 
+#login-modal {
+    background: url('/frontend/Default/img/login-bg.jpeg') center center / cover no-repeat,
+                #050208 !important;
+    background-attachment: scroll;
+}
+
+#login-modal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5, 2, 8, 0.55) 0%, rgba(5, 2, 8, 0.7) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
 #login-modal .modal-dialog {
+    position: relative;
+    z-index: 1;
     max-width: 440px;
     margin: 40px auto;
     animation: modalSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
