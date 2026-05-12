@@ -186,61 +186,60 @@
            Replaces the legacy spaced-out modal with a tight glass-
            morphism card matching the rest of the app.
         ══════════════════════════════════════════════════════════ */
+        /* ── FULL-SCREEN LOGIN — Jade Royale takes over the whole viewport ── */
+        #login-modal {
+            background:
+                linear-gradient(180deg, rgba(5,2,12,0.55) 0%, rgba(5,2,12,0.78) 100%),
+                url('/frontend/Default/img/login-bg.jpeg') center center / cover no-repeat !important;
+        }
         #login-modal .modal-dialog,
         #login-modal.modal-login .modal-dialog {
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             min-height: 100vh !important;
-            margin: 0 auto !important;
-            padding: 16px !important;
+            min-height: 100dvh !important;
+            margin: 0 !important;
+            padding: 0 !important;
             max-width: none !important;
             width: 100% !important;
-            background: transparent !important;     /* kill legacy .modal-login white panel */
+            background: transparent !important;
             box-shadow: none !important;
         }
         #login-modal .modal-content {
             background: transparent !important;
             border: none !important;
+            border-radius: 0 !important;
             box-shadow: none !important;
-            width: auto !important;
-            max-width: 380px !important;
-            margin: 0 auto !important;
+            width: 100% !important;
+            max-width: none !important;
+            min-height: 100vh !important;
+            min-height: 100dvh !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         #login-modal .modal-base {
             position: relative !important;
-            padding: 32px 28px 26px !important;
-            background:
-                linear-gradient(180deg, rgba(5,2,12,0.62) 0%, rgba(5,2,12,0.82) 100%),
-                url('/frontend/Default/img/login-bg.jpeg') center center / cover no-repeat !important;
+            width: 100% !important;
+            max-width: 420px !important;       /* form column stays readable */
+            margin: 0 auto !important;
+            padding: 36px 28px 32px !important;
+            padding-top: calc(36px + env(safe-area-inset-top, 0px)) !important;
+            padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)) !important;
+            background: transparent !important; /* image lives on #login-modal */
             border: none !important;
-            border-radius: 22px !important;
-            box-shadow:
-                0 30px 90px rgba(0,0,0,0.7),
-                0 0 50px rgba(212,175,55,0.22) !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
             color: #f5ecd6 !important;
             font-family: 'Poppins', sans-serif !important;
-            overflow: hidden !important;
+            overflow: visible !important;
             min-height: 0 !important;
         }
-        /* Hairline gold gradient ring — adds elegance without a hard "box" */
-        #login-modal .modal-base::after {
-            content: '' !important;
-            position: absolute !important;
-            inset: 0 !important;
-            border-radius: 22px !important;
-            padding: 1px !important;
-            background: linear-gradient(135deg,
-                rgba(255,215,120,0.55),
-                rgba(212,175,55,0.05) 40%,
-                rgba(255,215,120,0.45)) !important;
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
-            -webkit-mask-composite: xor !important;
-                    mask-composite: exclude !important;
-            pointer-events: none !important;
-            z-index: 4 !important;
-        }
-        /* The form sits above the scrim/image */
+        /* No card ring on the full-screen variant */
+        #login-modal .modal-base::after { display: none !important; }
+        /* The form sits above the scrim */
         #login-modal .modal-base > * { position: relative; z-index: 2; }
         /* Hero image / decorative blocks bloated the modal — kill them. */
         #login-modal .login-hero-image,
@@ -249,9 +248,9 @@
             display: none !important;
         }
         #login-modal .modal-close--login {
-            position: absolute !important;
-            top: 10px !important;
-            right: 12px !important;
+            position: fixed !important;
+            top: calc(14px + env(safe-area-inset-top, 0px)) !important;
+            right: calc(14px + env(safe-area-inset-right, 0px)) !important;
             width: 32px !important;
             height: 32px !important;
             border-radius: 50% !important;
