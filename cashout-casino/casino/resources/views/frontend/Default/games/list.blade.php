@@ -641,7 +641,9 @@
             };
 
             function jrRowCount() {
-                return window.matchMedia('(orientation: portrait) and (max-width: 799px)').matches ? 1 : 2;
+                if (window.innerWidth >= 800) return 2;                          /* desktop: 2 rows */
+                if (window.matchMedia('(orientation: portrait)').matches) return 2; /* phone portrait: 2-row grid */
+                return 1;                                                         /* phone landscape: single tall row */
             }
 
             var jrCurrentCat = 'hot';

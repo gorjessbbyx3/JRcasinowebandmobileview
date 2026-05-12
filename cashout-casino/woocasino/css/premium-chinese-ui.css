@@ -551,35 +551,35 @@ footer {
   text-align: center;
 }
 
-/* ── PORTRAIT — single horizontal row, taller cards ─────────── */
+/* ── PHONE PORTRAIT — 2-row grid, bottom nav (Game Vault style) ─ */
 @media (orientation: portrait) and (max-width: 799px) {
   :root {
-    --jr-card-w:  148px;
-    --jr-card-h:  215px;
-    --jr-gap:     10px;
+    --jr-header:  48px;
+    --jr-cat-h:   34px;
+    --jr-card-w:  clamp(120px, calc((100vw - 20px) / 2.6), 160px);
+    --jr-card-h:  clamp(90px,  calc((100svh - 174px) / 2), 180px);
+    --jr-gap:     9px;
   }
-  /* Carousel fills full available height as a single row */
-  .jr-carousel {
-    align-items: stretch;
-  }
-  .jr-col {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
+  /* Bottom nav replaces sidebar in portrait */
+  .jr-sidebar    { display: none !important; }
+  .jr-bottom-nav { display: flex !important; }
+
+  /* Game Vault style card frames */
   .jr-card__inner {
-    /* Title sits lower in taller cards */
-    border-radius: 14px;
+    border: 1.5px solid rgba(80,160,255,0.55);
+    box-shadow:
+      0 0 10px rgba(60,130,255,0.3),
+      inset 0 0 12px rgba(0,80,200,0.1);
+    border-radius: 10px;
   }
-  .jr-card__title {
-    font-size: 11px;
+  .jr-card__inner:hover,
+  .jr-card__inner:active {
+    border-color: rgba(160,80,255,0.8);
+    box-shadow:
+      0 0 18px rgba(120,80,255,0.5),
+      inset 0 0 12px rgba(80,40,200,0.15);
   }
-  /* Slightly wider sidebar tap targets on portrait */
-  .jr-sidebar__btn {
-    width: 56px;
-    height: 60px;
-    min-height: 60px;
-  }
+  .jr-card__title { font-size: 10px; }
 }
 
 /* ── TABLET / DESKTOP — sidebar stays, larger cards ─────────── */
@@ -621,47 +621,39 @@ footer {
   .jr-card__title { font-size: 11px; }
 }
 
-/* ── PHONE LANDSCAPE — bottom nav replaces sidebar ───────────── */
+/* ── PHONE LANDSCAPE — sidebar + single row of tall cards ────── */
 @media (orientation: landscape) and (max-height: 500px) {
   :root {
     --jr-header:  44px;
     --jr-cat-h:   30px;
-    --jr-card-w:  clamp(130px, calc((100vw - 40px) / 3.6), 175px);
-    --jr-card-h:  clamp(88px,  calc((100svh - 114px) / 2), 140px);
-    --jr-gap:     8px;
+    --jr-sidebar: 68px;
+    --jr-card-w:  clamp(140px, calc((100vw - 90px) / 3.2), 205px);
+    --jr-card-h:  clamp(180px, calc(100svh - 126px), 295px);
+    --jr-gap:     9px;
   }
-  /* Hide sidebar, show bottom nav */
-  .jr-sidebar  { display: none !important; }
-  .jr-bottom-nav { display: flex !important; }
+  /* Sidebar back, bottom nav hidden */
+  .jr-sidebar    { display: flex !important; }
+  .jr-bottom-nav { display: none !important; }
 
-  /* Compact header */
-  .jr-header { padding: 0 10px; gap: 6px; }
-  .jr-logo-img { height: 28px; max-width: 140px; }
-  .jr-action-btn { width: 28px; height: 28px; min-width: 28px; }
-  .jr-balance-pill { padding: 4px 8px; }
+  /* Compact header for the narrow landscape height */
+  .jr-header { padding: 0 10px; gap: 5px; }
+  .jr-logo-img { height: 26px; max-width: 130px; }
+  .jr-action-btn { width: 26px; height: 26px; min-width: 26px; font-size: 11px; }
+  .jr-balance-pill { padding: 3px 7px; gap: 4px; }
   .jr-balance-pill span { font-size: 11px; }
   .jr-cat-bar { padding: 0 10px; }
   .jr-cat-bar__title { font-size: 11px; }
 
-  /* Tighter carousel padding */
-  .jr-carousel { padding: 6px 8px; gap: 8px; }
-  .jr-col { gap: 8px; }
+  /* Compact sidebar */
+  .jr-sidebar__btn { width: 56px; height: 56px; min-height: 56px; border-radius: 10px; gap: 3px; }
+  .jr-sidebar__icon { width: 18px; height: 18px; }
+  .jr-sidebar__label { font-size: 9px; }
 
-  /* Game Vault style card frames */
-  .jr-card__inner {
-    border: 1.5px solid rgba(80,160,255,0.55);
-    box-shadow:
-      0 0 10px rgba(60,130,255,0.3),
-      inset 0 0 12px rgba(0,80,200,0.1);
-    border-radius: 10px;
-  }
-  .jr-card__inner:hover,
-  .jr-card__inner:active {
-    border-color: rgba(160,80,255,0.8);
-    box-shadow:
-      0 0 18px rgba(120,80,255,0.5),
-      inset 0 0 12px rgba(80,40,200,0.15);
-  }
+  /* Single-row tall cards fill the viewport height */
+  .jr-carousel { padding: 6px 8px; align-items: stretch; }
+  .jr-col { gap: 0; }
+  .jr-card__inner { border-radius: 12px; }
+  .jr-card__title { font-size: 11px; }
 }
 
 /* ── BOTTOM NAV component (phone landscape) ──────────────────── */
