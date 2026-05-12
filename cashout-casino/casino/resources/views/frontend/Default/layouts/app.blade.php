@@ -73,6 +73,158 @@
     <![endif]-->
         </head>
 <body class="en" ng-app="app" ng-controller="gameCtrl">
+
+{{-- ═══════════════════════════════════════════════════════════════════
+     INTRO VIDEO OVERLAY — plays once per browser session on first land.
+     When the video ends (or user skips), the overlay fades away and,
+     if the visitor is a guest, the login modal opens automatically.
+   ═══════════════════════════════════════════════════════════════════ --}}
+<div id="jrIntroOverlay" class="jr-intro-overlay" aria-hidden="true">
+    <video id="jrIntroVideo" class="jr-intro-overlay__video"
+           src="/woocasino/video/intro.mp4"
+           playsinline webkit-playsinline muted autoplay preload="auto"></video>
+    <button type="button" id="jrIntroSkip" class="jr-intro-overlay__skip" aria-label="Skip intro">
+        Skip <span aria-hidden="true">›</span>
+    </button>
+</div>
+<style>
+    .jr-intro-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483600;          /* above everything, including modals */
+        background: #000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+        transition: opacity 0.6s ease;
+        cursor: pointer;
+    }
+    .jr-intro-overlay.is-active { display: flex; }
+    .jr-intro-overlay.is-fading { opacity: 0; pointer-events: none; }
+    .jr-intro-overlay__video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background: #000;
+    }
+    .jr-intro-overlay__skip {
+        position: absolute;
+        top: calc(14px + env(safe-area-inset-top, 0px));
+        right: calc(14px + env(safe-area-inset-right, 0px));
+        padding: 8px 16px;
+        background: rgba(0,0,0,0.45);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 100px;
+        color: rgba(255,255,255,0.85);
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+    }
+    .jr-intro-overlay__skip:hover {
+        background: rgba(212,175,55,0.2);
+        border-color: rgba(212,175,55,0.6);
+        color: #ffd770;
+    }
+    .jr-intro-overlay__skip span { margin-left: 4px; font-size: 14px; }
+</style>
+<script>
+(function() {
+    /* Show only once per browser session. */
+    try {
+        if (sessionStorage.getItem('jr_intro_played') === '1') return;
+    } catch (e) { /* sessionStorage may be unavailable */ }
+
+    var overlay = document.getElementById('jrIntroOverlay');
+    var video   = document.getElementById('jrIntroVideo');
+    var skipBtn = document.getElementById('jrIntroSkip');
+    if (!overlay || !video) return;
+
+    /* Prevent the page from scrolling while the intro plays. */
+    var prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+
+    overlay.classList.add('is-active');
+    overlay.setAttribute('aria-hidden', 'false');
+
+    var finished = false;
+    function finish() {
+        if (finished) return;
+        finished = true;
+        try { sessionStorage.setItem('jr_intro_played', '1'); } catch (e) {}
+        try { video.pause(); } catch (e) {}
+        overlay.classList.add('is-fading');
+        document.documentElement.style.overflow = prevOverflow;
+        setTimeout(function() {
+            overlay.parentNode && overlay.parentNode.removeChild(overlay);
+        }, 700);
+
+        /* Open the login modal for guests once the intro has finished. */
+        @if(!\Illuminate\Support\Facades\Auth::check())
+            setTimeout(openLoginAfterIntro, 350);
+        @endif
+    }
+
+    function openLoginAfterIntro() {
+        var modal = document.getElementById('login-modal');
+        if (!modal) return;
+        /* Try the AngularJS gateway first (preserves backdrop + state). */
+        try {
+            var scope = window.angular && angular.element(document.body).scope();
+            if (scope && typeof scope.openModal === 'function') {
+                scope.$apply(function() { scope.openModal(null, '#login-modal'); });
+                return;
+            }
+        } catch (e) {}
+        /* Manual fallback — show the modal directly. */
+        modal.style.display    = 'block';
+        modal.style.background = 'transparent';
+        document.body.classList.add('modal-open');
+        if (!document.querySelector('.modal-backdrop')) {
+            var bd = document.createElement('div');
+            bd.className = 'modal-backdrop fade in';
+            document.body.appendChild(bd);
+        }
+    }
+
+    /* Autoplay needs to be muted on most browsers. Try unmuted first
+       (some browsers allow it after a prior interaction); fall back
+       to muted on rejection. */
+    video.muted = false;
+    var p = video.play();
+    if (p && p.catch) {
+        p.catch(function() {
+            video.muted = true;
+            video.play().catch(function() { finish(); });
+        });
+    }
+
+    video.addEventListener('ended',  finish);
+    video.addEventListener('error',  finish);
+    skipBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        finish();
+    });
+    /* Tapping anywhere on the overlay also dismisses (after a short
+       safety window so accidental taps during load don't cut it). */
+    setTimeout(function() {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === skipBtn) return;
+            finish();
+        });
+    }, 600);
+
+    /* Hard cap — never let the intro block the UI longer than 30s. */
+    setTimeout(finish, 30000);
+})();
+</script>
 <style>
     @-webkit-keyframes lights {
         0% {
