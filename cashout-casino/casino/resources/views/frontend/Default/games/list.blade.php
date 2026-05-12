@@ -819,7 +819,7 @@
             function jrRowCount() {
                 if (window.innerWidth >= 800) return 2;                          /* desktop: 2 rows */
                 if (window.matchMedia('(orientation: portrait)').matches) return 2; /* phone portrait: 2-row grid */
-                return 1;                                                         /* phone landscape: single tall row */
+                return 2;                                                         /* phone landscape: 2 stacked rows of Netflix thumbnails */
             }
 
             var jrCurrentCat = 'hot';

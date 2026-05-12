@@ -635,19 +635,24 @@ phpdebugbar,
   .jr-card__title { font-size: 11px; }
 }
 
-/* ── PHONE LANDSCAPE — sidebar + single row of tall cards ────── */
+/* ── PHONE LANDSCAPE — Netflix-style horizontal carousel ──────── */
+/* In landscape on a phone the screen is short (≤500px tall). The previous
+   layout stretched a single row of tall cards to fill the entire height —
+   that produced enormous thumbnails. Replace with Netflix-style: small
+   16:10 thumbnails in TWO horizontally-scrolling rows so the user can scan
+   many games at a glance, exactly like Netflix on mobile landscape. */
 @media (orientation: landscape) and (max-height: 500px) {
   :root {
     --jr-header:  44px;
     --jr-cat-h:   30px;
-    --jr-sidebar: 68px;
-    --jr-card-w:  clamp(140px, calc((100vw - 90px) / 3.2), 205px);
-    --jr-card-h:  clamp(180px, calc(100svh - 126px), 295px);
-    --jr-gap:     9px;
+    --jr-sidebar: 0px;             /* sidebar suppressed in landscape (see rule below) */
+    --jr-card-w:  140px;           /* fixed Netflix thumbnail width */
+    --jr-card-h:  88px;            /* 16:10 thumbnail */
+    --jr-gap:     8px;
   }
-  /* Sidebar back, bottom nav hidden */
-  .jr-sidebar    { display: flex !important; }
-  .jr-bottom-nav { display: none !important; }
+  /* Sidebar OUT, slim bottom-nav IN — frees full width for the carousel */
+  .jr-sidebar    { display: none !important; }
+  .jr-bottom-nav { display: flex !important; }
 
   /* Compact header for the narrow landscape height */
   .jr-header { padding: 0 10px; gap: 5px; }
@@ -658,16 +663,35 @@ phpdebugbar,
   .jr-cat-bar { padding: 0 10px; }
   .jr-cat-bar__title { font-size: 11px; }
 
-  /* Compact sidebar */
-  .jr-sidebar__btn { width: 56px; height: 56px; min-height: 56px; border-radius: 10px; gap: 3px; }
-  .jr-sidebar__icon { width: 18px; height: 18px; }
-  .jr-sidebar__label { font-size: 9px; }
-
-  /* Single-row tall cards fill the viewport height */
-  .jr-carousel { padding: 6px 8px; align-items: stretch; }
-  .jr-col { gap: 0; }
-  .jr-card__inner { border-radius: 12px; }
-  .jr-card__title { font-size: 11px; }
+  /* Carousel: pure horizontal scroll, top-aligned (NOT stretch) so cards keep
+     their Netflix-thumbnail size instead of expanding to fill viewport height. */
+  .jr-carousel {
+    padding: 6px 8px !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    scroll-snap-type: x mandatory;
+  }
+  /* Each .jr-col holds the 2 stacked rows for that column */
+  .jr-col {
+    gap: 8px !important;
+    flex-direction: column;
+    scroll-snap-align: start;
+  }
+  /* Lock card dimensions — no stretching, no aspect-ratio override */
+  .jr-card,
+  .jr-card__inner {
+    width: 140px !important;
+    height: 88px !important;
+    aspect-ratio: auto !important;
+    border-radius: 8px !important;
+  }
+  .jr-card__title { font-size: 10px; bottom: 4px; left: 6px; right: 22px; }
+  .jr-card__fav   { width: 18px; height: 18px; top: 4px; right: 4px; }
+  .jr-card__badge { font-size: 7px; padding: 1px 4px; }
+  .jr-card__play-btn { font-size: 8px; padding: 4px 8px; }
+  /* Hide the lock-overlay text in landscape — too small to read; the blur
+     already signals "logged out" */
+  .jr-app--guest .jr-card__inner::after { font-size: 7px; letter-spacing: 0.6px; }
 }
 
 /* ── BOTTOM NAV component (phone landscape) ──────────────────── */
