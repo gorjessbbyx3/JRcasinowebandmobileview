@@ -783,22 +783,52 @@ phpdebugbar,
      already signals "logged out" */
   .jr-app--guest .jr-card__inner::after { font-size: 7px; letter-spacing: 0.6px; }
 
-  /* Slider in landscape: SWAP to mobile-format gifs and shrink the height
-     so the games carousel still gets the bulk of the viewport. mslider gifs
-     are ~768x640 ≈ 1.2:1, so we pin a small max-height instead. */
+  /* ── LANDSCAPE LAYOUT: slider as a TALL LEFT COLUMN ────────────
+     Inspired by arcade-style portrait promos (e.g. Orion Stars):
+     the slider becomes a vertical strip on the left of the games
+     carousel rather than a horizontal banner above it. We absolutely
+     position it inside .jr-content (which is the column flex parent)
+     and push the bonus strip + cat bar + carousel to the right with
+     padding so they don't overlap. */
+  .jr-content { position: relative; }
+
   .jr-slider {
+    position: absolute;
+    left: 0;
+    top:    var(--jr-header);     /* sits flush below the header */
+    bottom: 0;                    /* extends down to the bottom-nav region */
+    width:  180px;
+    height: auto;
+    max-height: none;
     aspect-ratio: auto;
-    height: 90px;
-    max-height: 90px;
+    border-bottom: none;
+    border-right: 1px solid rgba(212,175,55,0.22);
+    z-index: 5;
   }
+  /* Mobile-format gifs (~1.2:1) fit a tall vertical panel much better
+     than the widescreen desktop ones. */
   .jr-slider__img--desktop { display: none; }
   .jr-slider__img--mobile  { display: block; }
-  .jr-slider__nav { width: 26px; height: 26px; }
-  .jr-slider__nav--prev { left: 6px; }
-  .jr-slider__nav--next { right: 6px; }
-  .jr-slider__dots { bottom: 4px; gap: 5px; }
+  .jr-slider__img          { object-fit: cover; }
+
+  /* Compact controls for the narrow vertical strip */
+  .jr-slider__nav { width: 24px; height: 24px; }
+  .jr-slider__nav--prev { left: 4px; }
+  .jr-slider__nav--next { right: 4px; }
+  .jr-slider__dots { bottom: 6px; gap: 4px; }
   .jr-slider__dot { width: 6px; height: 6px; }
-  .jr-slider__dot--active { width: 16px; }
+  .jr-slider__dot--active { width: 14px; }
+
+  /* Push the rest of the content to the right of the slider strip.
+     Use 188px = 180px slider + 8px gutter. */
+  .jr-bonus-strip,
+  .jr-cat-bar,
+  .jr-carousel-wrap { padding-left: 188px !important; }
+
+  /* The bonus strip is too tall to keep alongside a 180px slider on a
+     ~500px-tall phone. Hide it in landscape — the bonus modal is still
+     reachable from the bottom-nav. */
+  .jr-bonus-strip { display: none !important; }
 }
 
 /* ── BOTTOM NAV component (phone landscape) ──────────────────── */
