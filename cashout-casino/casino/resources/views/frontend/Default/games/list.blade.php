@@ -182,6 +182,188 @@
         }
 
         /* ══════════════════════════════════════════════════════════
+           LOGIN MODAL — premium JadeRoyale restyle
+           Replaces the legacy spaced-out modal with a tight glass-
+           morphism card matching the rest of the app.
+        ══════════════════════════════════════════════════════════ */
+        #login-modal .modal-dialog {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-height: 100vh !important;
+            margin: 0 auto !important;
+            padding: 16px !important;
+            max-width: none !important;
+            width: 100% !important;
+        }
+        #login-modal .modal-content {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            width: auto !important;
+            max-width: 380px !important;
+            margin: 0 auto !important;
+        }
+        #login-modal .modal-base {
+            position: relative !important;
+            padding: 28px 26px 24px !important;
+            background: linear-gradient(160deg, rgba(28,15,52,0.78) 0%, rgba(10,5,22,0.86) 100%) !important;
+            border: 1px solid rgba(212,175,55,0.45) !important;
+            border-radius: 20px !important;
+            backdrop-filter: blur(20px) saturate(120%) !important;
+            -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+            box-shadow:
+                0 24px 70px rgba(0,0,0,0.6),
+                0 0 60px rgba(212,175,55,0.18),
+                inset 0 1px 0 rgba(255,255,255,0.06) !important;
+            color: #f5ecd6 !important;
+            font-family: 'Poppins', sans-serif !important;
+            overflow: hidden !important;
+            min-height: 0 !important;
+            background-image: none !important;
+        }
+        /* Hero image / decorative blocks bloated the modal — kill them. */
+        #login-modal .login-hero-image,
+        #login-modal .modal-base__header-decor,
+        #login-modal .modal-base__decor-logo {
+            display: none !important;
+        }
+        #login-modal .modal-close--login {
+            position: absolute !important;
+            top: 10px !important;
+            right: 12px !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 50% !important;
+            background: rgba(255,255,255,0.05) !important;
+            border: 1px solid rgba(255,255,255,0.12) !important;
+            color: rgba(255,255,255,0.6) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+            font-size: 14px !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            z-index: 5 !important;
+        }
+        #login-modal .modal-close--login:hover {
+            color: #fff !important;
+            border-color: rgba(212,175,55,0.55) !important;
+            background: rgba(212,175,55,0.15) !important;
+        }
+        #login-modal .modal-base__title {
+            margin: 4px 0 22px !important;
+            padding: 0 !important;
+            font-size: 22px !important;
+            font-weight: 800 !important;
+            letter-spacing: 1.5px !important;
+            text-transform: uppercase !important;
+            text-align: center !important;
+            background: linear-gradient(180deg, #fff5d2 0%, #d4af37 100%) !important;
+            -webkit-background-clip: text !important;
+            background-clip: text !important;
+            color: transparent !important;
+        }
+        #login-modal .form { margin: 0 !important; }
+        #login-modal .form__field {
+            margin-bottom: 14px !important;
+            padding: 0 !important;
+            background: transparent !important;
+        }
+        #login-modal .input-elem__label {
+            font-size: 11px !important;
+            font-weight: 600 !important;
+            letter-spacing: 1.5px !important;
+            text-transform: uppercase !important;
+            color: rgba(245,236,214,0.55) !important;
+            margin-bottom: 6px !important;
+            padding: 0 !important;
+        }
+        #login-modal .input-elem {
+            width: 100% !important;
+            height: 46px !important;
+            padding: 0 14px !important;
+            background: rgba(0,0,0,0.32) !important;
+            border: 1px solid rgba(212,175,55,0.25) !important;
+            border-radius: 10px !important;
+            color: #fff !important;
+            font-size: 14px !important;
+            font-family: 'Poppins', sans-serif !important;
+            transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease !important;
+            box-shadow: none !important;
+            outline: none !important;
+        }
+        #login-modal .input-elem::placeholder {
+            color: rgba(245,236,214,0.32) !important;
+        }
+        #login-modal .input-elem:focus {
+            border-color: rgba(212,175,55,0.7) !important;
+            background: rgba(0,0,0,0.45) !important;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.12) !important;
+        }
+        #login-modal .modal-base__forgot-password {
+            text-align: right !important;
+            margin: -4px 0 18px !important;
+            padding: 0 !important;
+        }
+        #login-modal .modal-base__link {
+            font-size: 12px !important;
+            color: rgba(212,175,55,0.85) !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            transition: color 0.2s ease !important;
+        }
+        #login-modal .modal-base__link:hover {
+            color: #ffd770 !important;
+            text-decoration: underline !important;
+        }
+        #login-modal .modal-base__btn-wrp {
+            margin: 0 !important;
+            padding: 0 !important;
+            text-align: center !important;
+        }
+        #login-modal .form__btn,
+        #login-modal .form__btn--mrg-btm {
+            width: 100% !important;
+            min-height: 50px !important;
+            margin: 0 !important;
+            padding: 14px 20px !important;
+            background: linear-gradient(135deg, #d4af37 0%, #f5d272 50%, #b8860b 100%) !important;
+            border: 1px solid rgba(255,215,120,0.7) !important;
+            border-radius: 12px !important;
+            color: #2a1a05 !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            letter-spacing: 2px !important;
+            text-transform: uppercase !important;
+            cursor: pointer !important;
+            box-shadow:
+                0 8px 22px rgba(212,175,55,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.4) !important;
+            transition: all 0.25s ease !important;
+        }
+        #login-modal .form__btn:hover,
+        #login-modal .form__btn:active {
+            transform: translateY(-1px) !important;
+            box-shadow:
+                0 12px 30px rgba(212,175,55,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.5) !important;
+            filter: brightness(1.08) !important;
+        }
+        #login-modal .modal__error {
+            margin: 0 0 14px !important;
+            padding: 10px 12px !important;
+            background: rgba(220,38,38,0.12) !important;
+            border: 1px solid rgba(220,38,38,0.4) !important;
+            border-radius: 8px !important;
+            color: #fca5a5 !important;
+            font-size: 12px !important;
+            text-align: center !important;
+        }
+
+        /* ══════════════════════════════════════════════════════════
            DESKTOP BACKGROUND — aggressive override to ensure dark bg
         ══════════════════════════════════════════════════════════ */
         @media (min-width: 769px) {
@@ -482,6 +664,7 @@
                    ═══════════════════════════════════════════════════════════ -->
                 <div class="jr-slider" id="jrSlider" aria-label="Promotions">
                     <div class="jr-slider__track" id="jrSliderTrack">
+                        @php $tallMap = [1=>1, 2=>2, 3=>1, 4=>2]; @endphp
                         @for($i = 1; $i <= 4; $i++)
                             <div class="jr-slider__slide{{ $i === 1 ? ' jr-slider__slide--active' : '' }}"
                                  data-idx="{{ $i - 1 }}">
@@ -490,6 +673,9 @@
                                      alt="Promotion {{ $i }}" loading="lazy">
                                 <img class="jr-slider__img jr-slider__img--mobile"
                                      src="/woocasino/mslider{{ $i }}.gif"
+                                     alt="Promotion {{ $i }}" loading="lazy">
+                                <img class="jr-slider__img jr-slider__img--tall"
+                                     src="/woocasino/tallslider{{ $tallMap[$i] }}.gif"
                                      alt="Promotion {{ $i }}" loading="lazy">
                             </div>
                         @endfor
@@ -1143,69 +1329,196 @@
         </script>
 
         <!-- ═══════════════════════════════════════════════════════════════
-             FLOATING FULLSCREEN BUTTON
-             A small transparent circular button that appears in the
-             bottom-right corner ONLY on mobile devices when the page is
-             not already in fullscreen / installed-PWA mode. Tapping it
-             requests fullscreen via the Fullscreen API (Android, modern
-             mobile browsers). On iOS Safari (which has no Fullscreen
-             API), tapping shows the "Add to Home Screen" instructions.
-             The button hides itself once fullscreen is active and
-             reappears if the user exits fullscreen.
+             FULLSCREEN PROMPT MODAL — classy semi-transparent popup that
+             appears on mobile when the page is NOT already in fullscreen
+             or installed as a PWA. The user can tap "Enter Fullscreen"
+             to call the Fullscreen API (Android), or get Add-to-Home-
+             Screen instructions on iOS. Dismissable; if dismissed it
+             stays hidden for the session.
            ═══════════════════════════════════════════════════════════════ -->
-        <button id="jrFsFloatBtn" type="button" aria-label="Enter fullscreen" hidden>
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 9V3h6"/>
-                <path d="M21 9V3h-6"/>
-                <path d="M3 15v6h6"/>
-                <path d="M21 15v6h-6"/>
-            </svg>
-        </button>
+        <div id="jrFsModal" class="jr-fs-modal" hidden role="dialog" aria-labelledby="jrFsTitle" aria-modal="true">
+            <div class="jr-fs-modal__backdrop" data-jr-fs-dismiss></div>
+            <div class="jr-fs-modal__card" role="document">
+                <button class="jr-fs-modal__close" type="button" data-jr-fs-dismiss aria-label="Close">×</button>
+                <div class="jr-fs-modal__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9V3h6"/><path d="M21 9V3h-6"/>
+                        <path d="M3 15v6h6"/><path d="M21 15v6h-6"/>
+                    </svg>
+                </div>
+                <h3 id="jrFsTitle" class="jr-fs-modal__title">Best Played Fullscreen</h3>
+                <p class="jr-fs-modal__msg">For the most immersive Jade Royale experience, switch to fullscreen mode and let the game take over your screen.</p>
+                <div class="jr-fs-modal__actions">
+                    <button type="button" class="jr-fs-modal__btn jr-fs-modal__btn--primary" id="jrFsEnterBtn">Enter Fullscreen</button>
+                    <button type="button" class="jr-fs-modal__btn jr-fs-modal__btn--ghost" data-jr-fs-dismiss>Maybe Later</button>
+                </div>
+            </div>
+        </div>
 
         <style>
-        /* Transparent floating fullscreen toggle. Glass-morphism, gold accent
-           — matches the rest of the JadeRoyale UI. Hidden by default; the
-           script below toggles `[hidden]` based on viewport state. */
-        #jrFsFloatBtn {
+        /* ── FULLSCREEN PROMPT MODAL — glass morphism, gold accents ── */
+        .jr-fs-modal {
             position: fixed;
-            right: calc(14px + env(safe-area-inset-right, 0px));
-            bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-            width: 46px;
-            height: 46px;
-            border-radius: 50%;
-            background: rgba(10, 5, 20, 0.42);
-            border: 1px solid rgba(212, 175, 55, 0.55);
-            color: rgba(255, 235, 180, 0.92);
+            inset: 0;
+            z-index: 99000;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 24px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .jr-fs-modal:not([hidden]) {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .jr-fs-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(10,5,25,0.55) 0%, rgba(0,0,0,0.78) 100%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .jr-fs-modal__card {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            padding: 32px 28px 26px;
+            text-align: center;
+            background: linear-gradient(160deg, rgba(28,15,52,0.72) 0%, rgba(10,5,22,0.78) 100%);
+            border: 1px solid rgba(212,175,55,0.45);
+            border-radius: 20px;
+            color: #f5ecd6;
+            font-family: 'Poppins', sans-serif;
+            backdrop-filter: blur(18px) saturate(120%);
+            -webkit-backdrop-filter: blur(18px) saturate(120%);
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.55),
+                0 0 0 1px rgba(255,255,255,0.04) inset,
+                0 0 50px rgba(212,175,55,0.18);
+            transform: translateY(14px) scale(0.96);
+            transition: transform 0.35s cubic-bezier(.2,.9,.3,1.2);
+        }
+        .jr-fs-modal:not([hidden]) .jr-fs-modal__card {
+            transform: translateY(0) scale(1);
+        }
+        .jr-fs-modal__card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,215,120,0.55), rgba(212,175,55,0.05) 40%, rgba(255,215,120,0.35));
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .jr-fs-modal__close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.55);
+            font-size: 18px;
+            line-height: 1;
             cursor: pointer;
-            z-index: 9500;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(212, 175, 55, 0.18);
-            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
             padding: 0;
         }
-        #jrFsFloatBtn:active {
-            transform: scale(0.92);
-            background: rgba(212, 175, 55, 0.22);
-            border-color: rgba(255, 215, 90, 0.8);
+        .jr-fs-modal__close:hover {
+            color: #fff;
+            border-color: rgba(212,175,55,0.5);
+            background: rgba(212,175,55,0.12);
         }
-        /* When the bottom-nav is visible (phone portrait + landscape) lift
-           the button above it so it never overlaps the category buttons. */
-        @media (orientation: portrait) and (max-width: 799px) {
-            #jrFsFloatBtn { bottom: calc(58px + env(safe-area-inset-bottom, 0px) + 10px); }
+        .jr-fs-modal__icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 25%, rgba(255,215,120,0.32), rgba(212,175,55,0.06) 70%);
+            border: 1px solid rgba(212,175,55,0.45);
+            color: #ffd770;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 24px rgba(212,175,55,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .jr-fs-modal__title {
+            margin: 0 0 8px;
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            background: linear-gradient(180deg, #fff5d2 0%, #d4af37 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .jr-fs-modal__msg {
+            margin: 0 0 22px;
+            font-size: 13.5px;
+            line-height: 1.55;
+            color: rgba(245,236,214,0.78);
+            font-weight: 300;
+        }
+        .jr-fs-modal__actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .jr-fs-modal__btn {
+            min-height: 48px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .jr-fs-modal__btn--primary {
+            background: linear-gradient(135deg, #d4af37 0%, #f5d272 50%, #b8860b 100%);
+            border: 1px solid rgba(255,215,120,0.7);
+            color: #2a1a05;
+            box-shadow: 0 6px 22px rgba(212,175,55,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .jr-fs-modal__btn--primary:hover,
+        .jr-fs-modal__btn--primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 30px rgba(212,175,55,0.5), inset 0 1px 0 rgba(255,255,255,0.5);
+            filter: brightness(1.08);
+        }
+        .jr-fs-modal__btn--ghost {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(245,236,214,0.65);
+        }
+        .jr-fs-modal__btn--ghost:hover,
+        .jr-fs-modal__btn--ghost:active {
+            border-color: rgba(255,255,255,0.3);
+            color: #fff;
+            background: rgba(255,255,255,0.04);
         }
         @media (orientation: landscape) and (max-height: 540px) {
-            #jrFsFloatBtn {
-                bottom: calc(40px + env(safe-area-inset-bottom, 0px) + 8px);
-                width: 40px; height: 40px;
-            }
-            #jrFsFloatBtn svg { width: 18px; height: 18px; }
+            .jr-fs-modal__card { padding: 22px 24px 18px; max-width: 420px; }
+            .jr-fs-modal__icon { width: 48px; height: 48px; margin-bottom: 10px; }
+            .jr-fs-modal__icon svg { width: 26px; height: 26px; }
+            .jr-fs-modal__title { font-size: 17px; }
+            .jr-fs-modal__msg { font-size: 12.5px; margin-bottom: 14px; }
+            .jr-fs-modal__actions { flex-direction: row; }
+            .jr-fs-modal__btn { min-height: 42px; padding: 10px 16px; flex: 1; }
         }
-        /* Safe-area padding for iPhone notch/home bar on the app shell. */
         .jr-app { padding-bottom: env(safe-area-inset-bottom); }
         </style>
 
@@ -1214,10 +1527,11 @@
             var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             var isAndroid = /Android/i.test(navigator.userAgent);
             var isMobile  = isIOS || isAndroid;
-            if (!isMobile) return;                       /* mobile-only */
+            if (!isMobile) return;
 
-            var btn = document.getElementById('jrFsFloatBtn');
-            if (!btn) return;
+            var modal = document.getElementById('jrFsModal');
+            if (!modal) return;
+            var enterBtn = document.getElementById('jrFsEnterBtn');
 
             function inFullscreen() {
                 return !!(document.fullscreenElement
@@ -1226,50 +1540,65 @@
                        || window.matchMedia('(display-mode: fullscreen)').matches
                        || window.matchMedia('(display-mode: standalone)').matches);
             }
-
+            function dismissed() {
+                try { return sessionStorage.getItem('jr_fs_dismissed') === '1'; }
+                catch (e) { return false; }
+            }
+            function show() {
+                if (inFullscreen() || dismissed()) return;
+                modal.hidden = false;
+            }
+            function hide(persist) {
+                modal.hidden = true;
+                if (persist) {
+                    try { sessionStorage.setItem('jr_fs_dismissed', '1'); } catch (e) {}
+                }
+            }
             function refresh() {
-                btn.hidden = inFullscreen();
+                if (inFullscreen()) modal.hidden = true;
             }
 
-            btn.addEventListener('click', function() {
-                /* iOS Safari has no Fullscreen API on document — instruct the user
-                   to add to home screen for a fullscreen-style PWA experience. */
+            /* Dismiss handlers — backdrop, X button, "Maybe Later" all share data-attr */
+            modal.querySelectorAll('[data-jr-fs-dismiss]').forEach(function(el) {
+                el.addEventListener('click', function() { hide(true); });
+            });
+
+            enterBtn.addEventListener('click', function() {
                 if (isIOS && !document.documentElement.requestFullscreen
                           && !document.documentElement.webkitRequestFullscreen) {
                     alert('To play fullscreen on iPhone:\n\n'
                         + '1. Tap the Share button in Safari\n'
                         + '2. Scroll down and tap "Add to Home Screen"\n'
                         + '3. Open the app from your home screen — it will launch fullscreen.');
+                    hide(true);
                     return;
                 }
-
                 var el = document.documentElement;
                 var req = el.requestFullscreen
                        || el.webkitRequestFullscreen
                        || el.mozRequestFullScreen
                        || el.msRequestFullscreen;
-                if (!req) return;
-
+                if (!req) { hide(true); return; }
                 try {
                     var p = req.call(el);
                     if (p && p.then) {
                         p.then(function() {
-                            refresh();
+                            hide(true);
                             if (screen.orientation && screen.orientation.lock) {
                                 screen.orientation.lock('landscape').catch(function(){});
                             }
-                        }).catch(function(){});
+                        }).catch(function() { hide(true); });
                     } else {
-                        refresh();
+                        hide(true);
                     }
-                } catch (err) { /* swallow */ }
+                } catch (err) { hide(true); }
             });
 
             document.addEventListener('fullscreenchange',       refresh);
             document.addEventListener('webkitfullscreenchange', refresh);
-            window.addEventListener('resize',                   refresh);
 
-            refresh();
+            /* Show 1.2s after page settles — gives the user time to orient. */
+            setTimeout(show, 1200);
         })();
         </script>
 
