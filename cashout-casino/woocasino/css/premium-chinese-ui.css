@@ -760,30 +760,35 @@ phpdebugbar,
 
 /* ── PULL-DOWN FULLSCREEN INDICATOR ─────────────────────────── */
 .jr-pull-indicator {
-  position: absolute;
+  position: fixed;
   top: 0; left: 50%;
   transform: translateX(-50%);
-  width: 60px;
+  width: 80px;
   height: 3px;
-  background: rgba(212,175,55,0.25);
-  border-radius: 0 0 4px 4px;
-  transition: all 0.2s ease;
+  background: rgba(212,175,55,0.35);
+  border-radius: 0 0 6px 6px;
+  transition: all 0.22s ease;
   pointer-events: none;
-  z-index: 20;
+  z-index: 99998;
 }
+/* While actively dragging, kill the transition so the bar tracks the finger */
+.jr-pull-indicator.jr-pull-active { transition: none; }
 .jr-pull-indicator.pulling {
-  background: rgba(212,175,55,0.7);
-  box-shadow: 0 0 8px rgba(212,175,55,0.5);
+  background: linear-gradient(90deg, #D4AF37, #FFD700, #D4AF37);
+  box-shadow: 0 0 14px rgba(255,215,0,0.7), 0 0 28px rgba(212,175,55,0.4);
 }
 .jr-pull-ripple {
-  position: absolute;
+  position: fixed;
   top: 0; left: 0; right: 0;
   height: 0;
-  background: linear-gradient(180deg, rgba(212,175,55,0.15) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(212,175,55,0.22) 0%, rgba(255,61,172,0.08) 60%, transparent 100%);
   pointer-events: none;
-  z-index: 15;
-  transition: height 0.05s ease;
+  z-index: 99997;
+  transition: height 0.08s ease;
 }
+
+/* Block native pull-to-refresh so our gesture wins */
+html, body { overscroll-behavior-y: contain; }
 
 /* ── CAROUSEL TRAY — frames the game grid ───────────────────── */
 .jr-carousel-wrap {

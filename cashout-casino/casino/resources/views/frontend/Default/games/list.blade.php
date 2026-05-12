@@ -930,71 +930,116 @@
                 jrInitScrollProgress();
             });
 
-            /* ── PULL-DOWN FULLSCREEN GESTURE ─────────────────── */
+            /* ── PULL-DOWN FULLSCREEN GESTURE (rewritten) ─────────── */
             (function() {
-                var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                if (!isMobile) return;
+                var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                var isAndroid = /Android/i.test(navigator.userAgent);
+                if (!isIOS && !isAndroid) return;
 
                 var indicator = document.getElementById('jrPullIndicator');
                 var ripple    = document.getElementById('jrPullRipple');
-                var startY = null, pulling = false;
-                var THRESHOLD = 65;
+                var startY = null, pulling = false, threshCrossed = false;
+                var THRESHOLD = 75;
+                var TRIGGER_ZONE = 110;          /* generous top zone — finger lands here */
+                var hapticFired = false;
 
-                function tryFullscreen() {
+                function tryEnterFullscreen() {
+                    /* iOS Safari can't fullscreen non-video — show Add-to-Home prompt */
+                    if (isIOS) {
+                        var bar = document.getElementById('jrFsBar');
+                        if (bar) {
+                            bar.style.display = 'flex';
+                            /* highlight it briefly */
+                            bar.style.animation = 'none';
+                            /* eslint-disable-next-line no-unused-expressions */
+                            bar.offsetWidth;
+                            bar.style.animation = 'jrFadeIn 0.4s ease';
+                        }
+                        return;
+                    }
+                    /* Android / desktop Chrome — real Fullscreen API */
                     var el = document.documentElement;
-                    var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
-                    if (req) {
-                        req.call(el).then(function() {
+                    var req = el.requestFullscreen || el.webkitRequestFullscreen
+                           || el.mozRequestFullScreen || el.msRequestFullscreen;
+                    if (!req) return;
+                    var p = req.call(el);
+                    if (p && p.then) {
+                        p.then(function() {
                             localStorage.setItem('jr_fs_dismissed', '1');
                             var bar = document.getElementById('jrFsBar');
                             if (bar) bar.style.display = 'none';
-                        }).catch(function() {});
+                            /* lock orientation to landscape if available */
+                            if (screen.orientation && screen.orientation.lock) {
+                                screen.orientation.lock('landscape').catch(function(){});
+                            }
+                        }).catch(function(){});
                     }
                 }
 
-                document.addEventListener('touchstart', function(e) {
-                    /* Only trigger pull when touch starts near the top (within 55px) */
-                    if (e.touches[0].clientY < 55) {
-                        startY = e.touches[0].clientY;
-                        pulling = true;
-                    }
-                }, { passive: true });
-
-                document.addEventListener('touchmove', function(e) {
-                    if (!pulling || startY === null) return;
-                    var dy = e.touches[0].clientY - startY;
-                    if (dy < 0) { pulling = false; return; }
-
-                    var pct = Math.min(dy / THRESHOLD, 1);
-
+                function reset() {
                     if (indicator) {
-                        indicator.style.width = (60 + pct * 160) + 'px';
-                        indicator.style.opacity = 0.3 + pct * 0.7;
-                        indicator.classList.toggle('pulling', pct > 0.5);
-                    }
-                    if (ripple) {
-                        ripple.style.height = (dy * 0.5) + 'px';
-                    }
-                }, { passive: true });
-
-                document.addEventListener('touchend', function(e) {
-                    if (!pulling || startY === null) return;
-                    var dy = e.changedTouches[0].clientY - startY;
-
-                    if (dy >= THRESHOLD) {
-                        tryFullscreen();
-                    }
-
-                    /* Reset visual */
-                    if (indicator) {
-                        indicator.style.width = '60px';
+                        indicator.classList.remove('jr-pull-active', 'pulling');
+                        indicator.style.width = '';
                         indicator.style.opacity = '';
-                        indicator.classList.remove('pulling');
+                        indicator.style.height = '';
                     }
                     if (ripple) ripple.style.height = '0';
                     pulling = false;
                     startY = null;
+                    threshCrossed = false;
+                    hapticFired = false;
+                }
+
+                document.addEventListener('touchstart', function(e) {
+                    /* Only arm if at top of page AND finger landed in top zone */
+                    if (window.scrollY > 4) return;
+                    var y = e.touches[0].clientY;
+                    if (y < TRIGGER_ZONE) {
+                        startY = y;
+                        pulling = true;
+                        threshCrossed = false;
+                        hapticFired = false;
+                        if (indicator) indicator.classList.add('jr-pull-active');
+                    }
                 }, { passive: true });
+
+                /* NON-passive — must preventDefault to block native pull-to-refresh */
+                document.addEventListener('touchmove', function(e) {
+                    if (!pulling || startY === null) return;
+                    var dy = e.touches[0].clientY - startY;
+                    if (dy < 0) { reset(); return; }
+
+                    /* We own this gesture now — block browser pull-to-refresh */
+                    if (e.cancelable) e.preventDefault();
+
+                    var pct = Math.min(dy / THRESHOLD, 1.4);
+
+                    if (indicator) {
+                        indicator.style.width  = (80 + pct * 180) + 'px';
+                        indicator.style.height = (3 + pct * 4) + 'px';
+                        indicator.style.opacity = String(0.35 + Math.min(pct, 1) * 0.65);
+                        indicator.classList.toggle('pulling', pct >= 1);
+                    }
+                    if (ripple) {
+                        ripple.style.height = Math.min(dy * 0.55, 140) + 'px';
+                    }
+
+                    /* Haptic feedback when threshold crossed */
+                    if (pct >= 1 && !hapticFired) {
+                        hapticFired = true;
+                        threshCrossed = true;
+                        if (navigator.vibrate) navigator.vibrate(12);
+                    }
+                }, { passive: false });
+
+                document.addEventListener('touchend', function(e) {
+                    if (!pulling || startY === null) return;
+                    var dy = e.changedTouches[0].clientY - startY;
+                    if (dy >= THRESHOLD) tryEnterFullscreen();
+                    reset();
+                }, { passive: true });
+
+                document.addEventListener('touchcancel', reset, { passive: true });
             })();
         })();
         </script>
