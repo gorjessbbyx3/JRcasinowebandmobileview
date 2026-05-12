@@ -570,6 +570,9 @@
                 slots: 'Slots', fish: 'Fishing', table: 'Table Games'
             };
 
+            var jrIsLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+            var jrCsrfToken = '{{ csrf_token() }}';
+
             function jrGetFavs() {
                 try { return JSON.parse(localStorage.getItem('jr_favs') || '[]'); }
                 catch(e) { return []; }
@@ -578,12 +581,41 @@
                 try { localStorage.setItem('jr_favs', JSON.stringify(f)); } catch(e) {}
             }
 
+            /* Merge server favorites into localStorage on load */
+            if (jrIsLoggedIn) {
+                fetch('/user/favorites', { credentials: 'same-origin' })
+                    .then(function(r) { return r.ok ? r.json() : null; })
+                    .then(function(data) {
+                        if (data && Array.isArray(data.favorites) && data.favorites.length) {
+                            var local = jrGetFavs();
+                            var merged = data.favorites.concat(local.filter(function(n) {
+                                return data.favorites.indexOf(n) < 0;
+                            }));
+                            jrSetFavs(merged);
+                            jrUpdateFavIcons();
+                        }
+                    })
+                    .catch(function() {});
+            }
+
             window.jrToggleFav = function(name) {
                 var favs = jrGetFavs();
                 var idx = favs.indexOf(name);
-                if (idx >= 0) favs.splice(idx, 1); else favs.push(name);
+                var adding = idx < 0;
+                if (adding) favs.push(name); else favs.splice(idx, 1);
                 jrSetFavs(favs);
                 jrUpdateFavIcons();
+
+                /* Sync to server for logged-in users */
+                if (jrIsLoggedIn) {
+                    var method = adding ? 'POST' : 'DELETE';
+                    var url    = (adding ? '/favorites/add/' : '/favorites/remove/') + encodeURIComponent(name);
+                    fetch(url, {
+                        method: method,
+                        credentials: 'same-origin',
+                        headers: { 'X-CSRF-TOKEN': jrCsrfToken, 'Accept': 'application/json' }
+                    }).catch(function() {});
+                }
             };
 
             function jrUpdateFavIcons() {
@@ -662,7 +694,19 @@
 
             window.jrRefreshBalance = function(btn) {
                 if (btn) btn.classList.add('refreshing');
-                setTimeout(function() { location.reload(); }, 400);
+                fetch('/user/balance', { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+                    .then(function(r) { return r.ok ? r.json() : null; })
+                    .then(function(data) {
+                        if (data && data.balance !== undefined) {
+                            var el = document.getElementById('jrBalanceAmt');
+                            if (el) el.textContent = '$' + data.balance;
+                        }
+                        if (btn) btn.classList.remove('refreshing');
+                    })
+                    .catch(function() {
+                        if (btn) btn.classList.remove('refreshing');
+                        location.reload();
+                    });
             };
 
             /* Re-render on orientation change or resize */

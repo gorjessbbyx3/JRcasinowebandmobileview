@@ -68,7 +68,8 @@ namespace VanguardLTE
             'last_daily_entry', 
             'last_bid', 
             'last_progress', 
-            'last_wheelfortune'
+            'last_wheelfortune',
+            'favorites'
         ];
         protected $hidden = [
             'password', 

@@ -142,6 +142,12 @@ Route::namespace ('Frontend')->middleware(['siteisclosed', 'checker'])->group(fu
     Route::get('/search.json', ['as' => 'frontend.search.json', 'uses' => 'GamesController@search_json']);
     Route::post('balance', ['as' => 'frontend.balance.post', 'uses' => 'GamesController@balanceAdd']);
 
+    /* Mobile UI — live balance & favorites sync */
+    Route::get('/user/balance',               ['as' => 'frontend.balance.json',      'uses' => 'GamesController@balanceJson']);
+    Route::get('/user/favorites',             ['as' => 'frontend.favorites.json',    'uses' => 'GamesController@favoritesJson']);
+    Route::post('/favorites/add/{game}',      ['as' => 'frontend.favorites.add',     'uses' => 'GamesController@favoritesAdd']);
+    Route::delete('/favorites/remove/{game}', ['as' => 'frontend.favorites.remove',  'uses' => 'GamesController@favoritesRemove']);
+
     /*
     Route::get('games', [
         'as' => 'frontend.game.list',

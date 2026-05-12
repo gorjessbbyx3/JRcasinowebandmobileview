@@ -1422,6 +1422,62 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
             }
             return json_encode(['status' => 0]);
         }
+
+        /* ── MOBILE UI: live balance ──────────────────────────── */
+        public function balanceJson()
+        {
+            if (!auth()->check()) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+            $user = auth()->user();
+            $shop = \VanguardLTE\Shop::find($user->shop_id);
+            $currency = $shop ? $shop->currency : '$';
+            return response()->json([
+                'balance'   => number_format((float)$user->balance, 2, '.', ''),
+                'currency'  => $currency,
+                'timestamp' => now()->toIso8601String(),
+            ]);
+        }
+
+        /* ── MOBILE UI: server-side favorites ────────────────── */
+        public function favoritesJson()
+        {
+            if (!auth()->check()) {
+                return response()->json(['favorites' => []]);
+            }
+            $favs = json_decode(auth()->user()->favorites ?? '[]', true);
+            return response()->json(['favorites' => is_array($favs) ? $favs : []]);
+        }
+
+        public function favoritesAdd(\Illuminate\Http\Request $request, $game)
+        {
+            if (!auth()->check()) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+            $user = auth()->user();
+            $favs = json_decode($user->favorites ?? '[]', true);
+            if (!is_array($favs)) $favs = [];
+            if (!in_array($game, $favs)) {
+                $favs[] = $game;
+                $user->favorites = json_encode($favs);
+                $user->save();
+            }
+            return response()->json(['success' => true, 'favorites' => $favs]);
+        }
+
+        public function favoritesRemove(\Illuminate\Http\Request $request, $game)
+        {
+            if (!auth()->check()) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+            $user = auth()->user();
+            $favs = json_decode($user->favorites ?? '[]', true);
+            if (!is_array($favs)) $favs = [];
+            $favs = array_values(array_filter($favs, function($f) use ($game) { return $f !== $game; }));
+            $user->favorites = json_encode($favs);
+            $user->save();
+            return response()->json(['success' => true, 'favorites' => $favs]);
+        }
     }
 
 }
