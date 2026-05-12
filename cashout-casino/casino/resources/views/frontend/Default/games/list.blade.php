@@ -1186,8 +1186,10 @@
         <style>
         #jrFsBar {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
-            z-index: 99999;
+            /* Sits flush to the bottom by default (desktop / non-bottom-nav viewports). */
+            bottom: env(safe-area-inset-bottom, 0);
+            left: 0; right: 0;
+            z-index: 50; /* below the bottom-nav (z=20) is fine — but keep above feed content */
             background: rgba(10,5,20,0.97);
             border-top: 1px solid rgba(212,175,55,0.4);
             backdrop-filter: blur(12px);
@@ -1196,6 +1198,13 @@
             gap: 10px;
             padding: 10px 16px;
             animation: jrFadeIn 0.4s ease;
+        }
+        /* On phone widths the .jr-bottom-nav (54px) is visible — lift the banner above it
+           so it does NOT cover the Hot/Slots/Fish/Tables/Favorites category buttons. */
+        @media (max-width: 480px) {
+            #jrFsBar {
+                bottom: calc(54px + env(safe-area-inset-bottom, 0px));
+            }
         }
         #jrFsMsg {
             flex: 1;
