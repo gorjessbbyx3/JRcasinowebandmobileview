@@ -425,7 +425,7 @@
                 <!-- HEADER -->
                 <header class="jr-header">
                     <a href="/" class="jr-header__logo-link">
-                        <img src="/woocasino/images/jade-royale-logo.jpeg" alt="Jade Royale" class="jr-logo-img">
+                        <img src="/woocasino/images/jade-royale-logo-v2.png?v=2" alt="Jade Royale" class="jr-logo-img">
                     </a>
                     <div class="jr-header__right">
                         @if(Auth::check())
@@ -1255,7 +1255,7 @@
     <!-- ===================== DESKTOP NAVBAR ===================== -->
     <nav class="desktop-navbar" id="desktopNavbar">
         <a href="/" class="desktop-navbar__logo">
-            <img class="desktop-navbar__logo-img" src="/woocasino/images/jade-royale-logo.jpeg" alt="Jade Royale">
+            <img class="desktop-navbar__logo-img" src="/woocasino/images/jade-royale-logo-v2.png?v=2" alt="Jade Royale">
         </a>
         <div class="desktop-navbar__nav">
             <a href="/" class="desktop-navbar__nav-link active">All Games</a>
