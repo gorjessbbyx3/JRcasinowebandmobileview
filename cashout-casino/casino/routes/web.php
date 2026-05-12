@@ -113,6 +113,9 @@ Route::namespace ('Frontend')->middleware(['siteisclosed', 'checker'])->group(fu
 
     Route::get('profile/daily_entry', ['as' => 'frontend.profile.daily_entry', 'uses' => 'ProfileController@daily_entry']);
 
+    Route::post('profile/wheel_spin', ['as' => 'frontend.profile.wheel_spin', 'uses' => 'ProfileController@wheel_spin']);
+    Route::post('profile/dragon_egg', ['as' => 'frontend.profile.dragon_egg', 'uses' => 'ProfileController@dragon_egg']);
+
     Route::get('profile/phone', ['as' => 'frontend.profile.phone', 'uses' => 'ProfileController@phone']);
 
     Route::get('profile/code', ['as' => 'frontend.profile.code', 'uses' => 'ProfileController@code']);

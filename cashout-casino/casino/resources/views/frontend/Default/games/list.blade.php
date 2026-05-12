@@ -2625,30 +2625,56 @@
             return;
         }
         premiumWheelSpinning = true;
-        
+
         var wheel = document.getElementById('premiumWheel');
-        var sectorCount = wheelSectors.length || 18;
+        var sectorCount = wheelSectors.length || 16;
         var sectorAngle = 360 / sectorCount;
-        var randomSector = Math.floor(Math.random() * sectorCount);
-        var randomOffset = Math.random() * sectorAngle * 0.8;
-        var targetAngle = 1800 + (360 - (randomSector * sectorAngle + sectorAngle / 2 + randomOffset));
-        
-        wheel.classList.add('spinning');
-        wheel.style.transform = 'rotate(' + targetAngle + 'deg)';
-        
-        setTimeout(function() {
-            var prize = wheelSectors[randomSector] ? wheelSectors[randomSector].label : '0.00';
-            if (prize === 'LUCK') prize = 'Good Luck!';
-            else prize = '$' + prize;
-            
-            document.getElementById('wheelPrize').textContent = prize;
-            document.getElementById('wheelResult').style.display = 'flex';
-            triggerConfetti();
-            
-            setTimeout(function() {
+
+        // Ask the server which sector wins. Server enforces 1/day + awards balance.
+        fetch('/profile/wheel_spin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') || {}).content || (window.jrCsrfToken || ''),
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({})
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.fail) {
                 premiumWheelSpinning = false;
-            }, 2000);
-        }, 5000);
+                jrShowLoginGate(data.error || 'Spin not available.');
+                return;
+            }
+            var idx = (typeof data.sector_index === 'number') ? data.sector_index : 0;
+            var randomOffset = (Math.random() - 0.5) * sectorAngle * 0.6;
+            var targetAngle = 1800 + (360 - (idx * sectorAngle + sectorAngle / 2 + randomOffset));
+
+            wheel.classList.add('spinning');
+            wheel.style.transform = 'rotate(' + targetAngle + 'deg)';
+
+            setTimeout(function() {
+                var prizeText = (data.value > 0)
+                    ? (data.currency || '$') + Number(data.value).toFixed(2)
+                    : 'Good Luck!';
+                document.getElementById('wheelPrize').textContent = prizeText;
+                document.getElementById('wheelResult').style.display = 'flex';
+                if (data.value > 0) triggerConfetti();
+                /* Refresh on-screen balance pill */
+                var pill = document.getElementById('jrBalancePill');
+                if (pill && data.balance) {
+                    pill.textContent = (data.currency || '') + Number(data.balance).toLocaleString();
+                }
+                setTimeout(function() { premiumWheelSpinning = false; }, 2000);
+            }, 5000);
+        })
+        .catch(function() {
+            premiumWheelSpinning = false;
+            jrShowLoginGate('Could not reach the wheel server. Please try again.');
+        });
     }
 
     // MORE Modal Functions
@@ -2718,6 +2744,7 @@
             return;
         }
         eggPicked = true;
+
         var eggs = document.querySelectorAll('.dragon-egg');
         eggs.forEach(function(egg) {
             if (parseInt(egg.dataset.egg) === eggNum) {
@@ -2726,11 +2753,53 @@
                 egg.classList.add('not-selected');
             }
         });
-        setTimeout(function() {
-            document.getElementById('dragonEggsContainer').style.display = 'none';
-            document.getElementById('dragonEggResult').style.display = 'block';
-            triggerConfetti();
-        }, 800);
+
+        // Claim from server — it enforces 1/day and credits the wallet.
+        fetch('/profile/dragon_egg', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') || {}).content || (window.jrCsrfToken || ''),
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ egg: eggNum })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            setTimeout(function() {
+                document.getElementById('dragonEggsContainer').style.display = 'none';
+                var resultBox = document.getElementById('dragonEggResult');
+                resultBox.style.display = 'block';
+
+                if (data.fail) {
+                    /* Already claimed today, etc. — show error in the result panel */
+                    var rewardEl = resultBox.querySelector('.dragon-egg-reward');
+                    if (rewardEl) rewardEl.textContent = data.error || 'Not available';
+                    eggPicked = false;
+                    return;
+                }
+                /* Update reward display + balance pill */
+                var rewardEl = resultBox.querySelector('.dragon-egg-reward');
+                if (rewardEl) {
+                    rewardEl.textContent = (data.currency || '$') + Number(data.value).toFixed(2);
+                }
+                var pill = document.getElementById('jrBalancePill');
+                if (pill && data.balance) {
+                    pill.textContent = (data.currency || '') + Number(data.balance).toLocaleString();
+                }
+                if (data.value > 0) triggerConfetti();
+            }, 800);
+        })
+        .catch(function() {
+            setTimeout(function() {
+                document.getElementById('dragonEggsContainer').style.display = 'none';
+                document.getElementById('dragonEggResult').style.display = 'block';
+                eggPicked = false;
+                jrShowLoginGate('Could not reach the bonus server. Please try again.');
+            }, 800);
+        });
     }
 
     // Confetti Celebration

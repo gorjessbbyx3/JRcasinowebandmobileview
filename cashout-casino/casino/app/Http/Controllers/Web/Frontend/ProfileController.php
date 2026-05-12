@@ -163,6 +163,130 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 'error' => __('app.no_active_daily_entries')
             ]);
         }
+
+        /**
+         * Wheel of Fortune spin — server-authoritative.
+         * Picks a sector server-side, awards via addBalance with system='wheelfortune'
+         * (which auto-increments balance, the wheelfortune mirror, and count_wheelfortune wager).
+         * Limited to one spin per day per shop config.
+         */
+        public function wheel_spin(\Illuminate\Http\Request $request)
+        {
+            if (!\Illuminate\Support\Facades\Auth::check()) {
+                return response()->json(['fail' => true, 'error' => 'Please log in to spin.'], 200);
+            }
+            $user = \VanguardLTE\User::find(auth()->user()->id);
+            if (!$user || !$user->shop) {
+                return response()->json(['fail' => true, 'error' => 'Account not available.'], 200);
+            }
+            if (!$user->shop->wheelfortune_active) {
+                return response()->json(['fail' => true, 'error' => 'The Wheel is not enabled for your shop.'], 200);
+            }
+
+            // 1-spin-per-day check
+            if ($user->last_wheelfortune
+                && \Carbon\Carbon::parse($user->last_wheelfortune)->isSameDay(\Carbon\Carbon::now())) {
+                return response()->json([
+                    'fail' => true,
+                    'error' => 'You have already spun the Wheel today. Come back tomorrow!'
+                ], 200);
+            }
+
+            $wheel = \VanguardLTE\WheelFortune::where(['shop_id' => $user->shop_id, 'active' => true])->first();
+            if (!$wheel || empty($wheel->sectors)) {
+                return response()->json(['fail' => true, 'error' => 'No active wheel configured.'], 200);
+            }
+
+            $sectors = json_decode($wheel->sectors, true);
+            if (!is_array($sectors) || count($sectors) === 0) {
+                return response()->json(['fail' => true, 'error' => 'Wheel sectors invalid.'], 200);
+            }
+
+            // Server-side random pick
+            $idx    = random_int(0, count($sectors) - 1);
+            $sector = $sectors[$idx];
+            $label  = $sector['label'] ?? '';
+
+            // Parse numeric cash value out of the label (e.g. "$5.00" -> 5.00)
+            $value = 0.0;
+            if (preg_match('/[\d]+(?:\.\d+)?/', $label, $m)) {
+                $value = floatval($m[0]);
+            }
+
+            $payeer = \VanguardLTE\User::find($user->parent_id);
+            if ($value > 0) {
+                // addBalance with system='wheelfortune' auto-handles balance + count_wheelfortune wager
+                $user->addBalance('add', $value, $payeer, false, 'wheelfortune', false, $wheel);
+            }
+            $user->update(['last_wheelfortune' => \Carbon\Carbon::now()]);
+
+            $fresh = $user->fresh();
+            return response()->json([
+                'success'      => true,
+                'sector_index' => $idx,
+                'label'        => $label,
+                'value'        => $value,
+                'currency'     => $user->shop->currency,
+                'balance'      => number_format($fresh->balance, 2, '.', ''),
+                'message'      => $value > 0
+                    ? 'You won ' . $label . '!'
+                    : 'Better luck next time!',
+            ]);
+        }
+
+        /**
+         * Dragon Egg daily reward — picks a random egg server-side from active w_daily_bonus rows.
+         * Awards via addBalance with system='daily_entry' so it shares the existing
+         * count_daily_entries wagering pipeline.
+         * One claim per 24h per user (uses last_daily_entry timestamp).
+         */
+        public function dragon_egg(\Illuminate\Http\Request $request)
+        {
+            if (!\Illuminate\Support\Facades\Auth::check()) {
+                return response()->json(['fail' => true, 'error' => 'Please log in to claim.'], 200);
+            }
+            $user = \VanguardLTE\User::find(auth()->user()->id);
+            if (!$user || !$user->shop) {
+                return response()->json(['fail' => true, 'error' => 'Account not available.'], 200);
+            }
+
+            // 1-claim-per-day check (shared with daily_entry)
+            if ($user->last_daily_entry
+                && \Carbon\Carbon::parse($user->last_daily_entry)->isSameDay(\Carbon\Carbon::now())) {
+                return response()->json([
+                    'fail' => true,
+                    'error' => 'You have already claimed your daily reward. Come back tomorrow!'
+                ], 200);
+            }
+
+            // Pick a random active reward from the player's shop, falling back to global config
+            $rewards = \DB::table('daily_bonus')
+                ->where(['shop_id' => $user->shop_id, 'active' => true])
+                ->pluck('reward')->toArray();
+            if (empty($rewards)) {
+                $rewards = \DB::table('daily_bonus')->where('active', true)->pluck('reward')->toArray();
+            }
+            if (empty($rewards)) {
+                return response()->json(['fail' => true, 'error' => 'No daily rewards configured.'], 200);
+            }
+
+            $value = floatval($rewards[array_rand($rewards)]);
+            $payeer = \VanguardLTE\User::find($user->parent_id);
+            if ($value > 0) {
+                $user->addBalance('add', $value, $payeer, false, 'daily_entry', false, null);
+            }
+            $user->update(['last_daily_entry' => \Carbon\Carbon::now()]);
+
+            $fresh = $user->fresh();
+            return response()->json([
+                'success'  => true,
+                'value'    => $value,
+                'currency' => $user->shop->currency,
+                'balance'  => number_format($fresh->balance, 2, '.', ''),
+                'message'  => 'You found ' . $user->shop->currency . number_format($value, 2) . '!',
+            ]);
+        }
+
         public function pincode(\Illuminate\Http\Request $request)
         {
             $user = \VanguardLTE\User::find(auth()->user()->id);
@@ -972,7 +1096,7 @@ namespace VanguardLTE\Http\Controllers\Web\Frontend
                 array(
                 'title' => 'Thank you for your request the funds will be added to your wallet within 24 hours',
                 'msg' => ''
-            )                //		trans('app.user_withdrawal_request_submitted')
+            )                //         trans('app.user_withdrawal_request_submitted')
             );
         }
     }
