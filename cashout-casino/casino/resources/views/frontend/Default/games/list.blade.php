@@ -367,289 +367,260 @@
     @php
         $allMobGames = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => 0])->whereIn('device', [1, 2])->take(120)->get();
     @endphp
-    <div class="mobile-casino-layout" id="mobileCasinoLayout">
-        <!-- TOP HEADER -->
-        <header class="mob-header">
-            <div class="mob-header__left">
-                @if(Auth::check())
-                <div class="mob-header__user-pill">
-                    <div class="mob-header__avatar">
-                        <svg viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
-                    </div>
-                    <span class="mob-header__username">{{ auth()->user()->username }}</span>
-                    <span class="mob-header__balance">${{ number_format(auth()->user()->balance, 2) }}</span>
-                </div>
-                @else
-                <div class="mob-header__user-pill mob-header__user-pill--guest" ng-click="openModal($event, '#login-modal')">
-                    <div class="mob-header__avatar">
-                        <svg viewBox="0 0 24 24" fill="#fbbf24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v2h20v-2c0-3.3-6.7-5-10-5z"/></svg>
-                    </div>
-                    <span class="mob-header__login-text">Tap to Login</span>
-                </div>
-                @endif
-            </div>
-            <div class="mob-header__logo">
-                <img src="/woocasino/images/jade-royale-logo.jpeg" alt="Jade Royale" class="mob-header__logo-neon">
-            </div>
-        </header>
+    <div class="mobile-casino-layout jr-app" id="mobileCasinoLayout">
 
-        <!-- BODY: sidebar + scrollable content -->
-        <div class="mob-body">
-            <!-- LEFT CATEGORY SIDEBAR -->
-            <nav class="mob-sidebar">
-                <button class="mob-sidebar__item active" data-filter="all" onclick="mobFilterGames('all', this)">
-                    <div class="mob-sidebar__icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="2" width="9" height="9" rx="1.5"/><rect x="13" y="2" width="9" height="9" rx="1.5"/><rect x="2" y="13" width="9" height="9" rx="1.5"/><rect x="13" y="13" width="9" height="9" rx="1.5"/></svg>
-                    </div>
-                    <span class="mob-sidebar__label">ALL</span>
+        <!-- Animated background orbs -->
+        <div class="jr-bg" aria-hidden="true">
+            <div class="jr-orb jr-orb--1"></div>
+            <div class="jr-orb jr-orb--2"></div>
+            <div class="jr-orb jr-orb--3"></div>
+            <div class="jr-orb jr-orb--4"></div>
+        </div>
+
+        <!-- App layout: sidebar + content -->
+        <div class="jr-layout">
+
+            <!-- LEFT SIDEBAR -->
+            <nav class="jr-sidebar" id="jrSidebar">
+                <button class="jr-sidebar__btn active" data-cat="hot" onclick="jrSelectCat('hot',this)">
+                    <svg class="jr-sidebar__icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/>
+                    </svg>
+                    <span class="jr-sidebar__label">Hot</span>
                 </button>
-                <button class="mob-sidebar__item" data-filter="slots" onclick="mobFilterGames('slots', this)">
-                    <div class="mob-sidebar__icon">
-                        <svg viewBox="0 0 28 20" fill="currentColor">
-                            <rect x="0" y="0" width="8" height="20" rx="2" fill="#1a1040"/>
-                            <text x="4" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="#fbbf24">7</text>
-                            <rect x="10" y="0" width="8" height="20" rx="2" fill="#1a1040"/>
-                            <text x="14" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="#fbbf24">7</text>
-                            <rect x="20" y="0" width="8" height="20" rx="2" fill="#1a1040"/>
-                            <text x="24" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="#fbbf24">7</text>
-                        </svg>
-                    </div>
-                    <span class="mob-sidebar__label">SLOTS</span>
+                <button class="jr-sidebar__btn" data-cat="favorites" onclick="jrSelectCat('favorites',this)">
+                    <svg class="jr-sidebar__icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <span class="jr-sidebar__label">Favs</span>
                 </button>
-                <button class="mob-sidebar__item" data-filter="fish" onclick="mobFilterGames('fish', this)">
-                    <div class="mob-sidebar__icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.17 3.25Q21.5 3.25 21.76 3.5C23.24 5 23.29 7.26 22.5 9.21C21.76 11 20.25 12.5 18.5 13.5L13 16.5L7.59 21.91C7.19 22.3 6.56 22.3 6.16 21.91L2.09 17.84C1.7 17.44 1.7 16.81 2.09 16.41L7.5 11L10.5 5.5C11.5 3.75 13 2.24 14.79 1.5C16.74 0.71 19 0.76 20.5 2.24Q20.76 2.5 20.76 2.83V3.25H21.17M17 10A1 1 0 0 0 18 9A1 1 0 0 0 17 8A1 1 0 0 0 16 9A1 1 0 0 0 17 10Z"/></svg>
-                    </div>
-                    <span class="mob-sidebar__label">FISH</span>
+                <button class="jr-sidebar__btn" data-cat="slots" onclick="jrSelectCat('slots',this)">
+                    <svg class="jr-sidebar__icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span class="jr-sidebar__label">Slots</span>
                 </button>
-                <button class="mob-sidebar__item" data-filter="table" onclick="mobFilterGames('table', this)">
-                    <div class="mob-sidebar__icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 8h20v2H2zm0 4h20v2H2zm-1-8h22v2H1zM2 16h20v4H2z" opacity=".4"/><path d="M2 8h2v8H2zm18 0h2v8h-2zM7 12l2.5-4h5L17 12l-2.5 4h-5z" fill="currentColor"/></svg>
-                    </div>
-                    <span class="mob-sidebar__label">TABLES</span>
+                <button class="jr-sidebar__btn" data-cat="fish" onclick="jrSelectCat('fish',this)">
+                    <svg class="jr-sidebar__icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21.17 3.25Q21.5 3.25 21.76 3.5C23.24 5 23.29 7.26 22.5 9.21C21.76 11 20.25 12.5 18.5 13.5L13 16.5L7.59 21.91C7.19 22.3 6.56 22.3 6.16 21.91L2.09 17.84C1.7 17.44 1.7 16.81 2.09 16.41L7.5 11L10.5 5.5C11.5 3.75 13 2.24 14.79 1.5C16.74 0.71 19 0.76 20.5 2.24Q20.76 2.5 20.76 2.83V3.25H21.17M17 10A1 1 0 0 0 18 9A1 1 0 0 0 17 8A1 1 0 0 0 16 9A1 1 0 0 0 17 10Z"/>
+                    </svg>
+                    <span class="jr-sidebar__label">Fish</span>
                 </button>
-                <button class="mob-sidebar__item" data-filter="faves" onclick="mobFilterGames('faves', this)">
-                    <div class="mob-sidebar__icon">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    </div>
-                    <span class="mob-sidebar__label">FAVES</span>
+                <button class="jr-sidebar__btn" data-cat="table" onclick="jrSelectCat('table',this)">
+                    <svg class="jr-sidebar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                    </svg>
+                    <span class="jr-sidebar__label">Tables</span>
                 </button>
             </nav>
 
-            <!-- SCROLLABLE CONTENT -->
-            <div class="mob-content" id="mobContent">
-                <!-- HERO BANNER -->
-                <div class="mob-hero-banner">
-                    <div class="mob-banner-slider" id="mobBannerSlider">
-                        <div class="mob-banner-slide active" style="background-image:url(/woocasino/mslider1.gif)"></div>
-                        <div class="mob-banner-slide" style="background-image:url(/woocasino/mslider2.gif)"></div>
-                        <div class="mob-banner-slide" style="background-image:url(/woocasino/mslider3.gif)"></div>
-                    </div>
-                    <div class="mob-banner-dots" id="mobBannerDots">
-                        <span class="mob-banner-dot active"></span>
-                        <span class="mob-banner-dot"></span>
-                        <span class="mob-banner-dot"></span>
-                    </div>
-                    <div class="mob-banner-balance">
-                        <div class="mob-balance-coin">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fbbf24"/><circle cx="12" cy="12" r="9" fill="#f59e0b"/><text x="12" y="16.5" text-anchor="middle" font-size="11" fill="#7c2d12" font-weight="900">$</text></svg>
-                        </div>
+            <!-- MAIN CONTENT -->
+            <div class="jr-content">
+
+                <!-- HEADER -->
+                <header class="jr-header">
+                    <a href="/" class="jr-header__logo-link">
+                        <img src="/woocasino/images/jade-royale-logo.jpeg" alt="Jade Royale" class="jr-logo-img">
+                    </a>
+                    <div class="jr-header__right">
                         @if(Auth::check())
-                        <span class="mob-balance-amount">{{ number_format(auth()->user()->balance, 2) }}</span>
+                        <button class="jr-balance-pill" id="jrBalancePill" onclick="jrRefreshBalance(this)">
+                            <svg viewBox="0 0 20 20" width="13" height="13" style="flex-shrink:0"><circle cx="10" cy="10" r="9" fill="#D4AF37"/><text x="10" y="14.5" text-anchor="middle" font-size="10" font-weight="900" fill="#5a2d00">$</text></svg>
+                            <span id="jrBalanceAmt">${{ number_format(auth()->user()->balance, 2) }}</span>
+                            <svg class="jr-refresh-ico" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="rgba(212,175,55,0.6)" stroke-width="2.5"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                        </button>
+                        <button class="jr-action-btn" style="color:#D4AF37" onclick="openBonusModal()" title="Daily Bonus">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M20 12v10H4V12M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+                        </button>
+                        <button class="jr-action-btn" style="color:#A020F0" onclick="openBonusModal()" title="Spin Wheel">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </button>
+                        <button class="jr-action-btn" style="color:#0099FF" onclick="openMoreModal()" title="Alerts">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        </button>
+                        <button class="jr-action-btn" style="color:#00FF87" ng-click="openModal($event,'#my-account')" title="Deposit">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </button>
+                        <button class="jr-action-btn" style="color:#FF1493" ng-click="openModal($event,'#my-account')" title="Withdraw">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                        </button>
+                        <button class="jr-action-btn" style="color:#A020F0" ng-click="openModal($event,'#my-account')" title="Profile">
+                            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </button>
                         @else
-                        <span class="mob-balance-amount">0.00</span>
+                        <button class="jr-login-btn" ng-click="openModal($event,'#login-modal')">Log In</button>
                         @endif
                     </div>
+                </header>
+
+                <!-- CATEGORY BAR -->
+                <div class="jr-cat-bar">
+                    <span class="jr-cat-bar__title" id="jrCatTitle">Hot Games</span>
+                    <span class="jr-cat-bar__count" id="jrCatCount">0</span>
+                    <div class="jr-cat-bar__arrows">
+                        <button onclick="document.getElementById('jrCarousel').scrollBy({left:-300,behavior:'smooth'})" title="Scroll left">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+                        <button onclick="document.getElementById('jrCarousel').scrollBy({left:300,behavior:'smooth'})" title="Scroll right">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- GAME GRID - 2 columns -->
-                <div class="mob-game-grid" id="mobGameGrid">
-                    @foreach($allMobGames as $mobGame)
-                    @php
-                        $mobNameLower = strtolower($mobGame->name ?? '');
-                        $mobCat = 'slots';
-                        if (preg_match('/(VP|SW|CQ9|PGD|KA)$/i', $mobGame->name) || strpos($mobNameLower, 'fishing') !== false || strpos($mobNameLower, 'hunter') !== false || strpos($mobNameLower, 'shooter') !== false) {
-                            $mobCat = 'fish';
-                        } elseif (strpos($mobNameLower, 'keno') !== false || strpos($mobNameLower, 'poker') !== false || strpos($mobNameLower, 'blackjack') !== false || strpos($mobNameLower, 'roulette') !== false || strpos($mobNameLower, 'baccarat') !== false) {
-                            $mobCat = 'table';
-                        }
-                    @endphp
-                    <a class="mob-game-card" data-cat="{{ $mobCat }}"
-                       href="@if(isset(auth()->user()->username) && auth()->user()->balance > 0){{ route('frontend.game.go', $mobGame->name) }}?api_exit=/@else{{ route('frontend.game.go', $mobGame->name) }}/prego?api_exit=/@endif">
-                        <div class="mob-game-card__wrap">
-                            <img class="mob-game-card__img" src="{{ $mobGame->thumbnail ?? '/frontend/Default/ico/'.$mobGame->name.'.jpg' }}" alt="{{ $mobGame->title }}" loading="lazy" onerror="this.src='/woocasino/mslider1.gif'">
-                            @if($mobGame->label)<span class="mob-game-card__badge">{{ $mobGame->label }}</span>@endif
-                            <div class="mob-game-card__overlay">
-                                <svg viewBox="0 0 24 24" fill="white" width="32" height="32"><polygon points="8,5 19,12 8,19"/></svg>
-                            </div>
-                        </div>
-                    </a>
-                    @endforeach
+                <!-- HORIZONTAL GAME CAROUSEL — rebuilt by JS -->
+                <div class="jr-carousel" id="jrCarousel"></div>
+
+            </div><!-- end .jr-content -->
+        </div><!-- end .jr-layout -->
+
+        <!-- HIDDEN CARD POOL — all games pre-rendered, JS pulls from here -->
+        <div id="jrCardPool" hidden aria-hidden="true">
+            @foreach($allMobGames as $game)
+            @php
+                $jrCat = 'slots';
+                $jrN   = strtolower($game->name ?? '');
+                if (preg_match('/(VP|SW|CQ9|PGD|KA)$/i', $game->name ?? '')
+                    || str_contains($jrN, 'fishing')
+                    || str_contains($jrN, 'hunter')
+                    || str_contains($jrN, 'shooter')) {
+                    $jrCat = 'fish';
+                } elseif (str_contains($jrN, 'keno') || str_contains($jrN, 'poker')
+                    || str_contains($jrN, 'blackjack') || str_contains($jrN, 'roulette')
+                    || str_contains($jrN, 'baccarat')) {
+                    $jrCat = 'table';
+                }
+                $jrHref = (isset(auth()->user()->username) && auth()->user()->balance > 0)
+                    ? route('frontend.game.go', $game->name).'?api_exit=/'
+                    : route('frontend.game.go', $game->name).'/prego?api_exit=/';
+                $jrLbl = strtolower($game->label ?? '');
+                $jrImg = $game->thumbnail ?? '/frontend/Default/ico/'.$game->name.'.jpg';
+            @endphp
+            <div class="jr-card"
+                data-cat="{{ $jrCat }}"
+                data-label="{{ $jrLbl }}"
+                data-name="{{ $game->name }}"
+                data-href="{{ $jrHref }}">
+                <div class="jr-card__inner" onclick="window.location.href=this.closest('.jr-card').dataset.href">
+                    <img class="jr-card__img"
+                        src="{{ $jrImg }}"
+                        alt="{{ $game->title }}"
+                        loading="lazy"
+                        onerror="this.src='/woocasino/mslider1.gif'">
+                    <div class="jr-card__overlay"></div>
+                    <div class="jr-card__title">{{ $game->title }}</div>
+                    @if($game->label)
+                    <div class="jr-card__badge jr-card__badge--{{ $jrLbl }}">{{ $game->label }}</div>
+                    @endif
+                    <button class="jr-card__fav" data-name="{{ $game->name }}"
+                        onclick="event.stopPropagation();jrToggleFav('{{ $game->name }}')">
+                        <svg class="jr-fav-icon" data-name="{{ $game->name }}"
+                            viewBox="0 0 24 24" width="12" height="12"
+                            fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
+            @endforeach
         </div>
 
-        <!-- FIXED BOTTOM NAVIGATION -->
-        <nav class="mob-bottom-nav">
-            <!-- PROFILE — Dragon Crown User -->
-            <button class="mob-nav-item" ng-click="openModal($event, '#my-account')">
-                <div class="mob-nav-icon-wrap">
-                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Crown -->
-                        <polygon points="6,16 10,8 18,13 26,8 30,16 28,18 8,18" fill="#FFD700" opacity="0.95"/>
-                        <polygon points="8,17 18,12 28,17" fill="#FFC107" opacity="0.7"/>
-                        <!-- Crown jewels -->
-                        <circle cx="18" cy="9" r="2" fill="#FF1744"/>
-                        <circle cx="10" cy="10" r="1.3" fill="#00E5FF"/>
-                        <circle cx="26" cy="10" r="1.3" fill="#00E676"/>
-                        <!-- Body -->
-                        <ellipse cx="18" cy="30" rx="9" ry="5" fill="#C4B5FD" opacity="0.6"/>
-                        <circle cx="18" cy="22" r="5.5" fill="#EDE9FE"/>
-                        <!-- Face highlight -->
-                        <circle cx="18" cy="22" r="4.5" fill="#fff" opacity="0.9"/>
-                    </svg>
-                </div>
-                <span>PROFILE</span>
-            </button>
-            <!-- ALERTS — Ornate Chinese Bell -->
-            <button class="mob-nav-item" onclick="openMoreModal()">
-                <div class="mob-nav-icon-wrap">
-                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Bell body -->
-                        <path d="M18 4 C11 4 8 10 8 16 L8 24 L28 24 L28 16 C28 10 25 4 18 4Z" fill="#00E5FF" opacity="0.85"/>
-                        <!-- Bell inner shade -->
-                        <path d="M18 6 C12 6 10 11 10 16 L10 22 L26 22 L26 16 C26 11 24 6 18 6Z" fill="#67E8F9" opacity="0.5"/>
-                        <!-- Bell top ring -->
-                        <rect x="16" y="2" width="4" height="4" rx="2" fill="#FFD700"/>
-                        <!-- Bell rim -->
-                        <rect x="6" y="23" width="24" height="3" rx="1.5" fill="#0891B2"/>
-                        <!-- Bell clapper -->
-                        <circle cx="18" cy="30" r="2.5" fill="#FFD700"/>
-                        <line x1="18" y1="26" x2="18" y2="28" stroke="#FFD700" stroke-width="1.5"/>
-                        <!-- Alert dot -->
-                        <circle cx="28" cy="6" r="4" fill="#FF1744"/>
-                        <circle cx="28" cy="6" r="2.2" fill="#FF6B7A"/>
-                    </svg>
-                </div>
-                <span>ALERTS</span>
-            </button>
-            <!-- DEPOSIT — Gold Coin Stack -->
-            <button class="mob-nav-item mob-nav-item--deposit" ng-click="openModal($event, '#my-account')">
-                <div class="mob-nav-icon-wrap">
-                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Coin stacks -->
-                        <ellipse cx="18" cy="28" rx="10" ry="3" fill="#00874A"/>
-                        <rect x="8" y="22" width="20" height="6" rx="0" fill="#00C853"/>
-                        <ellipse cx="18" cy="22" rx="10" ry="3" fill="#69F0AE"/>
-                        <rect x="8" y="17" width="20" height="5" rx="0" fill="#00E676"/>
-                        <ellipse cx="18" cy="17" rx="10" ry="3" fill="#B9F6CA"/>
-                        <ellipse cx="18" cy="14" rx="10" ry="3" fill="#FFD700"/>
-                        <!-- Sheen on top coin -->
-                        <ellipse cx="15" cy="13" rx="3.5" ry="1.2" fill="#FFF9C4" opacity="0.6"/>
-                        <!-- Up arrow -->
-                        <path d="M18 4 L14 10 L17 10 L17 14 L19 14 L19 10 L22 10 Z" fill="#FFD700" opacity="0.95"/>
-                    </svg>
-                </div>
-                <span>DEPOSIT</span>
-            </button>
-            <!-- SPIN — Dragon Fortune Wheel -->
-            <button class="mob-nav-item mob-nav-item--spin" onclick="openBonusModal(); switchBonusTab('wheel')">
-                <div class="mob-nav-icon-wrap">
-                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Outer ring -->
-                        <circle cx="18" cy="18" r="15" fill="none" stroke="#FFD700" stroke-width="2"/>
-                        <!-- Wheel sectors -->
-                        <path d="M18 18 L18 3 A15 15 0 0 1 30.99 10.5 Z" fill="#FF1744" opacity="0.9"/>
-                        <path d="M18 18 L30.99 10.5 A15 15 0 0 1 30.99 25.5 Z" fill="#FFD700" opacity="0.9"/>
-                        <path d="M18 18 L30.99 25.5 A15 15 0 0 1 18 33 Z" fill="#00E676" opacity="0.9"/>
-                        <path d="M18 18 L18 33 A15 15 0 0 1 5.01 25.5 Z" fill="#FF1744" opacity="0.9"/>
-                        <path d="M18 18 L5.01 25.5 A15 15 0 0 1 5.01 10.5 Z" fill="#FFD700" opacity="0.9"/>
-                        <path d="M18 18 L5.01 10.5 A15 15 0 0 1 18 3 Z" fill="#00E5FF" opacity="0.9"/>
-                        <!-- Inner ring -->
-                        <circle cx="18" cy="18" r="6" fill="#1a0a00"/>
-                        <circle cx="18" cy="18" r="5" fill="#FFD700"/>
-                        <circle cx="18" cy="18" r="3.5" fill="#B8860B"/>
-                        <!-- Center star -->
-                        <polygon points="18,13.5 19.2,16.8 22.7,16.8 19.95,18.75 21,22 18,20.1 15,22 16.05,18.75 13.3,16.8 16.8,16.8" fill="#FFD700"/>
-                        <!-- Pointer -->
-                        <polygon points="18,2 16.5,5 19.5,5" fill="#fff"/>
-                    </svg>
-                </div>
-                <span>SPIN</span>
-            </button>
-            <!-- CASHOUT — Dragon Red Withdraw -->
-            <button class="mob-nav-item mob-nav-item--cashout" ng-click="openModal($event, '#my-account')">
-                <div class="mob-nav-icon-wrap">
-                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Banknote base -->
-                        <rect x="3" y="10" width="30" height="16" rx="3" fill="#FCA5A5"/>
-                        <rect x="5" y="12" width="26" height="12" rx="2" fill="#FECACA"/>
-                        <!-- Center dollar circle -->
-                        <circle cx="18" cy="18" r="5" fill="#FF1744"/>
-                        <circle cx="18" cy="18" r="4" fill="#FF6B7A"/>
-                        <text x="18" y="21.5" text-anchor="middle" font-size="7" font-weight="900" fill="#fff">$</text>
-                        <!-- Corner marks -->
-                        <circle cx="8" cy="15" r="2" fill="#FF1744" opacity="0.6"/>
-                        <circle cx="28" cy="21" r="2" fill="#FF1744" opacity="0.6"/>
-                        <!-- Up arrow -->
-                        <path d="M18 4 L15 8 L17 8 L17 11 L19 11 L19 8 L21 8 Z" fill="#FFD700"/>
-                        <!-- Dragon wing ornament left -->
-                        <path d="M3 14 Q0 18 3 22" stroke="#FF1744" stroke-width="1.5" fill="none" opacity="0.7"/>
-                        <path d="M33 14 Q36 18 33 22" stroke="#FF1744" stroke-width="1.5" fill="none" opacity="0.7"/>
-                    </svg>
-                </div>
-                <span>CASHOUT</span>
-            </button>
-            <!-- BONUS — Treasure Chest -->
-            <button class="mob-nav-item" onclick="openBonusModal()">
-                <div class="mob-nav-icon-wrap">
-                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Chest base -->
-                        <rect x="4" y="18" width="28" height="14" rx="3" fill="#92400E"/>
-                        <rect x="5" y="19" width="26" height="12" rx="2" fill="#B45309"/>
-                        <!-- Chest lid -->
-                        <rect x="4" y="10" width="28" height="10" rx="3" fill="#A16207"/>
-                        <rect x="5" y="11" width="26" height="8" rx="2" fill="#CA8A04"/>
-                        <!-- Gold band -->
-                        <rect x="4" y="16.5" width="28" height="3" rx="0" fill="#FFD700"/>
-                        <!-- Lock -->
-                        <rect x="14" y="14" width="8" height="7" rx="2" fill="#FFD700"/>
-                        <circle cx="18" cy="17" r="2" fill="#B8860B"/>
-                        <!-- Gold coins spilling -->
-                        <ellipse cx="18" cy="12" rx="4" ry="2" fill="#FFD700" opacity="0.9"/>
-                        <circle cx="12" cy="10" r="2.5" fill="#FFD700"/>
-                        <circle cx="24" cy="10" r="2.5" fill="#FFC107"/>
-                        <circle cx="18" cy="8" r="2.5" fill="#FFD700"/>
-                        <!-- Shine on coins -->
-                        <ellipse cx="11.5" cy="9" rx="1" ry="0.5" fill="#FFF9C4" opacity="0.8"/>
-                        <ellipse cx="23.5" cy="9" rx="1" ry="0.5" fill="#FFF9C4" opacity="0.8"/>
-                        <!-- Stars/sparkle -->
-                        <path d="M8 6 L8.6 7.8 L10.5 7.8 L9 8.8 L9.6 10.5 L8 9.4 L6.4 10.5 L7 8.8 L5.5 7.8 L7.4 7.8Z" fill="#FFD700" opacity="0.85"/>
-                        <path d="M28 4 L28.4 5.2 L29.7 5.2 L28.7 5.9 L29.1 7.1 L28 6.4 L26.9 7.1 L27.3 5.9 L26.3 5.2 L27.6 5.2Z" fill="#FFD700" opacity="0.85"/>
-                    </svg>
-                </div>
-                <span>BONUS</span>
-            </button>
-            <!-- SETTINGS — Jade Gear -->
-            <button class="mob-nav-item" onclick="openMoreModal(); switchMoreTab('settings')">
-                <div class="mob-nav-icon-wrap">
-                    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Gear teeth -->
-                        <path d="M15 3 L17 7 L19 7 L21 3 L21 3 Q24 3.5 26.5 5.5 L24.5 9 L25.8 10.5 L30 9.5 Q31.5 12 32 15 L28 16.5 L28 19.5 L32 21 Q31.5 24 30 26.5 L25.8 25.5 L24.5 27 L26.5 30.5 Q24 32.5 21 33 L19 29 L17 29 L15 33 Q12 32.5 9.5 30.5 L11.5 27 L10.2 25.5 L6 26.5 Q4.5 24 4 21 L8 19.5 L8 16.5 L4 15 Q4.5 12 6 9.5 L10.2 10.5 L11.5 9 L9.5 5.5 Q12 3.5 15 3Z" fill="#374151"/>
-                        <path d="M15 5 L17 8.5 L19 8.5 L21 5 Q23.5 5.5 25.5 7 L23.5 10.5 L25.5 12.5 L29.5 11 Q30.5 13 31 15.5 L27 17 L27 19 L31 20.5 Q30.5 23 29.5 25 L25.5 23.5 L23.5 25.5 L25.5 29 Q23.5 30.5 21 31 L19 27.5 L17 27.5 L15 31 Q12.5 30.5 10.5 29 L12.5 25.5 L10.5 23.5 L6.5 25 Q5.5 23 5 20.5 L9 19 L9 17 L5 15.5 Q5.5 13 6.5 11 L10.5 12.5 L12.5 10.5 L10.5 7 Q12.5 5.5 15 5Z" fill="#4B5563"/>
-                        <!-- Jade center gem -->
-                        <circle cx="18" cy="18" r="7" fill="#00C853"/>
-                        <circle cx="18" cy="18" r="5.5" fill="#00E676"/>
-                        <circle cx="18" cy="18" r="4" fill="#69F0AE"/>
-                        <!-- Gem facet highlight -->
-                        <ellipse cx="16.5" cy="16.5" rx="2" ry="1.2" fill="#B9F6CA" opacity="0.8" transform="rotate(-30 16.5 16.5)"/>
-                        <!-- Inner hex pattern -->
-                        <polygon points="18,13.5 21.5,15.8 21.5,20.2 18,22.5 14.5,20.2 14.5,15.8" fill="none" stroke="#00A040" stroke-width="0.8" opacity="0.6"/>
-                    </svg>
-                </div>
-                <span>SETTINGS</span>
-            </button>
-        </nav>
+        <!-- JS: carousel rendering, category filtering, favorites -->
+        <script>
+        (function() {
+            var CAT_TITLES = {
+                hot: 'Hot Games', favorites: 'Favorites',
+                slots: 'Slots', fish: 'Fishing', table: 'Table Games'
+            };
+
+            function jrGetFavs() {
+                try { return JSON.parse(localStorage.getItem('jr_favs') || '[]'); }
+                catch(e) { return []; }
+            }
+            function jrSetFavs(f) {
+                try { localStorage.setItem('jr_favs', JSON.stringify(f)); } catch(e) {}
+            }
+
+            window.jrToggleFav = function(name) {
+                var favs = jrGetFavs();
+                var idx = favs.indexOf(name);
+                if (idx >= 0) favs.splice(idx, 1); else favs.push(name);
+                jrSetFavs(favs);
+                jrUpdateFavIcons();
+            };
+
+            function jrUpdateFavIcons() {
+                var favs = jrGetFavs();
+                document.querySelectorAll('.jr-fav-icon').forEach(function(svg) {
+                    var name = svg.dataset.name;
+                    var on = favs.indexOf(name) >= 0;
+                    svg.setAttribute('fill', on ? '#FF1493' : 'none');
+                    svg.setAttribute('stroke', on ? '#FF1493' : 'rgba(255,255,255,0.7)');
+                    svg.style.filter = on ? 'drop-shadow(0 0 4px #FF1493)' : 'none';
+                });
+            }
+
+            window.jrSelectCat = function(cat, btn) {
+                document.querySelectorAll('.jr-sidebar__btn').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+                jrRender(cat);
+            };
+
+            window.jrRender = function(cat) {
+                var cards = Array.from(document.querySelectorAll('#jrCardPool .jr-card'));
+                var favs  = jrGetFavs();
+                var visible = [];
+
+                if (cat === 'hot') {
+                    visible = cards.filter(function(c) {
+                        return c.dataset.label === 'hot' || c.dataset.label === 'new';
+                    });
+                    if (visible.length === 0) visible = cards.slice();
+                } else if (cat === 'favorites') {
+                    visible = cards.filter(function(c) {
+                        return favs.indexOf(c.dataset.name) >= 0;
+                    });
+                } else {
+                    visible = cards.filter(function(c) { return c.dataset.cat === cat; });
+                }
+
+                var titleEl = document.getElementById('jrCatTitle');
+                var countEl = document.getElementById('jrCatCount');
+                if (titleEl) titleEl.textContent = CAT_TITLES[cat] || cat;
+                if (countEl) countEl.textContent = visible.length;
+
+                var carousel = document.getElementById('jrCarousel');
+                if (!carousel) return;
+                carousel.innerHTML = '';
+
+                if (visible.length === 0) {
+                    carousel.innerHTML = '<div class="jr-empty"><p>No games found</p></div>';
+                    return;
+                }
+
+                for (var i = 0; i < visible.length; i += 2) {
+                    var col = document.createElement('div');
+                    col.className = 'jr-col';
+                    col.innerHTML = visible[i].outerHTML;
+                    if (visible[i + 1]) col.innerHTML += visible[i + 1].outerHTML;
+                    carousel.appendChild(col);
+                }
+
+                jrUpdateFavIcons();
+            };
+
+            window.jrRefreshBalance = function(btn) {
+                if (btn) btn.classList.add('refreshing');
+                setTimeout(function() { location.reload(); }, 400);
+            };
+
+            document.addEventListener('DOMContentLoaded', function() {
+                jrRender('hot');
+            });
+        })();
+        </script>
+
     </div>
     <!-- ===================== END MOBILE CASINO LAYOUT ===================== -->
 

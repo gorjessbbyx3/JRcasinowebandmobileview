@@ -1,1058 +1,621 @@
 /* ================================================================
-   JADE ROYALE — PREMIUM CHINESE CASINO UI
-   Dragon Gold · Jade Green · Dragon Red · Deep Black
-   Real Chinese Online Gambling App Aesthetic
+   JADE ROYALE — Reference Design System
+   Matching gorjessbbyx3/JadeRoyale.webapp
+   Deep Purple · Royal Gold · Neon Accents
+   Applies to ALL screen sizes (portrait + landscape + desktop)
    ================================================================ */
 
-/* ── 1. GOOGLE FONTS — INTER + NOTO SERIF SC ─────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Serif+SC:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* ── 2. CORE ANIMATIONS ──────────────────────────────────────── */
+/* ── DESIGN TOKENS ──────────────────────────────────────────── */
+:root {
+  --jr-bg:      #050208;
+  --jr-bg2:     #0A0514;
+  --jr-bg3:     #150A28;
+  --jr-gold:    #D4AF37;
+  --jr-gold-lt: #FFD700;
+  --jr-green:   #00FF87;
+  --jr-purple:  #A020F0;
+  --jr-blue:    #0099FF;
+  --jr-pink:    #FF1493;
+  --jr-red:     #FF3366;
+  --jr-orange:  #FF6B35;
+  --jr-sidebar: 72px;
+  --jr-header:  52px;
+  --jr-cat-h:   38px;
+  --jr-card-w:  160px;
+  --jr-card-h:  110px;
+  --jr-gap:     10px;
+}
 
-/* Dragon Color Cycle: Gold → Jade → Cyan → Crimson */
-@keyframes dragonCycleText {
-  0%, 100% {
-    color: #FFD700;
-    text-shadow: 0 0 8px #FFD700, 0 0 20px rgba(255,215,0,0.5), 0 0 45px rgba(255,215,0,0.2);
+/* ── ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes jrFloatOrb {
+  0%,100% { transform: translateY(0) scale(1); }
+  33%     { transform: translateY(-20px) scale(1.08); }
+  66%     { transform: translateY(10px) scale(0.94); }
+}
+@keyframes jrNeonPulse {
+  0%,100% {
+    filter: brightness(1.05)
+      drop-shadow(0 0 10px rgba(255,130,200,0.55))
+      drop-shadow(0 0 25px rgba(255,80,180,0.3));
   }
-  25% {
-    color: #FFD700;
-    text-shadow: 0 0 8px #FFD700, 0 0 20px rgba(255,215,0,0.5), 0 0 45px rgba(255,215,0,0.2);
+  50% {
+    filter: brightness(1.2)
+      drop-shadow(0 0 18px rgba(255,150,220,0.85))
+      drop-shadow(0 0 40px rgba(255,80,180,0.5));
   }
-  42% {
-    color: #00E676;
-    text-shadow: 0 0 8px #00E676, 0 0 20px rgba(0,230,118,0.5), 0 0 45px rgba(0,230,118,0.2);
+}
+@keyframes jrFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes jrSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ── GLOBAL — show jr-app at ALL sizes, hide legacy layouts ──── */
+html, body {
+  background: var(--jr-bg) !important;
+  overflow: hidden !important;
+}
+
+/* Show mobile layout div as the universal layout */
+.mobile-casino-layout {
+  display: flex !important;
+}
+
+/* Hide all legacy page elements — the jr-app covers the full viewport */
+.desktop-navbar,
+.carcass__body,
+.carcass__footer,
+.top-winners-bar,
+.ng-scope > .mobile-slider,
+footer {
+  display: none !important;
+}
+
+/* ── APP SHELL ───────────────────────────────────────────────── */
+.jr-app {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  background: var(--jr-bg) !important;
+  font-family: 'Inter', sans-serif !important;
+  color: #fff !important;
+  z-index: 9000 !important;
+}
+
+/* ── ANIMATED BACKGROUND ─────────────────────────────────────── */
+.jr-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(180deg,
+    #050208 0%,
+    #0A0514 30%,
+    #150A28 70%,
+    #0A0514 100%);
+}
+.jr-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.jr-orb--1 {
+  right: 10%; top: 20%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(160,32,240,0.12) 0%, transparent 70%);
+  filter: blur(50px);
+  opacity: 0.5;
+  animation: jrFloatOrb 8s ease-in-out infinite alternate;
+}
+.jr-orb--2 {
+  left: 15%; bottom: 15%;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(0,153,255,0.10) 0%, transparent 70%);
+  filter: blur(35px);
+  opacity: 0.45;
+  animation: jrFloatOrb 10s ease-in-out 2s infinite alternate;
+}
+.jr-orb--3 {
+  right: 30%; bottom: 35%;
+  width: 150px; height: 150px;
+  background: radial-gradient(circle, rgba(0,255,135,0.07) 0%, transparent 70%);
+  filter: blur(28px);
+  opacity: 0.4;
+  animation: jrFloatOrb 12s ease-in-out 1s infinite alternate;
+}
+.jr-orb--4 {
+  left: 40%; top: 8%;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle, rgba(255,20,147,0.08) 0%, transparent 70%);
+  filter: blur(22px);
+  opacity: 0.4;
+  animation: jrFloatOrb 9s ease-in-out 3s infinite alternate;
+}
+
+/* ── LAYOUT ──────────────────────────────────────────────────── */
+.jr-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── SIDEBAR ─────────────────────────────────────────────────── */
+.jr-sidebar {
+  width: var(--jr-sidebar);
+  min-width: var(--jr-sidebar);
+  height: 100%;
+  background: linear-gradient(180deg,
+    rgba(15,5,30,0.98) 0%,
+    rgba(25,10,50,0.95) 50%,
+    rgba(15,5,30,0.98) 100%);
+  border-right: 1px solid rgba(212,175,55,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0;
+  gap: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-shrink: 0;
+}
+.jr-sidebar::-webkit-scrollbar { width: 0; }
+
+.jr-sidebar__btn {
+  width: 56px;
+  height: 56px;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  color: rgba(255,255,255,0.4);
+  transition: all 0.2s ease;
+  padding: 0;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.jr-sidebar__btn:hover,
+.jr-sidebar__btn:active {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.7);
+}
+
+/* Active states — per category color */
+.jr-sidebar__btn[data-cat="hot"].active {
+  color: #FF6B35;
+  background: rgba(255,107,53,0.14);
+  border-color: rgba(255,107,53,0.45);
+  box-shadow: 0 0 14px rgba(255,107,53,0.3);
+}
+.jr-sidebar__btn[data-cat="favorites"].active {
+  color: #FF1493;
+  background: rgba(255,20,147,0.14);
+  border-color: rgba(255,20,147,0.45);
+  box-shadow: 0 0 14px rgba(255,20,147,0.3);
+}
+.jr-sidebar__btn[data-cat="slots"].active {
+  color: #FFD700;
+  background: rgba(255,215,0,0.12);
+  border-color: rgba(255,215,0,0.45);
+  box-shadow: 0 0 14px rgba(255,215,0,0.3);
+}
+.jr-sidebar__btn[data-cat="fish"].active {
+  color: #0099FF;
+  background: rgba(0,153,255,0.14);
+  border-color: rgba(0,153,255,0.45);
+  box-shadow: 0 0 14px rgba(0,153,255,0.3);
+}
+.jr-sidebar__btn[data-cat="table"].active {
+  color: #A020F0;
+  background: rgba(160,32,240,0.14);
+  border-color: rgba(160,32,240,0.45);
+  box-shadow: 0 0 14px rgba(160,32,240,0.3);
+}
+
+.jr-sidebar__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: filter 0.2s ease;
+}
+.jr-sidebar__btn.active .jr-sidebar__icon {
+  filter: drop-shadow(0 0 5px currentColor);
+}
+.jr-sidebar__label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ── CONTENT ─────────────────────────────────────────────────── */
+.jr-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── HEADER ──────────────────────────────────────────────────── */
+.jr-header {
+  height: var(--jr-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  background: rgba(5,2,8,0.88);
+  border-bottom: 1px solid rgba(212,175,55,0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  flex-shrink: 0;
+  gap: 10px;
+  z-index: 10;
+  position: relative;
+}
+
+.jr-header__logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.jr-logo-img {
+  height: 36px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  animation: jrNeonPulse 3s ease-in-out infinite;
+}
+
+.jr-header__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.jr-balance-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: var(--jr-gold);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.jr-balance-pill:hover,
+.jr-balance-pill:active {
+  background: rgba(212,175,55,0.18);
+  border-color: rgba(212,175,55,0.5);
+}
+.jr-balance-pill span {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--jr-gold-lt);
+}
+.jr-balance-pill svg.jr-refresh-ico {
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+.jr-balance-pill.refreshing .jr-refresh-ico {
+  animation: jrSpin 0.7s linear infinite;
+}
+
+.jr-action-btn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 9px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.jr-action-btn:hover,
+.jr-action-btn:active {
+  background: rgba(255,255,255,0.1);
+  box-shadow: 0 0 8px rgba(255,255,255,0.12);
+}
+
+.jr-login-btn {
+  background: linear-gradient(135deg, #D4AF37, #B8860B);
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  color: #000;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 14px rgba(212,175,55,0.4);
+  transition: all 0.15s ease;
+  font-family: 'Orbitron', sans-serif;
+  white-space: nowrap;
+}
+.jr-login-btn:hover {
+  box-shadow: 0 0 22px rgba(212,175,55,0.6);
+  transform: translateY(-1px);
+}
+
+/* ── CATEGORY BAR ────────────────────────────────────────────── */
+.jr-cat-bar {
+  height: var(--jr-cat-h);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 0 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.jr-cat-bar__title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--jr-gold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.jr-cat-bar__count {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.06);
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.jr-cat-bar__arrows {
+  margin-left: auto;
+  display: flex;
+  gap: 5px;
+}
+.jr-cat-bar__arrows button {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(255,255,255,0.5);
+  padding: 0;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.jr-cat-bar__arrows button:hover,
+.jr-cat-bar__arrows button:active {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.8);
+}
+
+/* ── CAROUSEL ────────────────────────────────────────────────── */
+.jr-carousel {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: var(--jr-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--jr-gap) var(--jr-gap) var(--jr-gap) var(--jr-gap);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  align-items: flex-start;
+}
+.jr-carousel::-webkit-scrollbar { height: 3px; }
+.jr-carousel::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+.jr-carousel::-webkit-scrollbar-thumb {
+  background: rgba(212,175,55,0.3);
+  border-radius: 2px;
+}
+
+.jr-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--jr-gap);
+  flex-shrink: 0;
+  animation: jrFadeIn 0.25s ease forwards;
+}
+
+/* ── GAME CARD ───────────────────────────────────────────────── */
+.jr-card__inner {
+  position: relative;
+  width: var(--jr-card-w);
+  height: var(--jr-card-h);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  transition: all 0.2s ease;
+  background: #150A28;
+  -webkit-tap-highlight-color: transparent;
+}
+.jr-card__inner:hover,
+.jr-card__inner:active {
+  border-color: rgba(212,175,55,0.6);
+  box-shadow: 0 0 20px rgba(212,175,55,0.3), 0 8px 24px rgba(0,0,0,0.5);
+  transform: scale(1.03);
+}
+.jr-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.jr-card__overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60%;
+  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  pointer-events: none;
+}
+.jr-card__title {
+  position: absolute;
+  bottom: 6px; left: 8px; right: 26px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  line-height: 1.2;
+}
+.jr-card__fav {
+  position: absolute;
+  top: 5px; right: 5px;
+  width: 22px; height: 22px;
+  background: rgba(0,0,0,0.5);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  transition: all 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.jr-card__fav:hover,
+.jr-card__fav:active {
+  background: rgba(0,0,0,0.78);
+  transform: scale(1.2);
+}
+.jr-card__badge {
+  position: absolute;
+  top: 5px; left: 5px;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 8px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  z-index: 2;
+  pointer-events: none;
+}
+.jr-card__badge--hot    { background: linear-gradient(135deg, #FF6B35, #FF3366); }
+.jr-card__badge--new    { background: linear-gradient(135deg, #00FF87, #0099FF); }
+.jr-card__badge--vip    { background: linear-gradient(135deg, #D4AF37, #B8860B); }
+.jr-card__badge--jackpot { background: linear-gradient(135deg, #A020F0, #5B00A8); }
+
+/* ── EMPTY STATE ─────────────────────────────────────────────── */
+.jr-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 120px;
+  padding: 40px 20px;
+}
+.jr-empty p {
+  color: rgba(255,255,255,0.4);
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+}
+
+/* ── LANDSCAPE / WIDE ────────────────────────────────────────── */
+@media (min-width: 600px) and (orientation: landscape),
+       (min-width: 800px) {
+  :root {
+    --jr-sidebar: 80px;
+    --jr-header:  58px;
+    --jr-card-w:  175px;
+    --jr-card-h:  118px;
+    --jr-gap:     12px;
   }
-  58% {
-    color: #00E5FF;
-    text-shadow: 0 0 8px #00E5FF, 0 0 20px rgba(0,229,255,0.5), 0 0 45px rgba(0,229,255,0.2);
+  .jr-sidebar__btn {
+    width: 62px;
+    height: 62px;
+    min-height: 62px;
+    border-radius: 14px;
   }
-  75% {
-    color: #FF1744;
-    text-shadow: 0 0 8px #FF1744, 0 0 20px rgba(255,23,68,0.5), 0 0 45px rgba(255,23,68,0.2);
+  .jr-sidebar__icon {
+    width: 22px;
+    height: 22px;
   }
-  90% {
-    color: #FFD700;
-    text-shadow: 0 0 8px #FFD700, 0 0 20px rgba(255,215,0,0.5), 0 0 45px rgba(255,215,0,0.2);
+  .jr-sidebar__label {
+    font-size: 10px;
+  }
+  .jr-logo-img {
+    height: 42px;
+    max-width: 220px;
+  }
+  .jr-action-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+  .jr-header__right {
+    gap: 8px;
+  }
+  .jr-cat-bar__title {
+    font-size: 13px;
   }
 }
 
-/* Logo image glow pulse matching text cycle */
-@keyframes dragonLogoGlow {
-  0%, 25%, 100% {
-    filter: drop-shadow(0 0 10px rgba(255,215,0,0.8)) drop-shadow(0 0 25px rgba(255,215,0,0.35)) brightness(1.05);
+/* ── VERY WIDE (tablet / desktop) ───────────────────────────── */
+@media (min-width: 1100px) {
+  :root {
+    --jr-sidebar: 88px;
+    --jr-header:  62px;
+    --jr-card-w:  185px;
+    --jr-card-h:  125px;
+    --jr-gap:     14px;
+  }
+  .jr-sidebar__btn {
+    width: 68px;
+    height: 68px;
+    min-height: 68px;
+  }
+  .jr-sidebar__label {
+    font-size: 10px;
+  }
+  .jr-logo-img {
+    height: 46px;
+    max-width: 260px;
+  }
+  .jr-balance-pill span {
+    font-size: 14px;
+  }
+  .jr-card__title {
+    font-size: 11px;
   }
-  42% {
-    filter: drop-shadow(0 0 10px rgba(0,230,118,0.8)) drop-shadow(0 0 25px rgba(0,230,118,0.35)) brightness(1.05);
-  }
-  58% {
-    filter: drop-shadow(0 0 10px rgba(0,229,255,0.8)) drop-shadow(0 0 25px rgba(0,229,255,0.35)) brightness(1.05);
-  }
-  75% {
-    filter: drop-shadow(0 0 10px rgba(255,23,68,0.8)) drop-shadow(0 0 25px rgba(255,23,68,0.35)) brightness(1.05);
-  }
-}
-
-/* Border & box-shadow glow cycle */
-@keyframes dragonBorderGlow {
-  0%, 25%, 100% { border-color: rgba(255,215,0,0.55) !important; box-shadow: 0 0 14px rgba(255,215,0,0.3), inset 0 0 12px rgba(255,215,0,0.06) !important; }
-  42%           { border-color: rgba(0,230,118,0.55) !important; box-shadow: 0 0 14px rgba(0,230,118,0.3), inset 0 0 12px rgba(0,230,118,0.06) !important; }
-  58%           { border-color: rgba(0,229,255,0.55) !important; box-shadow: 0 0 14px rgba(0,229,255,0.3), inset 0 0 12px rgba(0,229,255,0.06) !important; }
-  75%           { border-color: rgba(255,23,68,0.55) !important; box-shadow: 0 0 14px rgba(255,23,68,0.3), inset 0 0 12px rgba(255,23,68,0.06) !important; }
-}
-
-/* Sweeping shimmer highlight */
-@keyframes goldShimmerSweep {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-/* Pulse scale for active state */
-@keyframes activePulse {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.04); }
-}
-
-/* Floating gold particle */
-@keyframes particleRise {
-  0%   { transform: translateY(0) scale(1); opacity: 0.9; }
-  100% { transform: translateY(-60px) scale(0.2); opacity: 0; }
-}
-
-/* Neon flicker */
-@keyframes neonFlicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-  20%, 24%, 55% { opacity: 0.7; }
-}
-
-/* ── 3. TOP GOLDEN ACCENT BAR ────────────────────────────────── */
-@media (min-width: 769px) {
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #FFD700 0%, #00E676 25%, #00E5FF 50%, #FF1744 75%, #FFD700 100%);
-    background-size: 300% 100%;
-    animation: goldShimmerSweep 5s linear infinite;
-    z-index: 100000;
-    pointer-events: none;
-  }
-}
-
-/* ── 4. JADE ROYALE DESKTOP NAVBAR — DRAGON NEON SIGN ────────── */
-@media (min-width: 769px) {
-
-  .desktop-navbar {
-    background: rgba(2, 2, 8, 0.97) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border-bottom: 1px solid rgba(255,215,0,0.12) !important;
-    position: relative !important;
-  }
-
-  /* Bottom shimmer line on navbar */
-  .desktop-navbar::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.5) 20%, rgba(0,230,118,0.5) 50%, rgba(255,23,68,0.5) 80%, transparent 100%);
-    background-size: 200% 100%;
-    animation: goldShimmerSweep 4s linear infinite;
-  }
-
-  /* Logo container */
-  .desktop-navbar__logo {
-    gap: 10px !important;
-    align-items: center !important;
-    text-decoration: none !important;
-  }
-
-  /* Neon logo image — screen blend removes the dark purple bg */
-  .desktop-navbar__logo-img {
-    height: 52px !important;
-    width: auto !important;
-    max-width: 260px !important;
-    object-fit: contain !important;
-    display: block !important;
-    mix-blend-mode: screen !important;
-    filter: brightness(1.1) drop-shadow(0 0 12px rgba(255,130,200,0.6)) !important;
-    animation: neonLogoPulse 3s ease-in-out infinite !important;
-    flex-shrink: 0 !important;
-  }
-
-  @keyframes neonLogoPulse {
-    0%, 100% { filter: brightness(1.05) drop-shadow(0 0 10px rgba(255,130,200,0.55)) drop-shadow(0 0 25px rgba(255,80,180,0.3)); }
-    50%       { filter: brightness(1.2)  drop-shadow(0 0 18px rgba(255,150,220,0.85)) drop-shadow(0 0 40px rgba(255,80,180,0.5)); }
-  }
-
-  /* Nav links — active state */
-  .desktop-navbar__nav-link {
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.5px !important;
-    color: rgba(255,255,255,0.65) !important;
-    position: relative !important;
-    transition: color 0.2s ease !important;
-  }
-
-  .desktop-navbar__nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 2px; left: 50%; right: 50%;
-    height: 2px;
-    background: #FFD700;
-    border-radius: 1px;
-    transition: left 0.3s ease, right 0.3s ease, background-color 0.3s ease;
-  }
-
-  .desktop-navbar__nav-link:hover {
-    color: #fff !important;
-  }
-
-  .desktop-navbar__nav-link:hover::after {
-    left: 10px; right: 10px;
-    background: rgba(255,255,255,0.4);
-  }
-
-  .desktop-navbar__nav-link.active {
-    color: #FFD700 !important;
-    text-shadow: 0 0 12px rgba(255,215,0,0.5) !important;
-  }
-
-  .desktop-navbar__nav-link.active::after {
-    left: 10px; right: 10px;
-    background: #FFD700;
-    box-shadow: 0 0 6px rgba(255,215,0,0.6);
-  }
-
-  /* Login/Deposit buttons */
-  .desktop-navbar__login-btn {
-    background: linear-gradient(135deg, #CC0000, #FF1744) !important;
-    box-shadow: 0 3px 14px rgba(255,23,68,0.4), 0 0 0 1px rgba(255,23,68,0.2) !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.5px !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .desktop-navbar__login-btn:hover {
-    background: linear-gradient(135deg, #FF1744, #FF4569) !important;
-    box-shadow: 0 4px 20px rgba(255,23,68,0.6), 0 0 0 1px rgba(255,23,68,0.3) !important;
-    transform: translateY(-1px) !important;
-    color: #fff !important;
-  }
-
-  .desktop-navbar__deposit-btn {
-    background: linear-gradient(135deg, #00874a, #00C853) !important;
-    box-shadow: 0 3px 14px rgba(0,200,83,0.4) !important;
-    font-weight: 800 !important;
-  }
-
-  .desktop-navbar__deposit-btn:hover {
-    background: linear-gradient(135deg, #00C853, #69F0AE) !important;
-    box-shadow: 0 4px 20px rgba(0,200,83,0.6) !important;
-    color: #000 !important;
-    transform: translateY(-1px) !important;
-  }
-
-}
-
-/* ── 5. DESKTOP CATEGORY DIVIDERS — ORNATE CHINESE SEPARATORS ── */
-@media (min-width: 769px) {
-
-  /* Remove old CSS badges/separators */
-  .category-section::before { display: none !important; }
-
-  .category-section {
-    padding-top: 10px !important;
-    margin-bottom: 0 !important;
-  }
-
-  /* Full-width ornate divider */
-  .category-title-badge {
-    /* Layout: full-width flex row with extending lines */
-    position: static !important;
-    left: auto !important; top: auto !important;
-    transform: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 100% !important;
-    padding: 2px 40px 20px !important;
-    gap: 16px !important;
-
-    /* Clear old badge look */
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    border-radius: 0 !important;
-
-    /* Typography */
-    font-family: 'Noto Serif SC', 'Inter', serif !important;
-    font-size: 11px !important;
-    font-weight: 900 !important;
-    letter-spacing: 6px !important;
-    text-transform: uppercase !important;
-    white-space: nowrap !important;
-    text-shadow: none !important;
-
-    /* Animated dragon color cycle — same timing as logo */
-    animation: dragonCycleText 6s ease-in-out infinite !important;
-  }
-
-  /* Decorative lines on each side */
-  .category-title-badge::before,
-  .category-title-badge::after {
-    content: '' !important;
-    display: block !important;
-    flex: 1 !important;
-    height: 1px !important;
-    background: currentColor !important;
-    opacity: 0.4 !important;
-    position: static !important;
-    transform: none !important;
-    top: auto !important; left: auto !important;
-    width: auto !important;
-    border-radius: 1px !important;
-  }
-
-  /* Override category-specific badge colors — use animation instead */
-  .category-section--slots .category-title-badge,
-  .category-section--fish .category-title-badge,
-  .category-section--table .category-title-badge {
-    color: inherit !important;
-    text-shadow: inherit !important;
-    border: none !important;
-    background: transparent !important;
-  }
-
-  /* Filter chips — premium treatment */
-  .desktop-filter-chips {
-    padding: 16px 40px 4px !important;
-    gap: 8px !important;
-  }
-
-  .desktop-filter-chip {
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.5px !important;
-    border-radius: 100px !important;
-    padding: 7px 16px !important;
-    font-size: 12px !important;
-    background: rgba(255,215,0,0.05) !important;
-    border: 1px solid rgba(255,215,0,0.15) !important;
-    color: rgba(255,255,255,0.65) !important;
-    transition: all 0.2s ease !important;
-  }
-
-  .desktop-filter-chip:hover {
-    background: rgba(255,215,0,0.1) !important;
-    border-color: rgba(255,215,0,0.35) !important;
-    color: #FFD700 !important;
-    text-shadow: 0 0 8px rgba(255,215,0,0.4) !important;
-  }
-
-  .desktop-filter-chip.active {
-    background: rgba(255,215,0,0.15) !important;
-    border-color: rgba(255,215,0,0.55) !important;
-    color: #FFD700 !important;
-    text-shadow: 0 0 8px rgba(255,215,0,0.5) !important;
-    box-shadow: 0 0 12px rgba(255,215,0,0.2) !important;
-  }
-
-  /* Game cards — premium Chinese border */
-  .netflix-game-card {
-    border: 1px solid rgba(255,215,0,0.09) !important;
-    border-radius: 10px !important;
-    background: #0a0a14 !important;
-    transition: all 0.22s ease !important;
-  }
-
-  .netflix-game-card::before {
-    display: none !important;
-  }
-
-  .netflix-game-card:hover {
-    border-color: rgba(255,215,0,0.45) !important;
-    box-shadow: 0 8px 28px rgba(255,215,0,0.15), 0 2px 8px rgba(0,0,0,0.5) !important;
-    transform: scale(1.07) translateY(-2px) !important;
-    z-index: 10;
-  }
-
-  .netflix-game-card__badge {
-    background: linear-gradient(135deg, #FF6D00, #FF8F00) !important;
-    font-weight: 900 !important;
-    letter-spacing: 0.5px !important;
-    font-size: 8px !important;
-    padding: 2px 6px !important;
-    box-shadow: 0 2px 6px rgba(255,109,0,0.5) !important;
-  }
-
-  /* See-all cards */
-  .carousel-see-all-card {
-    border: 1px solid rgba(255,215,0,0.12) !important;
-    background: rgba(255,215,0,0.03) !important;
-    border-radius: 10px !important;
-  }
-
-  .carousel-see-all-card::before,
-  .carousel-see-all-card::after {
-    display: none !important;
-  }
-
-  .carousel-see-all-card:hover {
-    border-color: rgba(255,215,0,0.4) !important;
-    background: rgba(255,215,0,0.07) !important;
-    box-shadow: 0 8px 24px rgba(255,215,0,0.15) !important;
-    transform: scale(1.05) !important;
-  }
-
-  .see-all-icon svg {
-    stroke: #FFD700 !important;
-    filter: drop-shadow(0 0 5px rgba(255,215,0,0.5)) !important;
-  }
-
-  /* Nav arrows */
-  .netflix-carousel__nav:hover {
-    background: rgba(255,215,0,0.2) !important;
-    border-color: rgba(255,215,0,0.5) !important;
-  }
-
-  /* Subtle ambient bg on page */
-  .carcass__body {
-    background:
-      radial-gradient(ellipse at 15% 10%, rgba(255,215,0,0.025) 0%, transparent 45%),
-      radial-gradient(ellipse at 85% 90%, rgba(0,230,118,0.025) 0%, transparent 45%),
-      #000 !important;
-  }
-
-}
-
-/* ── 6. MOBILE HEADER — DRAGON LOGO SIGN ────────────────────── */
-@media (max-width: 768px) {
-
-  .mobile-casino-layout {
-    background: #050508 !important;
-  }
-
-  /* Header */
-  .mob-header {
-    background: linear-gradient(180deg, rgba(2,2,10,1) 0%, rgba(4,4,16,0.98) 100%) !important;
-    border-bottom: 1px solid rgba(255,215,0,0.1) !important;
-    height: 52px !important;
-    padding: 6px 12px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    position: relative !important;
-    z-index: 100 !important;
-  }
-
-  /* Animated shimmer line on header bottom */
-  .mob-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%, rgba(255,215,0,0.6) 20%,
-      rgba(0,230,118,0.6) 50%, rgba(255,23,68,0.6) 80%, transparent 100%);
-    background-size: 200% 100%;
-    animation: goldShimmerSweep 4s linear infinite;
-  }
-
-  /* CENTER logo in header */
-  .mob-header__logo {
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    display: flex !important;
-    align-items: center !important;
-    pointer-events: none !important;
-    background: transparent !important;
-    background-image: none !important;
-    -webkit-background-clip: unset !important;
-    background-clip: unset !important;
-    -webkit-text-fill-color: unset !important;
-    filter: none !important;
-    animation: none !important;
-  }
-
-  /* Neon logo image in mobile header */
-  .mob-header__logo-neon {
-    height: 38px !important;
-    width: auto !important;
-    max-width: 200px !important;
-    object-fit: contain !important;
-    display: block !important;
-    mix-blend-mode: screen !important;
-    animation: neonLogoPulse 3s ease-in-out infinite !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* User pill */
-  .mob-header__user-pill {
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-    background: rgba(255,215,0,0.08) !important;
-    border: 1px solid rgba(255,215,0,0.2) !important;
-    border-radius: 20px !important;
-    padding: 4px 8px 4px 5px !important;
-    max-width: 120px !important;
-    animation: dragonBorderGlow 6s ease-in-out infinite !important;
-    z-index: 1 !important;
-    position: relative !important;
-  }
-
-  .mob-header__avatar {
-    width: 24px !important;
-    height: 24px !important;
-    border-radius: 50% !important;
-    background: rgba(255,215,0,0.15) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-shrink: 0 !important;
-  }
-
-  .mob-header__avatar svg {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
-  .mob-header__username {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    color: #FFD700 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    max-width: 60px !important;
-  }
-
-  .mob-header__balance {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 10px !important;
-    font-weight: 600 !important;
-    color: rgba(255,255,255,0.7) !important;
-  }
-
-  .mob-header__login-text {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    color: rgba(255,255,255,0.7) !important;
-  }
-
-  /* ── 7. MOBILE SIDEBAR — PREMIUM CHINESE ──────────────────── */
-
-  .mob-sidebar {
-    background: linear-gradient(180deg, rgba(2,2,12,0.97) 0%, rgba(3,3,18,0.99) 100%) !important;
-    border-right: 1px solid rgba(255,215,0,0.08) !important;
-    width: 64px !important;
-    padding: 8px 4px !important;
-    gap: 5px !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-  }
-
-  /* Remove scrollbar from sidebar */
-  .mob-sidebar::-webkit-scrollbar { display: none; }
-  .mob-sidebar { scrollbar-width: none; }
-
-  /* Sidebar button base */
-  .mob-sidebar__item {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 4px !important;
-    width: 56px !important;
-    min-height: 58px !important;
-    border-radius: 12px !important;
-    border: 1px solid rgba(255,255,255,0.05) !important;
-    background: rgba(255,255,255,0.03) !important;
-    cursor: pointer !important;
-    transition: all 0.22s cubic-bezier(0.4,0,0.2,1) !important;
-    position: relative !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    flex-shrink: 0 !important;
-  }
-
-  /* Inner top highlight */
-  .mob-sidebar__item::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 8px; right: 8px;
-    height: 1px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 1px;
-    transition: background 0.22s ease;
-  }
-
-  /* Sidebar icon wrapper */
-  .mob-sidebar__icon {
-    width: 30px !important;
-    height: 30px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 8px !important;
-    background: rgba(255,255,255,0.04) !important;
-    transition: all 0.22s ease !important;
-  }
-
-  .mob-sidebar__icon svg {
-    width: 18px !important;
-    height: 18px !important;
-    transition: all 0.22s ease !important;
-  }
-
-  /* Label */
-  .mob-sidebar__label {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 8px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.5px !important;
-    text-transform: uppercase !important;
-    color: rgba(255,255,255,0.38) !important;
-    transition: color 0.22s ease !important;
-    line-height: 1 !important;
-  }
-
-  /* ── PER-CATEGORY COLORS ── */
-
-  /* ALL — Gold */
-  .mob-sidebar__item[data-filter="all"] { color: #FFD700; }
-  .mob-sidebar__item[data-filter="all"] .mob-sidebar__icon { background: rgba(255,215,0,0.08) !important; }
-  .mob-sidebar__item[data-filter="all"] .mob-sidebar__icon svg { color: rgba(255,215,0,0.65); fill: rgba(255,215,0,0.65); }
-
-  .mob-sidebar__item[data-filter="all"].active,
-  .mob-sidebar__item[data-filter="all"]:focus {
-    background: rgba(255,215,0,0.1) !important;
-    border-color: rgba(255,215,0,0.5) !important;
-    box-shadow: 0 0 16px rgba(255,215,0,0.25), inset 0 0 14px rgba(255,215,0,0.06) !important;
-  }
-  .mob-sidebar__item[data-filter="all"].active .mob-sidebar__icon {
-    background: rgba(255,215,0,0.15) !important;
-  }
-  .mob-sidebar__item[data-filter="all"].active .mob-sidebar__icon svg { color: #FFD700; fill: #FFD700; }
-  .mob-sidebar__item[data-filter="all"].active .mob-sidebar__label { color: #FFD700 !important; }
-  .mob-sidebar__item[data-filter="all"].active::after { background: rgba(255,215,0,0.25); }
-
-  /* SLOTS — Amber/Orange */
-  .mob-sidebar__item[data-filter="slots"] { color: #FF8F00; }
-  .mob-sidebar__item[data-filter="slots"] .mob-sidebar__icon { background: rgba(255,143,0,0.08) !important; }
-  .mob-sidebar__item[data-filter="slots"] .mob-sidebar__icon svg { color: rgba(255,143,0,0.65); fill: rgba(255,143,0,0.65); }
-
-  .mob-sidebar__item[data-filter="slots"].active {
-    background: rgba(255,143,0,0.1) !important;
-    border-color: rgba(255,143,0,0.5) !important;
-    box-shadow: 0 0 16px rgba(255,143,0,0.25), inset 0 0 14px rgba(255,143,0,0.06) !important;
-  }
-  .mob-sidebar__item[data-filter="slots"].active .mob-sidebar__icon { background: rgba(255,143,0,0.15) !important; }
-  .mob-sidebar__item[data-filter="slots"].active .mob-sidebar__icon svg { color: #FF8F00; fill: #FF8F00; }
-  .mob-sidebar__item[data-filter="slots"].active .mob-sidebar__label { color: #FF8F00 !important; }
-
-  /* FISH — Cyan */
-  .mob-sidebar__item[data-filter="fish"] { color: #00E5FF; }
-  .mob-sidebar__item[data-filter="fish"] .mob-sidebar__icon { background: rgba(0,229,255,0.06) !important; }
-  .mob-sidebar__item[data-filter="fish"] .mob-sidebar__icon svg { color: rgba(0,229,255,0.65); fill: rgba(0,229,255,0.65); }
-
-  .mob-sidebar__item[data-filter="fish"].active {
-    background: rgba(0,229,255,0.08) !important;
-    border-color: rgba(0,229,255,0.5) !important;
-    box-shadow: 0 0 16px rgba(0,229,255,0.2), inset 0 0 14px rgba(0,229,255,0.05) !important;
-  }
-  .mob-sidebar__item[data-filter="fish"].active .mob-sidebar__icon { background: rgba(0,229,255,0.12) !important; }
-  .mob-sidebar__item[data-filter="fish"].active .mob-sidebar__icon svg { color: #00E5FF; fill: #00E5FF; }
-  .mob-sidebar__item[data-filter="fish"].active .mob-sidebar__label { color: #00E5FF !important; }
-
-  /* TABLE — Jade Green */
-  .mob-sidebar__item[data-filter="table"] { color: #00E676; }
-  .mob-sidebar__item[data-filter="table"] .mob-sidebar__icon { background: rgba(0,230,118,0.06) !important; }
-  .mob-sidebar__item[data-filter="table"] .mob-sidebar__icon svg { color: rgba(0,230,118,0.65); fill: rgba(0,230,118,0.65); }
-
-  .mob-sidebar__item[data-filter="table"].active {
-    background: rgba(0,230,118,0.08) !important;
-    border-color: rgba(0,230,118,0.5) !important;
-    box-shadow: 0 0 16px rgba(0,230,118,0.2), inset 0 0 14px rgba(0,230,118,0.05) !important;
-  }
-  .mob-sidebar__item[data-filter="table"].active .mob-sidebar__icon { background: rgba(0,230,118,0.12) !important; }
-  .mob-sidebar__item[data-filter="table"].active .mob-sidebar__icon svg { color: #00E676; fill: #00E676; }
-  .mob-sidebar__item[data-filter="table"].active .mob-sidebar__label { color: #00E676 !important; }
-
-  /* FAVES — Crimson */
-  .mob-sidebar__item[data-filter="faves"] { color: #FF1744; }
-  .mob-sidebar__item[data-filter="faves"] .mob-sidebar__icon { background: rgba(255,23,68,0.06) !important; }
-  .mob-sidebar__item[data-filter="faves"] .mob-sidebar__icon svg { color: rgba(255,23,68,0.65); fill: rgba(255,23,68,0.65); }
-
-  .mob-sidebar__item[data-filter="faves"].active {
-    background: rgba(255,23,68,0.08) !important;
-    border-color: rgba(255,23,68,0.5) !important;
-    box-shadow: 0 0 16px rgba(255,23,68,0.2), inset 0 0 14px rgba(255,23,68,0.05) !important;
-  }
-  .mob-sidebar__item[data-filter="faves"].active .mob-sidebar__icon { background: rgba(255,23,68,0.12) !important; }
-  .mob-sidebar__item[data-filter="faves"].active .mob-sidebar__icon svg { color: #FF1744; fill: #FF1744; }
-  .mob-sidebar__item[data-filter="faves"].active .mob-sidebar__label { color: #FF1744 !important; }
-
-  /* Hover all */
-  .mob-sidebar__item:hover:not(.active) {
-    background: rgba(255,255,255,0.06) !important;
-    border-color: rgba(255,255,255,0.1) !important;
-  }
-
-  /* ── 8. MOBILE BOTTOM NAV — PREMIUM ───────────────────────── */
-
-  .mob-bottom-nav {
-    background: rgba(2, 2, 10, 0.99) !important;
-    border-top: 1px solid rgba(255,215,0,0.1) !important;
-    padding: 5px 2px 8px !important;
-    height: 68px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-around !important;
-    position: relative !important;
-    z-index: 200 !important;
-  }
-
-  /* Shimmer on top of bottom nav */
-  .mob-bottom-nav::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,215,0,0.35), rgba(0,230,118,0.35), rgba(255,23,68,0.35), transparent);
-    background-size: 200% 100%;
-    animation: goldShimmerSweep 5s linear infinite;
-  }
-
-  .mob-nav-item {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 3px !important;
-    padding: 2px 3px !important;
-    background: transparent !important;
-    border: none !important;
-    cursor: pointer !important;
-    min-width: 40px !important;
-    flex: 1 !important;
-    max-width: 52px !important;
-  }
-
-  .mob-nav-item span {
-    font-family: 'Inter', sans-serif !important;
-    font-size: 7px !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.3px !important;
-    color: rgba(255,255,255,0.42) !important;
-    text-transform: uppercase !important;
-    line-height: 1 !important;
-  }
-
-  .mob-nav-icon-wrap {
-    width: 38px !important;
-    height: 38px !important;
-    border-radius: 11px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: relative !important;
-    transition: transform 0.18s ease !important;
-  }
-
-  /* Bloom glow behind icon */
-  .mob-nav-icon-wrap::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 13px;
-    background: inherit;
-    filter: blur(7px);
-    opacity: 0.45;
-    z-index: -1;
-  }
-
-  .mob-nav-icon-wrap svg {
-    width: 19px !important;
-    height: 19px !important;
-  }
-
-  .mob-nav-item:active .mob-nav-icon-wrap {
-    transform: scale(0.91) !important;
-  }
-
-  /* PROFILE — Purple/Violet */
-  .mob-nav-item:nth-child(1) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #4527A0, #7C3AED) !important;
-    box-shadow: 0 3px 12px rgba(124,58,237,0.55) !important;
-  }
-
-  /* ALERTS — Blue */
-  .mob-nav-item:nth-child(2) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #0277BD, #0EA5E9) !important;
-    box-shadow: 0 3px 12px rgba(14,165,233,0.5) !important;
-  }
-
-  /* DEPOSIT — Jade Green */
-  .mob-nav-item--deposit .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #00600F, #00C853) !important;
-    box-shadow: 0 3px 14px rgba(0,200,83,0.6) !important;
-  }
-
-  /* SPIN — Gold wheel (bigger, elevated) */
-  .mob-nav-item--spin .mob-nav-icon-wrap {
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 13px !important;
-    margin-top: -10px !important;
-    background: linear-gradient(135deg, #B8860B, #FFD700, #FF8F00) !important;
-    box-shadow: 0 4px 18px rgba(255,215,0,0.7), 0 0 30px rgba(255,215,0,0.3) !important;
-    animation: activePulse 2.5s ease-in-out infinite !important;
-  }
-
-  /* CASHOUT — Dragon Red */
-  .mob-nav-item--cashout .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #7F0000, #CC0000) !important;
-    box-shadow: 0 3px 12px rgba(204,0,0,0.6) !important;
-  }
-
-  /* BONUS — Jade-Purple */
-  .mob-nav-item:nth-child(6) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #6A1B9A, #AB47BC) !important;
-    box-shadow: 0 3px 12px rgba(171,71,188,0.55) !important;
-  }
-
-  /* SETTINGS — Dark Steel */
-  .mob-nav-item:nth-child(7) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #1C1C2E, #374151) !important;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.5) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-  }
-
-  /* ── 9. MOBILE GAME CARDS — PREMIUM ───────────────────────── */
-
-  .mob-game-card__wrap {
-    border-radius: 10px !important;
-    overflow: hidden !important;
-    border: 1px solid rgba(255,215,0,0.1) !important;
-    transition: all 0.18s ease !important;
-    background: #0a0a14 !important;
-  }
-
-  .mob-game-card__wrap:active {
-    transform: scale(0.95) !important;
-    border-color: rgba(255,215,0,0.4) !important;
-    box-shadow: 0 0 14px rgba(255,215,0,0.25) !important;
-  }
-
-  .mob-game-card__badge {
-    background: linear-gradient(135deg, #CC4400, #FF6D00) !important;
-    font-weight: 900 !important;
-    font-size: 8px !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
-    letter-spacing: 0.5px !important;
-    box-shadow: 0 2px 6px rgba(255,109,0,0.4) !important;
-  }
-
-  .mob-game-card__overlay {
-    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.7) 100%) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    opacity: 0 !important;
-    transition: opacity 0.2s ease !important;
-  }
-
-  /* ── 10. MOBILE HERO BANNER — PREMIUM ─────────────────────── */
-
-  .mob-hero-banner {
-    position: relative !important;
-    overflow: hidden !important;
-  }
-
-  .mob-banner-slide {
-    background-size: cover !important;
-    background-position: center !important;
-  }
-
-  .mob-banner-dot {
-    width: 5px !important;
-    height: 5px !important;
-    border-radius: 50% !important;
-    background: rgba(255,255,255,0.35) !important;
-    transition: all 0.3s ease !important;
-  }
-
-  .mob-banner-dot.active {
-    width: 20px !important;
-    height: 5px !important;
-    border-radius: 3px !important;
-    background: #FFD700 !important;
-    box-shadow: 0 0 8px rgba(255,215,0,0.6) !important;
-  }
-
-  .mob-balance-coin svg {
-    filter: drop-shadow(0 0 6px rgba(255,215,0,0.5)) !important;
-  }
-
-  .mob-balance-amount {
-    font-family: 'Inter', sans-serif !important;
-    font-weight: 800 !important;
-    color: #FFD700 !important;
-    font-size: 15px !important;
-  }
-
-  /* ── 11. MOB CONTENT BG ────────────────────────────────────── */
-
-  .mob-content {
-    background: #050508 !important;
-  }
-
-  .mob-game-grid {
-    padding: 8px 8px 80px !important;
-    gap: 8px !important;
-  }
-
-  .mob-body {
-    background: #050508 !important;
-  }
-
-  /* ── 12. CRITICAL CONFLICT OVERRIDES ───────────────────────── */
-  /* Override minimal-layout.css purple (#130d2a) backgrounds to deep black */
-
-  html, body {
-    background: #050508 !important;
-    background-color: #050508 !important;
-  }
-
-  .mobile-casino-layout {
-    background: #050508 !important;
-  }
-
-  /* Reset the pink gradient text effect on logo container */
-  .mob-header__logo {
-    background: transparent !important;
-    background-image: none !important;
-    -webkit-background-clip: unset !important;
-    background-clip: unset !important;
-    -webkit-text-fill-color: unset !important;
-    color: transparent !important;
-    filter: none !important;
-    animation: none !important;
-    font-size: unset !important;
-    font-family: unset !important;
-  }
-
-  /* Logo image */
-  .mob-header__logo img {
-    height: 32px !important;
-    width: 32px !important;
-    object-fit: contain !important;
-    display: block !important;
-    animation: dragonLogoGlow 6s ease-in-out infinite !important;
-    flex-shrink: 0 !important;
-    -webkit-text-fill-color: unset !important;
-  }
-
-  /* Logo text span — full dragon neon treatment */
-  .mob-header__logo-text {
-    font-family: 'Noto Serif SC', 'Inter', serif !important;
-    font-size: 15px !important;
-    font-weight: 900 !important;
-    letter-spacing: 3px !important;
-    text-transform: uppercase !important;
-    animation: dragonCycleText 6s ease-in-out infinite !important;
-    white-space: nowrap !important;
-    display: block !important;
-    /* Override pink gradient clip */
-    background: transparent !important;
-    background-image: none !important;
-    -webkit-background-clip: unset !important;
-    background-clip: unset !important;
-    -webkit-text-fill-color: currentColor !important;
-  }
-
-  /* Override pink active state on sidebar items */
-  .mob-sidebar__item.active {
-    background: rgba(255,255,255,0.05) !important;
-    color: rgba(255,255,255,0.5) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-  }
-
-  /* Now re-apply our per-category active states on top */
-  .mob-sidebar__item[data-filter="all"].active {
-    background: rgba(255,215,0,0.1) !important;
-    border-color: rgba(255,215,0,0.5) !important;
-    box-shadow: 0 0 16px rgba(255,215,0,0.25), inset 0 0 14px rgba(255,215,0,0.06) !important;
-    color: #FFD700 !important;
-  }
-  .mob-sidebar__item[data-filter="all"].active .mob-sidebar__icon svg { color: #FFD700 !important; fill: #FFD700 !important; }
-  .mob-sidebar__item[data-filter="all"].active .mob-sidebar__label { color: #FFD700 !important; }
-
-  .mob-sidebar__item[data-filter="slots"].active {
-    background: rgba(255,143,0,0.1) !important;
-    border-color: rgba(255,143,0,0.5) !important;
-    box-shadow: 0 0 16px rgba(255,143,0,0.25), inset 0 0 14px rgba(255,143,0,0.06) !important;
-    color: #FF8F00 !important;
-  }
-  .mob-sidebar__item[data-filter="slots"].active .mob-sidebar__icon svg { color: #FF8F00 !important; fill: #FF8F00 !important; }
-  .mob-sidebar__item[data-filter="slots"].active .mob-sidebar__label { color: #FF8F00 !important; }
-
-  .mob-sidebar__item[data-filter="fish"].active {
-    background: rgba(0,229,255,0.08) !important;
-    border-color: rgba(0,229,255,0.5) !important;
-    box-shadow: 0 0 16px rgba(0,229,255,0.2), inset 0 0 14px rgba(0,229,255,0.05) !important;
-    color: #00E5FF !important;
-  }
-  .mob-sidebar__item[data-filter="fish"].active .mob-sidebar__icon svg { color: #00E5FF !important; fill: #00E5FF !important; }
-  .mob-sidebar__item[data-filter="fish"].active .mob-sidebar__label { color: #00E5FF !important; }
-
-  .mob-sidebar__item[data-filter="table"].active {
-    background: rgba(0,230,118,0.08) !important;
-    border-color: rgba(0,230,118,0.5) !important;
-    box-shadow: 0 0 16px rgba(0,230,118,0.2), inset 0 0 14px rgba(0,230,118,0.05) !important;
-    color: #00E676 !important;
-  }
-  .mob-sidebar__item[data-filter="table"].active .mob-sidebar__icon svg { color: #00E676 !important; fill: #00E676 !important; }
-  .mob-sidebar__item[data-filter="table"].active .mob-sidebar__label { color: #00E676 !important; }
-
-  .mob-sidebar__item[data-filter="faves"].active {
-    background: rgba(255,23,68,0.08) !important;
-    border-color: rgba(255,23,68,0.5) !important;
-    box-shadow: 0 0 16px rgba(255,23,68,0.2), inset 0 0 14px rgba(255,23,68,0.05) !important;
-    color: #FF1744 !important;
-  }
-  .mob-sidebar__item[data-filter="faves"].active .mob-sidebar__icon svg { color: #FF1744 !important; fill: #FF1744 !important; }
-  .mob-sidebar__item[data-filter="faves"].active .mob-sidebar__label { color: #FF1744 !important; }
-
-  /* Bottom nav base overrides */
-  .mob-bottom-nav {
-    background: rgba(2, 2, 10, 0.99) !important;
-    border-top: 1px solid rgba(255,215,0,0.1) !important;
-  }
-
-  /* Nav icon wrap default — dark glass */
-  .mob-nav-icon-wrap {
-    background: rgba(255,255,255,0.08) !important;
-    border: 1px solid rgba(255,255,255,0.06) !important;
-  }
-
-  /* PROFILE — violet */
-  .mob-nav-item:nth-child(1) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #4527A0, #7C3AED) !important;
-    border: none !important;
-    box-shadow: 0 3px 12px rgba(124,58,237,0.55) !important;
-  }
-  /* ALERTS — ocean blue */
-  .mob-nav-item:nth-child(2) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #0277BD, #0EA5E9) !important;
-    border: none !important;
-    box-shadow: 0 3px 12px rgba(14,165,233,0.5) !important;
-  }
-  /* DEPOSIT — jade green */
-  .mob-nav-item--deposit .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #00600F, #00C853) !important;
-    border: none !important;
-    box-shadow: 0 3px 14px rgba(0,200,83,0.6) !important;
-  }
-  /* SPIN — dragon gold (elevated) */
-  .mob-nav-item--spin .mob-nav-icon-wrap {
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 13px !important;
-    margin-top: -10px !important;
-    background: linear-gradient(135deg, #B8860B, #FFD700, #FF8F00) !important;
-    border: none !important;
-    box-shadow: 0 4px 18px rgba(255,215,0,0.7), 0 0 30px rgba(255,215,0,0.3) !important;
-    animation: activePulse 2.5s ease-in-out infinite !important;
-  }
-  /* CASHOUT — dragon crimson */
-  .mob-nav-item--cashout .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #7F0000, #CC0000) !important;
-    border: none !important;
-    box-shadow: 0 3px 12px rgba(204,0,0,0.6) !important;
-  }
-  /* BONUS — royal purple */
-  .mob-nav-item:nth-child(6) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #6A1B9A, #AB47BC) !important;
-    border: none !important;
-    box-shadow: 0 3px 12px rgba(171,71,188,0.55) !important;
-  }
-  /* SETTINGS — dark steel */
-  .mob-nav-item:nth-child(7) .mob-nav-icon-wrap {
-    background: linear-gradient(135deg, #1C1C2E, #374151) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.5) !important;
-  }
-
 }
