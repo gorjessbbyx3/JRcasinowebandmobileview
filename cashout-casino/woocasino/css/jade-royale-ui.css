@@ -4,19 +4,12 @@
    PREMIUM LOGIN MODAL REDESIGN
    ============================================ */
 
+/* The full-viewport modal container stays a transparent positioner —
+   the standard .modal-backdrop element is what dims the page. The
+   Jade Royale art lives on the popup CARD itself (see list.blade.php
+   inline overrides for the .modal-base rules). */
 #login-modal {
-    background: url('/frontend/Default/img/login-bg.jpeg') center center / cover no-repeat,
-                #050208 !important;
-    background-attachment: scroll;
-}
-
-#login-modal::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(5, 2, 8, 0.55) 0%, rgba(5, 2, 8, 0.7) 100%);
-    pointer-events: none;
-    z-index: 0;
+    background: transparent !important;
 }
 
 #login-modal .modal-dialog {

@@ -206,22 +206,39 @@
         }
         #login-modal .modal-base {
             position: relative !important;
-            padding: 28px 26px 24px !important;
-            background: linear-gradient(160deg, rgba(28,15,52,0.78) 0%, rgba(10,5,22,0.86) 100%) !important;
-            border: 1px solid rgba(212,175,55,0.45) !important;
-            border-radius: 20px !important;
-            backdrop-filter: blur(20px) saturate(120%) !important;
-            -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+            padding: 32px 28px 26px !important;
+            background:
+                linear-gradient(180deg, rgba(5,2,12,0.62) 0%, rgba(5,2,12,0.82) 100%),
+                url('/frontend/Default/img/login-bg.jpeg') center center / cover no-repeat !important;
+            border: none !important;
+            border-radius: 22px !important;
             box-shadow:
-                0 24px 70px rgba(0,0,0,0.6),
-                0 0 60px rgba(212,175,55,0.18),
-                inset 0 1px 0 rgba(255,255,255,0.06) !important;
+                0 30px 90px rgba(0,0,0,0.7),
+                0 0 50px rgba(212,175,55,0.22) !important;
             color: #f5ecd6 !important;
             font-family: 'Poppins', sans-serif !important;
             overflow: hidden !important;
             min-height: 0 !important;
-            background-image: none !important;
         }
+        /* Hairline gold gradient ring — adds elegance without a hard "box" */
+        #login-modal .modal-base::after {
+            content: '' !important;
+            position: absolute !important;
+            inset: 0 !important;
+            border-radius: 22px !important;
+            padding: 1px !important;
+            background: linear-gradient(135deg,
+                rgba(255,215,120,0.55),
+                rgba(212,175,55,0.05) 40%,
+                rgba(255,215,120,0.45)) !important;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
+            -webkit-mask-composite: xor !important;
+                    mask-composite: exclude !important;
+            pointer-events: none !important;
+            z-index: 4 !important;
+        }
+        /* The form sits above the scrim/image */
+        #login-modal .modal-base > * { position: relative; z-index: 2; }
         /* Hero image / decorative blocks bloated the modal — kill them. */
         #login-modal .login-hero-image,
         #login-modal .modal-base__header-decor,

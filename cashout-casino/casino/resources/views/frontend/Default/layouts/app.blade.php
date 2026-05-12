@@ -61,7 +61,7 @@
     <link rel="stylesheet" href="/woocasino/css/oct7vfe.css">
     <link href="/frontend/Default/css/bonuses.css" rel="stylesheet" type="text/css"/>
     <link href="/woocasino/css/custom-overrides.css" rel="stylesheet" type="text/css"/>
-    <link href="/woocasino/css/jade-royale-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="/woocasino/css/jade-royale-ui.css?v=20260512n" rel="stylesheet" type="text/css"/>
     <link href="/woocasino/css/minimal-layout.css" rel="stylesheet" type="text/css"/>
     <link href="/woocasino/css/netflix-carousel.css" rel="stylesheet" type="text/css"/>
     <link href="/woocasino/css/desktop-redesign.css" rel="stylesheet" type="text/css"/>
