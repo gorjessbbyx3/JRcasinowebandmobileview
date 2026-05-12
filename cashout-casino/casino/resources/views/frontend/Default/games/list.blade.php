@@ -567,27 +567,34 @@
                 jrRender(cat);
             };
 
+            function jrRowCount() {
+                return window.matchMedia('(orientation: portrait) and (max-width: 799px)').matches ? 1 : 2;
+            }
+
+            var jrCurrentCat = 'hot';
+
             window.jrRender = function(cat) {
+                if (cat) jrCurrentCat = cat;
                 var cards = Array.from(document.querySelectorAll('#jrCardPool .jr-card'));
                 var favs  = jrGetFavs();
                 var visible = [];
 
-                if (cat === 'hot') {
+                if (jrCurrentCat === 'hot') {
                     visible = cards.filter(function(c) {
                         return c.dataset.label === 'hot' || c.dataset.label === 'new';
                     });
                     if (visible.length === 0) visible = cards.slice();
-                } else if (cat === 'favorites') {
+                } else if (jrCurrentCat === 'favorites') {
                     visible = cards.filter(function(c) {
                         return favs.indexOf(c.dataset.name) >= 0;
                     });
                 } else {
-                    visible = cards.filter(function(c) { return c.dataset.cat === cat; });
+                    visible = cards.filter(function(c) { return c.dataset.cat === jrCurrentCat; });
                 }
 
                 var titleEl = document.getElementById('jrCatTitle');
                 var countEl = document.getElementById('jrCatCount');
-                if (titleEl) titleEl.textContent = CAT_TITLES[cat] || cat;
+                if (titleEl) titleEl.textContent = CAT_TITLES[jrCurrentCat] || jrCurrentCat;
                 if (countEl) countEl.textContent = visible.length;
 
                 var carousel = document.getElementById('jrCarousel');
@@ -599,11 +606,13 @@
                     return;
                 }
 
-                for (var i = 0; i < visible.length; i += 2) {
+                var rows = jrRowCount();
+                for (var i = 0; i < visible.length; i += rows) {
                     var col = document.createElement('div');
                     col.className = 'jr-col';
-                    col.innerHTML = visible[i].outerHTML;
-                    if (visible[i + 1]) col.innerHTML += visible[i + 1].outerHTML;
+                    for (var r = 0; r < rows; r++) {
+                        if (visible[i + r]) col.innerHTML += visible[i + r].outerHTML;
+                    }
                     carousel.appendChild(col);
                 }
 
@@ -614,6 +623,19 @@
                 if (btn) btn.classList.add('refreshing');
                 setTimeout(function() { location.reload(); }, 400);
             };
+
+            /* Re-render on orientation change or resize */
+            var jrResizeTimer = null;
+            function jrOnResize() {
+                clearTimeout(jrResizeTimer);
+                jrResizeTimer = setTimeout(function() {
+                    jrRender();
+                }, 120);
+            }
+            window.addEventListener('orientationchange', function() {
+                setTimeout(jrOnResize, 50);
+            });
+            window.addEventListener('resize', jrOnResize);
 
             document.addEventListener('DOMContentLoaded', function() {
                 jrRender('hot');

@@ -551,6 +551,37 @@ footer {
   text-align: center;
 }
 
+/* ── PORTRAIT — single horizontal row, taller cards ─────────── */
+@media (orientation: portrait) and (max-width: 799px) {
+  :root {
+    --jr-card-w:  148px;
+    --jr-card-h:  215px;
+    --jr-gap:     10px;
+  }
+  /* Carousel fills full available height as a single row */
+  .jr-carousel {
+    align-items: stretch;
+  }
+  .jr-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .jr-card__inner {
+    /* Title sits lower in taller cards */
+    border-radius: 14px;
+  }
+  .jr-card__title {
+    font-size: 11px;
+  }
+  /* Slightly wider sidebar tap targets on portrait */
+  .jr-sidebar__btn {
+    width: 56px;
+    height: 60px;
+    min-height: 60px;
+  }
+}
+
 /* ── LANDSCAPE / WIDE ────────────────────────────────────────── */
 @media (min-width: 600px) and (orientation: landscape),
        (min-width: 800px) {
