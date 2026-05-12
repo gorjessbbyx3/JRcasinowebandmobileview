@@ -1231,6 +1231,10 @@
         .jr-app {
             padding-bottom: env(safe-area-inset-bottom);
         }
+        /* Hide the install/fullscreen prompt in landscape — only show in portrait */
+        @media (orientation: landscape) {
+            #jrFsBar { display: none !important; }
+        }
         </style>
 
         <script>
