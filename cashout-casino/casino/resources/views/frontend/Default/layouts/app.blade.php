@@ -65,7 +65,7 @@
     <link href="/woocasino/css/minimal-layout.css" rel="stylesheet" type="text/css"/>
     <link href="/woocasino/css/netflix-carousel.css" rel="stylesheet" type="text/css"/>
     <link href="/woocasino/css/desktop-redesign.css" rel="stylesheet" type="text/css"/>
-    <link href="/woocasino/css/premium-chinese-ui.css" rel="stylesheet" type="text/css"/>
+    <link href="/woocasino/css/premium-chinese-ui.css?v=20260512c" rel="stylesheet" type="text/css"/>
 
     <!-- DEFAULT JS SCRIPTS -->
     <!--[if lt IE 9]>

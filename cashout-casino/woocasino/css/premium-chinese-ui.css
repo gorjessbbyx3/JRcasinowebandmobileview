@@ -1169,3 +1169,145 @@ html, body { overscroll-behavior-y: contain; }
     font-size: 8px !important; padding: 0 3px !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   BONUS ICONS STRIP + PORTRAIT MULTI-SECTION FEED
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Bonus icons strip — sits above cat-bar ──────────────────── */
+.jr-bonus-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 6px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, rgba(20,8,38,0.4), rgba(20,8,38,0));
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.jr-bonus-strip::-webkit-scrollbar { display: none; }
+.jr-bonus-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 2px;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s ease;
+}
+.jr-bonus-icon:active { transform: scale(0.92); }
+.jr-bonus-icon__circle {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  position: relative;
+  animation: jrBonusFloat 3.4s ease-in-out infinite;
+}
+.jr-bonus-icon:nth-child(2) .jr-bonus-icon__circle { animation-delay: 0.4s; }
+.jr-bonus-icon:nth-child(3) .jr-bonus-icon__circle { animation-delay: 0.8s; }
+.jr-bonus-icon:nth-child(4) .jr-bonus-icon__circle { animation-delay: 1.2s; }
+.jr-bonus-icon:nth-child(5) .jr-bonus-icon__circle { animation-delay: 1.6s; }
+@keyframes jrBonusFloat {
+  0%,100% { transform: translateY(0); box-shadow: 0 4px 14px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.18); }
+  50%     { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.22); }
+}
+.jr-bonus-icon__lbl {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── Portrait stacked sections ─────────────────────────────────── */
+.jr-section {
+  margin: 0 0 14px;
+  padding: 0;
+}
+.jr-section__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px 8px;
+}
+.jr-section__title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--jr-gold);
+  text-shadow: 0 0 10px rgba(212,175,55,0.4);
+}
+.jr-section__count {
+  font-size: 10px;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.07);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.jr-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.jr-section__empty {
+  grid-column: 1 / -1;
+  padding: 20px;
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+  font-size: 12px;
+}
+/* Color tints per section */
+.jr-section--hot       .jr-section__title { color: #FF6B35; text-shadow: 0 0 12px rgba(255,107,53,0.5); }
+.jr-section--favorites .jr-section__title { color: #FF3DAC; text-shadow: 0 0 12px rgba(255,61,172,0.5); }
+.jr-section--slots     .jr-section__title { color: #FFD700; text-shadow: 0 0 12px rgba(255,215,0,0.5); }
+.jr-section--fish      .jr-section__title { color: #40C4FF; text-shadow: 0 0 12px rgba(64,196,255,0.5); }
+.jr-section--table     .jr-section__title { color: #A86BFF; text-shadow: 0 0 12px rgba(168,107,255,0.5); }
+
+/* When the carousel is in portrait section mode, override layout */
+.jr-carousel.jr-portrait-mode {
+  display: block !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 8px 12px 14px !important;
+}
+.jr-carousel.jr-portrait-mode .jr-section__grid .jr-card,
+.jr-carousel.jr-portrait-mode .jr-section__grid .jr-card__inner {
+  width: 100% !important;
+  height: auto !important;
+}
+.jr-carousel.jr-portrait-mode .jr-section__grid .jr-card__inner {
+  aspect-ratio: 1 / 1 !important;
+}
+
+/* In portrait, hide the single cat-bar (sections have their own headers) */
+@media (orientation: portrait) and (max-width: 799px) {
+  .jr-cat-bar { display: none !important; }
+  .jr-bonus-strip { padding: 6px 10px; }
+  .jr-bonus-icon__circle { width: 40px; height: 40px; }
+  .jr-bonus-icon__lbl { font-size: 7px; }
+}
+
+/* ── Landscape: slim bonus strip + ENFORCE no-sidebar ──────────── */
+@media (orientation: landscape) and (max-height: 540px) {
+  .jr-bonus-strip { padding: 3px 8px !important; gap: 8px; }
+  .jr-bonus-icon__circle { width: 32px !important; height: 32px !important; }
+  .jr-bonus-icon__circle svg { width: 16px !important; height: 16px !important; }
+  .jr-bonus-icon__lbl { font-size: 6px !important; letter-spacing: 0.5px !important; }
+}
+
+/* HIGH-SPECIFICITY landscape override — wins over the older max-height:500px rule */
+@media (orientation: landscape) and (max-height: 540px) {
+  html body .jr-app .jr-sidebar { display: none !important; }
+  html body .jr-app .jr-bottom-nav { display: flex !important; }
+}

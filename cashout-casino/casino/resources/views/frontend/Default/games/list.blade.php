@@ -462,6 +462,40 @@
                     </div>
                 </header>
 
+                <!-- BONUS ICONS STRIP — always visible, sits above cat-bar -->
+                <div class="jr-bonus-strip">
+                    <a class="jr-bonus-icon" onclick="if(window.openBonusModal){openBonusModal();if(window.switchBonusTab)switchBonusTab('wheel');}">
+                        <div class="jr-bonus-icon__circle" style="background:linear-gradient(135deg,#A020F0,#FF1493)">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm-1-13h2v6h-2zm0 7h2v2h-2z"/></svg>
+                        </div>
+                        <span class="jr-bonus-icon__lbl">WHEEL</span>
+                    </a>
+                    <a class="jr-bonus-icon" onclick="if(window.openBonusModal){openBonusModal();if(window.switchBonusTab)switchBonusTab('referral');}">
+                        <div class="jr-bonus-icon__circle" style="background:linear-gradient(135deg,#FF6B35,#FFD700)">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M16 4a4 4 0 1 1-4 4 4 4 0 0 1 4-4m0 14c-3.3 0-6 1.4-6 3v1h12v-1c0-1.6-2.7-3-6-3M8 4a4 4 0 1 0 4 4 4 4 0 0 0-4-4m0 14c-3.3 0-8 1.4-8 3v1h8v-1c0-1.1.4-2 1-2.7-.3 0-.7-.3-1-.3z"/></svg>
+                        </div>
+                        <span class="jr-bonus-icon__lbl">REFERRAL</span>
+                    </a>
+                    <a class="jr-bonus-icon" onclick="if(window.openBonusModal){openBonusModal();if(window.switchBonusTab)switchBonusTab('daily');}">
+                        <div class="jr-bonus-icon__circle" style="background:linear-gradient(135deg,#00FF87,#0099FF)">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M19 3h-1V1h-2v2H8V1H6v2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm0 18H5V8h14zM7 10h5v5H7z"/></svg>
+                        </div>
+                        <span class="jr-bonus-icon__lbl">DAILY</span>
+                    </a>
+                    <a class="jr-bonus-icon" onclick="if(window.openBonusModal){openBonusModal();if(window.switchBonusTab)switchBonusTab('welcome');}">
+                        <div class="jr-bonus-icon__circle" style="background:linear-gradient(135deg,#D4AF37,#FFD700)">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M12 2L9 9l-7 .8 5.2 4.9L5.8 22 12 18l6.2 4-1.4-7.3L22 9.8 15 9z"/></svg>
+                        </div>
+                        <span class="jr-bonus-icon__lbl">BONUS</span>
+                    </a>
+                    <a class="jr-bonus-icon" onclick="if(window.openMoreModal)openMoreModal();">
+                        <div class="jr-bonus-icon__circle" style="background:linear-gradient(135deg,#5B00A8,#A020F0)">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><circle cx="6" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="18" cy="12" r="2"/></svg>
+                        </div>
+                        <span class="jr-bonus-icon__lbl">MORE</span>
+                    </a>
+                </div>
+
                 <!-- CATEGORY BAR -->
                 <div class="jr-cat-bar" id="jrCatBar" data-cat="hot">
                     <span class="jr-cat-bar__title" id="jrCatTitle">Hot Games</span>
@@ -710,6 +744,10 @@
                 });
             }
 
+            function jrIsPortrait() {
+                return window.matchMedia('(orientation: portrait) and (max-width: 799px)').matches;
+            }
+
             window.jrSelectCat = function(cat, btn) {
                 /* Sync ALL nav buttons (sidebar + bottom nav) */
                 document.querySelectorAll('.jr-sidebar__btn, .jr-bnav__btn').forEach(function(b) {
@@ -721,6 +759,16 @@
                 /* Color-theme the cat bar */
                 var catBar = document.getElementById('jrCatBar');
                 if (catBar) catBar.dataset.cat = cat;
+
+                /* In portrait: scroll to that section (multi-section feed). In landscape/desktop: filter. */
+                if (jrIsPortrait()) {
+                    var sec = document.getElementById('jrSec-' + cat);
+                    var carousel = document.getElementById('jrCarousel');
+                    if (sec && carousel) {
+                        carousel.scrollTo({ top: sec.offsetTop - 8, behavior: 'smooth' });
+                    }
+                    return;
+                }
                 jrRender(cat);
             };
 
@@ -750,37 +798,77 @@
                 jrUpdateFavIcons();
             }
 
+            function jrFilterFor(catKey, cards, favs) {
+                if (catKey === 'hot') {
+                    var hot = cards.filter(function(c) { return c.dataset.label === 'hot' || c.dataset.label === 'new'; });
+                    return hot.length ? hot : cards.slice();
+                }
+                if (catKey === 'favorites') {
+                    return cards.filter(function(c) { return favs.indexOf(c.dataset.name) >= 0; });
+                }
+                return cards.filter(function(c) { return c.dataset.cat === catKey; });
+            }
+
+            /* PORTRAIT: render every category as its own stacked section, scrollable vertically */
+            function jrBuildSections(carousel, cards, favs) {
+                carousel.innerHTML = '';
+                var order = ['hot', 'favorites', 'slots', 'fish', 'table'];
+                order.forEach(function(catKey) {
+                    var games = jrFilterFor(catKey, cards, favs);
+                    if (games.length === 0 && catKey !== 'favorites') return;  /* skip empty non-fav sections */
+                    var sec = document.createElement('section');
+                    sec.className = 'jr-section jr-section--' + catKey;
+                    sec.id = 'jrSec-' + catKey;
+                    var head = document.createElement('div');
+                    head.className = 'jr-section__head';
+                    head.innerHTML = '<span class="jr-section__title">' + (CAT_TITLES[catKey] || catKey) + '</span>'
+                                   + '<span class="jr-section__count">' + games.length + '</span>';
+                    sec.appendChild(head);
+                    var grid = document.createElement('div');
+                    grid.className = 'jr-section__grid';
+                    if (games.length === 0) {
+                        grid.innerHTML = '<div class="jr-section__empty">No favorites yet — tap the heart on any game.</div>';
+                    } else {
+                        games.forEach(function(c) { grid.innerHTML += c.outerHTML; });
+                    }
+                    sec.appendChild(grid);
+                    carousel.appendChild(sec);
+                });
+                jrUpdateFavIcons();
+            }
+
             window.jrRender = function(cat) {
                 if (cat) jrCurrentCat = cat;
                 var cards   = Array.from(document.querySelectorAll('#jrCardPool .jr-card'));
                 var favs    = jrGetFavs();
-                var visible = [];
+                var carousel = document.getElementById('jrCarousel');
+                if (!carousel) return;
 
-                if (jrCurrentCat === 'hot') {
-                    visible = cards.filter(function(c) {
-                        return c.dataset.label === 'hot' || c.dataset.label === 'new';
-                    });
-                    if (visible.length === 0) visible = cards.slice();
-                } else if (jrCurrentCat === 'favorites') {
-                    visible = cards.filter(function(c) {
-                        return favs.indexOf(c.dataset.name) >= 0;
-                    });
-                } else {
-                    visible = cards.filter(function(c) { return c.dataset.cat === jrCurrentCat; });
+                /* PORTRAIT: stack all categories as sections (no filtering by tab) */
+                if (jrIsPortrait()) {
+                    carousel.classList.add('jr-portrait-mode');
+                    jrBuildSections(carousel, cards, favs);
+                    var titleEl = document.getElementById('jrCatTitle');
+                    var countEl = document.getElementById('jrCatCount');
+                    if (titleEl) titleEl.textContent = 'All Games';
+                    if (countEl) countEl.textContent = cards.length;
+                    jrUpdateBadges();
+                    return;
                 }
+                carousel.classList.remove('jr-portrait-mode');
+
+                /* LANDSCAPE / DESKTOP: original single-category filtered view */
+                var visible = jrFilterFor(jrCurrentCat, cards, favs);
 
                 var titleEl = document.getElementById('jrCatTitle');
                 var countEl = document.getElementById('jrCatCount');
                 if (titleEl) titleEl.textContent = CAT_TITLES[jrCurrentCat] || jrCurrentCat;
                 if (countEl) countEl.textContent = visible.length;
 
-                var carousel = document.getElementById('jrCarousel');
-                if (!carousel) return;
-
                 /* Crossfade: fade out → swap content → fade in */
                 carousel.classList.add('jr-fading');
                 carousel.classList.remove('jr-showing');
-                var snap = visible.slice(); /* capture before timeout */
+                var snap = visible.slice();
                 setTimeout(function() {
                     jrBuildCarousel(carousel, snap);
                     carousel.scrollLeft = 0;
