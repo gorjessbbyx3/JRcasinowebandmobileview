@@ -621,6 +621,119 @@
         })();
         </script>
 
+        <!-- FULLSCREEN HANDLER -->
+        <div id="jrFsBar" style="display:none">
+            <span id="jrFsMsg"></span>
+            <button id="jrFsBtn" onclick="jrEnterFullscreen()"></button>
+            <button id="jrFsDismiss" onclick="jrDismissFs()">✕</button>
+        </div>
+
+        <style>
+        #jrFsBar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 99999;
+            background: rgba(10,5,20,0.97);
+            border-top: 1px solid rgba(212,175,55,0.4);
+            backdrop-filter: blur(12px);
+            display: flex !important;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            animation: jrFadeIn 0.4s ease;
+        }
+        #jrFsMsg {
+            flex: 1;
+            font-size: 13px;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.35;
+        }
+        #jrFsBtn {
+            background: linear-gradient(135deg, #D4AF37, #B8860B);
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: #000;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        #jrFsDismiss {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 0;
+        }
+        /* Safe-area padding for iPhone notch/home bar */
+        .jr-app {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        </style>
+
+        <script>
+        (function() {
+            var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            var isAndroid = /Android/i.test(navigator.userAgent);
+            var isMobile  = isIOS || isAndroid;
+            var standalone = window.navigator.standalone === true
+                          || window.matchMedia('(display-mode: fullscreen)').matches
+                          || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (!isMobile || standalone) return;
+            if (localStorage.getItem('jr_fs_dismissed') === '1') return;
+
+            var bar = document.getElementById('jrFsBar');
+            var msg = document.getElementById('jrFsMsg');
+            var btn = document.getElementById('jrFsBtn');
+
+            window.jrDismissFs = function() {
+                localStorage.setItem('jr_fs_dismissed', '1');
+                if (bar) bar.style.display = 'none';
+            };
+
+            if (isIOS) {
+                msg.innerHTML = 'For the best experience, tap <strong style="color:#D4AF37">Share</strong> then <strong style="color:#D4AF37">Add to Home Screen</strong> — launches in fullscreen.';
+                btn.textContent = '📲 How to';
+                btn.onclick = function() {
+                    alert('To play fullscreen on iPhone:\n\n1. Tap the Share button (□↑) in Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap Add — then open the app from your home screen');
+                };
+                setTimeout(function() {
+                    if (bar) bar.style.display = 'flex';
+                }, 2500);
+            } else if (isAndroid) {
+                msg.textContent = 'Tap Fullscreen for the best gaming experience.';
+                btn.textContent = '⛶ Fullscreen';
+                window.jrEnterFullscreen = function() {
+                    var el = document.documentElement;
+                    var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+                    if (req) {
+                        req.call(el).then(function() {
+                            if (bar) bar.style.display = 'none';
+                            localStorage.setItem('jr_fs_dismissed', '1');
+                        }).catch(function() {});
+                    }
+                };
+                setTimeout(function() {
+                    if (bar) bar.style.display = 'flex';
+                }, 1500);
+
+                document.addEventListener('fullscreenchange', function() {
+                    if (!document.fullscreenElement && bar) {
+                        bar.style.display = 'flex';
+                    }
+                });
+            }
+        })();
+        </script>
+
     </div>
     <!-- ===================== END MOBILE CASINO LAYOUT ===================== -->
 

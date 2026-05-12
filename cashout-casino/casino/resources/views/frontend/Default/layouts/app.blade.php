@@ -26,7 +26,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="HandheldFriendly" content="true"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="initial-scale=1,width=device-width,maximum-scale=2,minimum-scale=0.5,user-scalable=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+
+    <!-- PWA / Fullscreen support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Jade Royale">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#050208">
+    <link rel="manifest" href="/manifest.json">
 
 
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700&amp;subset=cyrillic,cyrillic-ext,latin-ext"

@@ -1,0 +1,32 @@
+{
+  "name": "Jade Royale Casino",
+  "short_name": "Jade Royale",
+  "description": "Jade Royale Online Casino",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#050208",
+  "theme_color": "#050208",
+  "icons": [
+    {
+      "src": "/woocasino/images/favicon/spc-iphone.png",
+      "sizes": "60x60",
+      "type": "image/png"
+    },
+    {
+      "src": "/woocasino/images/favicon/spc-ipad.png",
+      "sizes": "76x76",
+      "type": "image/png"
+    },
+    {
+      "src": "/woocasino/images/favicon/spc-ipad2.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    },
+    {
+      "src": "/woocasino/images/favicon/spc-ipad3.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    }
+  ]
+}
