@@ -784,111 +784,192 @@ phpdebugbar,
   .jr-card__badge  { font-size: 9px; padding: 2px 6px; }
 }
 
-/* ── PHONE LANDSCAPE — Netflix-style horizontal carousel ──────── */
-/* In landscape on a phone the screen is short (≤500px tall). The previous
-   layout stretched a single row of tall cards to fill the entire height —
-   that produced enormous thumbnails. Replace with Netflix-style: small
-   16:10 thumbnails in TWO horizontally-scrolling rows so the user can scan
-   many games at a glance, exactly like Netflix on mobile landscape. */
+/* ── PHONE LANDSCAPE — Netflix-style horizontal carousel ──────────
+   Phone in landscape is short (≤500px tall) and wide (~700-900px).
+   Layout: compact header → tall left slider strip → games carousel
+   on the right, slim bottom-nav at the floor. Every pixel is precious. */
 @media (orientation: landscape) and (max-height: 500px) {
   :root {
-    --jr-header:  44px;
-    --jr-cat-h:   30px;
-    --jr-sidebar: 0px;             /* sidebar suppressed in landscape (see rule below) */
-    --jr-card-w:  140px;           /* fixed Netflix thumbnail width */
-    --jr-card-h:  88px;            /* 16:10 thumbnail */
-    --jr-gap:     8px;
+    --jr-header:    40px;          /* tighter header in landscape */
+    --jr-cat-h:     26px;
+    --jr-sidebar:   0px;           /* sidebar suppressed (see rule below) */
+    --jr-card-w:    140px;         /* fixed Netflix thumbnail width */
+    --jr-card-h:    86px;          /* ~16:10 thumbnail */
+    --jr-gap:       8px;
+    --jr-strip-w:   148px;         /* slider strip width */
+    --jr-strip-pad: 156px;         /* slider width + 8px gutter */
   }
+
+  /* Kill the doubled safe-area padding — bottom-nav handles it on its own */
+  .jr-app { padding-bottom: 0 !important; }
+
   /* Sidebar OUT, slim bottom-nav IN — frees full width for the carousel */
   .jr-sidebar    { display: none !important; }
   .jr-bottom-nav { display: flex !important; }
 
-  /* Compact header for the narrow landscape height */
-  .jr-header { padding: 0 10px; gap: 5px; }
-  .jr-logo-img { height: 26px; max-width: 130px; }
-  .jr-action-btn { width: 26px; height: 26px; min-width: 26px; font-size: 11px; }
-  .jr-balance-pill { padding: 3px 7px; gap: 4px; }
-  .jr-balance-pill span { font-size: 11px; }
-  .jr-cat-bar { padding: 0 10px; }
-  .jr-cat-bar__title { font-size: 11px; }
+  /* ── HEADER — sleek, balanced ─────────────────────────────── */
+  .jr-header {
+    padding: 0 12px;
+    gap: 8px;
+    height: var(--jr-header);
+    min-height: var(--jr-header);
+  }
+  .jr-logo-img    { height: 24px; max-width: 130px; }
+  .jr-action-btn  { width: 30px; height: 30px; min-width: 30px; font-size: 12px; border-radius: 8px; }
+  .jr-balance-pill {
+    padding: 4px 10px;
+    gap: 5px;
+    border-radius: 100px;
+    height: 28px;
+  }
+  .jr-balance-pill span { font-size: 11.5px; font-weight: 600; }
 
-  /* Carousel: pure horizontal scroll, top-aligned (NOT stretch) so cards keep
-     their Netflix-thumbnail size instead of expanding to fill viewport height. */
+  /* ── CAT BAR — slim & integrated, sits to the RIGHT of slider ── */
+  .jr-cat-bar {
+    padding: 0 12px 0 var(--jr-strip-pad) !important;
+    height: var(--jr-cat-h);
+    min-height: var(--jr-cat-h);
+  }
+  .jr-cat-bar__title {
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    font-weight: 700;
+  }
+  .jr-cat-bar__count {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 100px;
+  }
+  .jr-cat-bar__arrows { gap: 4px; }
+  .jr-cat-bar__arrow  { width: 22px; height: 22px; }
+
+  /* ── CAROUSEL — horizontal scroll, two stacked rows ─────────── */
   .jr-carousel {
-    padding: 6px 8px !important;
+    padding: 6px 10px 8px !important;
     align-items: flex-start !important;
     gap: 8px !important;
     scroll-snap-type: x mandatory;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
   }
-  /* Each .jr-col holds the 2 stacked rows for that column */
   .jr-col {
     gap: 8px !important;
     flex-direction: column;
+    flex-shrink: 0;
     scroll-snap-align: start;
   }
-  /* Lock card dimensions — no stretching, no aspect-ratio override */
   .jr-card,
   .jr-card__inner {
-    width: 140px !important;
-    height: 88px !important;
+    width:  var(--jr-card-w) !important;
+    height: var(--jr-card-h) !important;
     aspect-ratio: auto !important;
-    border-radius: 8px !important;
+    border-radius: 9px !important;
+    flex-shrink: 0;
   }
-  .jr-card__title { font-size: 10px; bottom: 4px; left: 6px; right: 22px; }
-  .jr-card__fav   { width: 18px; height: 18px; top: 4px; right: 4px; }
-  .jr-card__badge { font-size: 7px; padding: 1px 4px; }
-  .jr-card__play-btn { font-size: 8px; padding: 4px 8px; }
-  /* Hide the lock-overlay text in landscape — too small to read; the blur
-     already signals "logged out" */
+  .jr-card__title    { font-size: 10px; bottom: 4px; left: 6px; right: 22px; font-weight: 600; }
+  .jr-card__fav      { width: 20px; height: 20px; top: 4px; right: 4px; }
+  .jr-card__badge    { font-size: 7px; padding: 1px 5px; letter-spacing: 0.5px; }
+  .jr-card__play-btn { font-size: 8.5px; padding: 5px 9px; letter-spacing: 0.6px; }
+  /* Lock-overlay text trimmed — blur already signals "logged out" */
   .jr-app--guest .jr-card__inner::after { font-size: 7px; letter-spacing: 0.6px; }
 
-  /* ── LANDSCAPE LAYOUT: slider as a TALL LEFT COLUMN ────────────
-     Inspired by arcade-style portrait promos (e.g. Orion Stars):
-     the slider becomes a vertical strip on the left of the games
-     carousel rather than a horizontal banner above it. We absolutely
-     position it inside .jr-content (which is the column flex parent)
-     and push the bonus strip + cat bar + carousel to the right with
-     padding so they don't overlap. */
+  /* ── SLIDER STRIP — tall left column with gold gradient edge ── */
   .jr-content { position: relative; }
 
   .jr-slider {
     position: absolute;
     left: 0;
-    top:    var(--jr-header);     /* sits flush below the header */
-    bottom: 0;                    /* extends down to the bottom-nav region */
-    width:  180px;
+    top:    var(--jr-header);
+    bottom: 0;
+    width:  var(--jr-strip-w);
     height: auto;
     max-height: none;
     aspect-ratio: auto;
     border-bottom: none;
-    border-right: 1px solid rgba(212,175,55,0.22);
+    border-right: none;
+    background: #07030f;
     z-index: 5;
+    box-shadow:
+      inset -1px 0 0 rgba(212,175,55,0.18),
+      4px 0 14px rgba(0,0,0,0.45);
   }
-  /* Tall portrait gifs (~9:16) fit the vertical strip natively — preferred
-     in landscape. Desktop / square mobile variants stay hidden. */
+  /* Soft inner top-shadow keeps the slider visually tied to the header */
+  .jr-slider::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.55) 100%);
+    z-index: 2;
+  }
+  /* Gold gradient edge — way more elegant than a flat hairline */
+  .jr-slider::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(212,175,55,0.55) 18%,
+      rgba(255,215,120,0.7) 50%,
+      rgba(212,175,55,0.55) 82%,
+      transparent 100%);
+    pointer-events: none;
+    z-index: 6;
+  }
+
+  /* Tall portrait gifs (~9:16) fit the vertical strip natively */
   .jr-slider__img--desktop { display: none; }
   .jr-slider__img--mobile  { display: none; }
   .jr-slider__img--tall    { display: block; }
   .jr-slider__img          { object-fit: cover; }
 
   /* Compact controls for the narrow vertical strip */
-  .jr-slider__nav { width: 24px; height: 24px; }
-  .jr-slider__nav--prev { left: 4px; }
-  .jr-slider__nav--next { right: 4px; }
-  .jr-slider__dots { bottom: 6px; gap: 4px; }
-  .jr-slider__dot { width: 6px; height: 6px; }
-  .jr-slider__dot--active { width: 14px; }
+  .jr-slider__nav {
+    width: 26px; height: 26px;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(212,175,55,0.4);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .jr-slider__nav--prev { left: 5px; }
+  .jr-slider__nav--next { right: 5px; }
+  .jr-slider__dots { bottom: 8px; gap: 5px; z-index: 4; }
+  .jr-slider__dot {
+    width: 5px; height: 5px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 100px;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+  .jr-slider__dot--active {
+    width: 16px;
+    background: linear-gradient(90deg, #d4af37, #ffd770);
+    box-shadow: 0 0 8px rgba(212,175,55,0.6);
+  }
 
-  /* Push the rest of the content to the right of the slider strip.
-     Use 188px = 180px slider + 8px gutter. */
+  /* Push the rest of the content to the right of the slider strip */
   .jr-bonus-strip,
-  .jr-cat-bar,
-  .jr-carousel-wrap { padding-left: 188px !important; }
+  .jr-carousel-wrap { padding-left: var(--jr-strip-pad) !important; }
 
-  /* The bonus strip is too tall to keep alongside a 180px slider on a
-     ~500px-tall phone. Hide it in landscape — the bonus modal is still
-     reachable from the bottom-nav. */
+  /* The bonus strip is too tall to keep alongside a tall slider on
+     a ~400px-tall phone. Hide it in landscape — the bonus modal is
+     still reachable from the bottom-nav. */
   .jr-bonus-strip { display: none !important; }
+
+  /* The decorative top-line of the carousel tray would extend
+     under the slider strip and look broken — start it at the
+     gutter instead. */
+  .jr-carousel-wrap::before { left: var(--jr-strip-pad); }
+
+  /* ── TICKER — slim, sits to the right of the slider ─────────── */
+  .jr-ticker {
+    height: 22px;
+    min-height: 22px;
+    padding-left: var(--jr-strip-pad);
+  }
+  .jr-ticker__prefix { font-size: 10px; padding: 0 5px 0 6px; }
+  .jr-ticker__inner  { font-size: 9.5px; letter-spacing: 0.3px; }
+  .jr-ticker__live   { font-size: 8.5px; padding: 0 6px; }
 }
 
 /* ── BOTTOM NAV component (phone landscape) ──────────────────── */
@@ -1357,32 +1438,34 @@ html, body { overscroll-behavior-y: contain; }
   .jr-jackpots { gap: 6px; padding: 8px 10px 0; }
 }
 
-/* ── LANDSCAPE PHONE: hide sidebar, slim bottom-nav, full-width games ── */
+/* ── LANDSCAPE PHONE: slim bottom-nav, jackpots, badges ─────────
+   Sized down for ≤540px viewport heights. Card width is governed
+   by the more specific ≤500px block above; here we just ensure the
+   nav, jackpots, and badges feel right when the slider strip is on. */
 @media (orientation: landscape) and (max-height: 540px) {
   :root {
     --jr-sidebar: 0px !important;
   }
-  /* Sidebar OUT — bottom nav IN (slim) */
+  /* Sidebar OUT — bottom nav IN (slim, premium glow) */
   .jr-sidebar    { display: none !important; }
   .jr-bottom-nav {
     display: flex !important;
-    height: 40px !important;
-    min-height: 40px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 4px !important;
+    padding-bottom: 0 !important;       /* safe-area handled by .jr-app */
   }
-  .jr-bnav__btn { padding: 3px 2px !important; gap: 1px !important; }
-  .jr-bnav__icon { width: 16px !important; height: 16px !important; }
-  .jr-bnav__label { font-size: 8px !important; letter-spacing: 0.4px !important; }
+  .jr-bnav__btn   { padding: 4px 3px !important; gap: 2px !important; border-radius: 8px !important; }
+  .jr-bnav__icon  { width: 17px !important; height: 17px !important; }
+  .jr-bnav__label { font-size: 8.5px !important; letter-spacing: 0.5px !important; }
+  /* Lit-up active pill — keep the glow but tighten the inset */
+  .jr-bnav__btn.active::before { inset: 3px 4px !important; border-radius: 7px !important; }
   /* Slim jackpots — recover vertical space */
   .jr-jackpots { padding: 4px 8px 0 !important; gap: 5px !important; }
   .jr-jackpot { padding: 3px 8px !important; border-radius: 7px !important; }
   .jr-jackpot__label { font-size: 7px !important; letter-spacing: 1px !important; margin-bottom: 0 !important; }
   .jr-jackpot__amt,
   .jr-jackpot--mega .jr-jackpot__amt { font-size: 12px !important; }
-  /* Slim ticker */
-  .jr-ticker { padding: 2px 6px !important; }
-  .jr-ticker__inner, .jr-ticker__live { font-size: 10px !important; }
-  /* Cards now stretch to full width since sidebar is gone */
-  :root { --jr-card-w: clamp(140px, calc((100vw - 24px) / 4.2), 220px); }
   /* Compact bnav badges so they fit at 40px */
   .jr-bnav__btn .jr-nav-badge {
     top: 2px !important; right: 4px !important;
