@@ -1337,26 +1337,25 @@
              stays hidden for the session.
            ═══════════════════════════════════════════════════════════════ -->
         <div id="jrFsModal" class="jr-fs-modal" hidden role="dialog" aria-labelledby="jrFsTitle" aria-modal="true">
-            <div class="jr-fs-modal__backdrop" data-jr-fs-dismiss></div>
-            <div class="jr-fs-modal__card" role="document">
-                <button class="jr-fs-modal__close" type="button" data-jr-fs-dismiss aria-label="Close">×</button>
+            <div class="jr-fs-modal__inner">
+                <button class="jr-fs-modal__close" type="button" data-jr-fs-dismiss aria-label="Dismiss">×</button>
                 <div class="jr-fs-modal__icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 9V3h6"/><path d="M21 9V3h-6"/>
                         <path d="M3 15v6h6"/><path d="M21 15v6h-6"/>
                     </svg>
                 </div>
                 <h3 id="jrFsTitle" class="jr-fs-modal__title">Best Played Fullscreen</h3>
-                <p class="jr-fs-modal__msg">For the most immersive Jade Royale experience, switch to fullscreen mode and let the game take over your screen.</p>
-                <div class="jr-fs-modal__actions">
-                    <button type="button" class="jr-fs-modal__btn jr-fs-modal__btn--primary" id="jrFsEnterBtn">Enter Fullscreen</button>
-                    <button type="button" class="jr-fs-modal__btn jr-fs-modal__btn--ghost" data-jr-fs-dismiss>Maybe Later</button>
-                </div>
+                <p class="jr-fs-modal__msg">For the most immersive Jade Royale experience, switch to fullscreen and let the game take over your screen.</p>
+                <button type="button" class="jr-fs-modal__btn" id="jrFsEnterBtn">Enter Fullscreen</button>
+                <button type="button" class="jr-fs-modal__later" data-jr-fs-dismiss>Maybe later</button>
             </div>
         </div>
 
         <style>
-        /* ── FULLSCREEN PROMPT MODAL — glass morphism, gold accents ── */
+        /* ── FULLSCREEN PROMPT — frosted white full-screen overlay ──
+           Smooth, ethereal, no card. Text and button feel etched into
+           the frosted glass that covers the entire viewport. */
         .jr-fs-modal {
             position: fixed;
             inset: 0;
@@ -1364,160 +1363,147 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(22px) saturate(140%);
+            -webkit-backdrop-filter: blur(22px) saturate(140%);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.55s cubic-bezier(.2,.9,.3,1), backdrop-filter 0.55s ease;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
         }
         .jr-fs-modal:not([hidden]) {
             opacity: 1;
             pointer-events: auto;
         }
-        .jr-fs-modal__backdrop {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at center, rgba(10,5,25,0.55) 0%, rgba(0,0,0,0.78) 100%);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .jr-fs-modal__card {
-            position: relative;
-            width: 100%;
-            max-width: 380px;
-            padding: 32px 28px 26px;
-            text-align: center;
-            background: linear-gradient(160deg, rgba(28,15,52,0.72) 0%, rgba(10,5,22,0.78) 100%);
-            border: 1px solid rgba(212,175,55,0.45);
-            border-radius: 20px;
-            color: #f5ecd6;
-            font-family: 'Poppins', sans-serif;
-            backdrop-filter: blur(18px) saturate(120%);
-            -webkit-backdrop-filter: blur(18px) saturate(120%);
-            box-shadow:
-                0 20px 60px rgba(0,0,0,0.55),
-                0 0 0 1px rgba(255,255,255,0.04) inset,
-                0 0 50px rgba(212,175,55,0.18);
-            transform: translateY(14px) scale(0.96);
-            transition: transform 0.35s cubic-bezier(.2,.9,.3,1.2);
-        }
-        .jr-fs-modal:not([hidden]) .jr-fs-modal__card {
-            transform: translateY(0) scale(1);
-        }
-        .jr-fs-modal__card::before {
+        /* A subtle warm-white sheen rolls across the frost when shown */
+        .jr-fs-modal::before {
             content: '';
             position: absolute;
             inset: 0;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(255,215,120,0.55), rgba(212,175,55,0.05) 40%, rgba(255,215,120,0.35));
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 30%, rgba(255,255,255,0.22) 0%, transparent 70%),
+                radial-gradient(ellipse 80% 60% at 50% 100%, rgba(212,175,55,0.10) 0%, transparent 65%);
             pointer-events: none;
+        }
+        .jr-fs-modal__inner {
+            position: relative;
+            text-align: center;
+            max-width: 480px;
+            transform: translateY(18px);
+            opacity: 0;
+            transition: transform 0.7s cubic-bezier(.2,.9,.3,1) 0.1s,
+                        opacity   0.7s ease 0.1s;
+        }
+        .jr-fs-modal:not([hidden]) .jr-fs-modal__inner {
+            transform: translateY(0);
+            opacity: 1;
         }
         .jr-fs-modal__close {
             position: absolute;
-            top: 10px;
-            right: 12px;
-            width: 30px;
-            height: 30px;
+            top: calc(-100vh + 100% + 28px + env(safe-area-inset-top, 0px));
+            right: 0;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.12);
-            background: rgba(255,255,255,0.04);
+            border: none;
+            background: transparent;
             color: rgba(255,255,255,0.55);
-            font-size: 18px;
+            font-size: 26px;
+            font-weight: 200;
             line-height: 1;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: color 0.25s ease, transform 0.25s ease;
             padding: 0;
         }
-        .jr-fs-modal__close:hover {
-            color: #fff;
-            border-color: rgba(212,175,55,0.5);
-            background: rgba(212,175,55,0.12);
-        }
+        .jr-fs-modal__close:hover { color: #fff; transform: rotate(90deg); }
         .jr-fs-modal__icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 25%, rgba(255,215,120,0.32), rgba(212,175,55,0.06) 70%);
-            border: 1px solid rgba(212,175,55,0.45);
-            color: #ffd770;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 24px rgba(212,175,55,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+            margin: 0 auto 22px;
+            color: rgba(255,255,255,0.85);
+            filter: drop-shadow(0 2px 14px rgba(255,255,255,0.35));
+            animation: jrFsIconFloat 4s ease-in-out infinite;
+        }
+        @keyframes jrFsIconFloat {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-4px); }
         }
         .jr-fs-modal__title {
-            margin: 0 0 8px;
-            font-size: 19px;
-            font-weight: 700;
-            letter-spacing: 0.4px;
-            background: linear-gradient(180deg, #fff5d2 0%, #d4af37 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            margin: 0 0 14px;
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.95);
+            text-shadow: 0 2px 18px rgba(255,255,255,0.25);
         }
         .jr-fs-modal__msg {
-            margin: 0 0 22px;
-            font-size: 13.5px;
-            line-height: 1.55;
-            color: rgba(245,236,214,0.78);
+            margin: 0 auto 32px;
+            max-width: 340px;
+            font-size: 14px;
+            line-height: 1.65;
             font-weight: 300;
-        }
-        .jr-fs-modal__actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            color: rgba(255,255,255,0.78);
+            letter-spacing: 0.3px;
         }
         .jr-fs-modal__btn {
-            min-height: 48px;
-            padding: 12px 20px;
-            border-radius: 12px;
+            display: inline-block;
+            min-width: 220px;
+            min-height: 52px;
+            padding: 14px 38px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.14);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 100px;
+            color: #fff;
             font-family: inherit;
             font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
+            font-weight: 500;
+            letter-spacing: 3px;
             text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.25s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.35s cubic-bezier(.2,.9,.3,1);
+            -webkit-tap-highlight-color: transparent;
+            box-shadow: 0 0 0 0 rgba(255,255,255,0.0);
+        }
+        .jr-fs-modal__btn:hover,
+        .jr-fs-modal__btn:active {
+            background: rgba(255,255,255,0.85);
+            border-color: rgba(255,255,255,0.95);
+            color: #1a1030;
+            transform: translateY(-1px);
+            box-shadow: 0 12px 40px rgba(255,255,255,0.35);
+            letter-spacing: 3.5px;
+        }
+        .jr-fs-modal__later {
+            display: block;
+            margin: 18px auto 0;
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.55);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: color 0.25s ease;
             -webkit-tap-highlight-color: transparent;
         }
-        .jr-fs-modal__btn--primary {
-            background: linear-gradient(135deg, #d4af37 0%, #f5d272 50%, #b8860b 100%);
-            border: 1px solid rgba(255,215,120,0.7);
-            color: #2a1a05;
-            box-shadow: 0 6px 22px rgba(212,175,55,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
-        }
-        .jr-fs-modal__btn--primary:hover,
-        .jr-fs-modal__btn--primary:active {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 30px rgba(212,175,55,0.5), inset 0 1px 0 rgba(255,255,255,0.5);
-            filter: brightness(1.08);
-        }
-        .jr-fs-modal__btn--ghost {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.14);
-            color: rgba(245,236,214,0.65);
-        }
-        .jr-fs-modal__btn--ghost:hover,
-        .jr-fs-modal__btn--ghost:active {
-            border-color: rgba(255,255,255,0.3);
-            color: #fff;
-            background: rgba(255,255,255,0.04);
-        }
+        .jr-fs-modal__later:hover { color: #fff; }
         @media (orientation: landscape) and (max-height: 540px) {
-            .jr-fs-modal__card { padding: 22px 24px 18px; max-width: 420px; }
-            .jr-fs-modal__icon { width: 48px; height: 48px; margin-bottom: 10px; }
-            .jr-fs-modal__icon svg { width: 26px; height: 26px; }
-            .jr-fs-modal__title { font-size: 17px; }
-            .jr-fs-modal__msg { font-size: 12.5px; margin-bottom: 14px; }
-            .jr-fs-modal__actions { flex-direction: row; }
-            .jr-fs-modal__btn { min-height: 42px; padding: 10px 16px; flex: 1; }
+            .jr-fs-modal { padding: 18px; }
+            .jr-fs-modal__icon { margin-bottom: 12px; }
+            .jr-fs-modal__icon svg { width: 32px; height: 32px; }
+            .jr-fs-modal__title { font-size: 22px; margin-bottom: 8px; }
+            .jr-fs-modal__msg { font-size: 12.5px; margin-bottom: 18px; max-width: 380px; }
+            .jr-fs-modal__btn { min-height: 44px; padding: 11px 30px; min-width: 180px; }
+            .jr-fs-modal__later { margin-top: 10px; }
         }
         .jr-app { padding-bottom: env(safe-area-inset-bottom); }
         </style>
