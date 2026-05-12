@@ -1086,3 +1086,81 @@ phpdebugbar,
   .jr-jackpot__label { font-size: 6px; }
   .jr-jackpot__amt, .jr-jackpot--mega .jr-jackpot__amt { font-size: 11px; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT FIX — Portrait = vertical feed, Landscape = no sidebar
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── PORTRAIT PHONE: vertical scrolling 2-column grid ─────────── */
+@media (orientation: portrait) and (max-width: 799px) {
+  /* Carousel becomes a vertical grid */
+  .jr-carousel {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-rows: min-content !important;
+    gap: 10px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 10px 10px 14px !important;
+    align-items: stretch !important;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Columns dissolve so cards flow as direct grid items */
+  .jr-col {
+    display: contents !important;
+    animation: none !important;
+  }
+  /* Cards fill column width, square-ish aspect */
+  .jr-card,
+  .jr-card__inner {
+    width: 100% !important;
+    height: auto !important;
+  }
+  .jr-card__inner {
+    aspect-ratio: 1 / 1 !important;
+  }
+  /* Card titles get a touch larger since cards are bigger */
+  .jr-card__title { font-size: 12px !important; }
+  /* Horizontal arrows + horizontal progress bar don't apply */
+  .jr-cat-bar__arrows { display: none !important; }
+  .jr-scroll-progress { display: none !important; }
+  /* Tray no longer needs its decorative inner border on a vertical scroller */
+  .jr-carousel-wrap::before { display: none; }
+  /* Jackpots stay compact */
+  .jr-jackpots { gap: 6px; padding: 8px 10px 0; }
+}
+
+/* ── LANDSCAPE PHONE: hide sidebar, slim bottom-nav, full-width games ── */
+@media (orientation: landscape) and (max-height: 540px) {
+  :root {
+    --jr-sidebar: 0px !important;
+  }
+  /* Sidebar OUT — bottom nav IN (slim) */
+  .jr-sidebar    { display: none !important; }
+  .jr-bottom-nav {
+    display: flex !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+  .jr-bnav__btn { padding: 3px 2px !important; gap: 1px !important; }
+  .jr-bnav__icon { width: 16px !important; height: 16px !important; }
+  .jr-bnav__label { font-size: 8px !important; letter-spacing: 0.4px !important; }
+  /* Slim jackpots — recover vertical space */
+  .jr-jackpots { padding: 4px 8px 0 !important; gap: 5px !important; }
+  .jr-jackpot { padding: 3px 8px !important; border-radius: 7px !important; }
+  .jr-jackpot__label { font-size: 7px !important; letter-spacing: 1px !important; margin-bottom: 0 !important; }
+  .jr-jackpot__amt,
+  .jr-jackpot--mega .jr-jackpot__amt { font-size: 12px !important; }
+  /* Slim ticker */
+  .jr-ticker { padding: 2px 6px !important; }
+  .jr-ticker__inner, .jr-ticker__live { font-size: 10px !important; }
+  /* Cards now stretch to full width since sidebar is gone */
+  :root { --jr-card-w: clamp(140px, calc((100vw - 24px) / 4.2), 220px); }
+  /* Compact bnav badges so they fit at 40px */
+  .jr-bnav__btn .jr-nav-badge {
+    top: 2px !important; right: 4px !important;
+    min-width: 14px !important; height: 14px !important;
+    font-size: 8px !important; padding: 0 3px !important;
+  }
+}
