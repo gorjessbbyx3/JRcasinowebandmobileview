@@ -476,16 +476,41 @@
                     </div>
                 </div>
 
-                <!-- CAROUSEL TRAY — dark panel + win ticker + game grid -->
+                <!-- CAROUSEL TRAY — jackpot banner + live ticker + game grid + progress -->
                 <div class="jr-carousel-wrap">
+                    <!-- LIVE JACKPOT BANNER — 3 tiers with rolling counters -->
+                    <div class="jr-jackpots" id="jrJackpots">
+                        <div class="jr-jackpot jr-jackpot--mini" data-base="48750" data-rate="1">
+                            <div class="jr-jackpot__label">MINI JACKPOT</div>
+                            <div class="jr-jackpot__amt">₱<span data-jp-amt>0</span></div>
+                            <div class="jr-jackpot__pulse"></div>
+                        </div>
+                        <div class="jr-jackpot jr-jackpot--major" data-base="284900" data-rate="3">
+                            <div class="jr-jackpot__label">MAJOR JACKPOT</div>
+                            <div class="jr-jackpot__amt">₱<span data-jp-amt>0</span></div>
+                            <div class="jr-jackpot__pulse"></div>
+                        </div>
+                        <div class="jr-jackpot jr-jackpot--mega" data-base="1847250" data-rate="7">
+                            <div class="jr-jackpot__label">MEGA JACKPOT</div>
+                            <div class="jr-jackpot__amt">₱<span data-jp-amt>0</span></div>
+                            <div class="jr-jackpot__pulse"></div>
+                        </div>
+                    </div>
+
+                    <!-- LIVE WIN TICKER — rotating winners -->
                     <div class="jr-ticker">
                         <span class="jr-ticker__prefix">🏆</span>
                         <div class="jr-ticker__track">
-                            <span class="jr-ticker__inner">🎉&nbsp;Lucky Win&nbsp;—&nbsp;₱52,400&nbsp;&nbsp;•&nbsp;&nbsp;🔥&nbsp;Big Winner&nbsp;—&nbsp;₱18,900&nbsp;&nbsp;•&nbsp;&nbsp;💎&nbsp;Jackpot Hit&nbsp;—&nbsp;₱124,000&nbsp;&nbsp;•&nbsp;&nbsp;⚡&nbsp;Bonus Round&nbsp;—&nbsp;₱9,850&nbsp;&nbsp;•&nbsp;&nbsp;🎉&nbsp;Lucky Win&nbsp;—&nbsp;₱52,400&nbsp;&nbsp;•&nbsp;&nbsp;🔥&nbsp;Big Winner&nbsp;—&nbsp;₱18,900&nbsp;&nbsp;•&nbsp;&nbsp;💎&nbsp;Jackpot Hit&nbsp;—&nbsp;₱124,000&nbsp;&nbsp;•&nbsp;&nbsp;⚡&nbsp;Bonus Round&nbsp;—&nbsp;₱9,850</span>
+                            <span class="jr-ticker__inner" id="jrTickerInner">Loading recent wins…</span>
                         </div>
+                        <span class="jr-ticker__live"><span class="jr-ticker__livedot"></span>LIVE</span>
                     </div>
+
                     <!-- HORIZONTAL GAME CAROUSEL — rebuilt by JS -->
                     <div class="jr-carousel" id="jrCarousel"></div>
+
+                    <!-- SCROLL PROGRESS — thin gradient bar -->
+                    <div class="jr-scroll-progress"><div class="jr-scroll-progress__bar" id="jrScrollBar"></div></div>
                 </div>
 
             </div><!-- end .jr-content -->
@@ -568,6 +593,12 @@
                         loading="lazy"
                         onerror="this.src='/woocasino/mslider1.gif'">
                     <div class="jr-card__overlay"></div>
+                    <div class="jr-card__play">
+                        <div class="jr-card__play-btn">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><path d="M8 5v14l11-7z"/></svg>
+                            <span>PLAY</span>
+                        </div>
+                    </div>
                     <div class="jr-card__title">{{ $game->title }}</div>
                     @if($game->label)
                     <div class="jr-card__badge jr-card__badge--{{ $jrLbl }}">{{ $game->label }}</div>
@@ -790,10 +821,113 @@
             });
             window.addEventListener('resize', jrOnResize);
 
+            /* ═══ LIVE JACKPOT COUNTERS — rolling digits ═════════════ */
+            function jrFmt(n) { return Math.floor(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+            function jrInitJackpots() {
+                document.querySelectorAll('.jr-jackpot').forEach(function(jp) {
+                    var base = parseFloat(jp.dataset.base) || 0;
+                    var rate = parseFloat(jp.dataset.rate) || 1;
+                    /* slight random offset so they don't all start in lockstep */
+                    jp._cur = base + Math.floor(Math.random() * 500);
+                    jp._rate = rate;
+                    var amtEl = jp.querySelector('[data-jp-amt]');
+                    if (amtEl) amtEl.textContent = jrFmt(jp._cur);
+                });
+                setInterval(function() {
+                    document.querySelectorAll('.jr-jackpot').forEach(function(jp) {
+                        /* increment by rate * (1..3) every tick — feels organic */
+                        jp._cur += jp._rate * (1 + Math.random() * 2);
+                        var amtEl = jp.querySelector('[data-jp-amt]');
+                        if (amtEl) {
+                            amtEl.textContent = jrFmt(jp._cur);
+                            var box = jp.querySelector('.jr-jackpot__amt');
+                            if (box) {
+                                box.classList.remove('jr-jp-tick');
+                                /* eslint-disable-next-line no-unused-expressions */
+                                box.offsetWidth;
+                                box.classList.add('jr-jp-tick');
+                            }
+                        }
+                    });
+                }, 850);
+            }
+
+            /* ═══ LIVE WIN TICKER — rotating fake winners ════════════ */
+            var JR_NAMES = ['Marco G.','Ana L.','Jordan T.','Maya P.','Rico V.','Liza M.','Carl D.',
+                            'Elena S.','Diego R.','Faye N.','Kai B.','Noor A.','Ravi K.','Sofia C.',
+                            'Theo J.','Wren H.','Zoe F.','Hana O.','Ivan W.','Lia Q.'];
+            var JR_GAMES = ['Sweet Bonanza','Gates of Olympus','Wolf Gold','Book of Dead','Starburst',
+                            'Fortune Ox','Money Train 3','Caishen Gold','Joker Bomber','Gold Party','Book of Ra'];
+            var JR_EVENTS = [
+                { ico:'🎉', verb:'won',           min:1500,  max:18000 },
+                { ico:'🔥', verb:'big win on',    min:8000,  max:65000 },
+                { ico:'💎', verb:'jackpot on',    min:48000, max:240000 },
+                { ico:'⚡', verb:'bonus on',      min:900,   max:6500 },
+                { ico:'🍀', verb:'lucky win on',  min:3200,  max:24000 }
+            ];
+            function jrPick(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+            function jrMakeWin() {
+                var ev = jrPick(JR_EVENTS);
+                var amt = Math.floor(ev.min + Math.random()*(ev.max - ev.min));
+                /* round to nearest 50 for realism */
+                amt = Math.round(amt/50)*50;
+                return ev.ico + ' ' + jrPick(JR_NAMES) + ' ' + ev.verb + ' ' + jrPick(JR_GAMES)
+                     + ' — ₱' + jrFmt(amt);
+            }
+            function jrBuildTicker() {
+                /* generate 12 wins, join with bullet — long enough to scroll smoothly */
+                var arr = [];
+                for (var i = 0; i < 12; i++) arr.push(jrMakeWin());
+                var el = document.getElementById('jrTickerInner');
+                if (el) el.innerHTML = arr.join('  •  ');
+            }
+            function jrInitTicker() {
+                jrBuildTicker();
+                /* refresh every 22s with a new batch of winners */
+                setInterval(jrBuildTicker, 22000);
+            }
+
+            /* ═══ SCROLL PROGRESS BAR ════════════════════════════════ */
+            function jrInitScrollProgress() {
+                var c = document.getElementById('jrCarousel');
+                var bar = document.getElementById('jrScrollBar');
+                if (!c || !bar) return;
+                function upd() {
+                    var max = c.scrollWidth - c.clientWidth;
+                    var pct = max > 0 ? (c.scrollLeft / max) * 100 : 0;
+                    bar.style.width = pct + '%';
+                }
+                c.addEventListener('scroll', upd, { passive: true });
+                /* MutationObserver re-checks after content swaps */
+                var mo = new MutationObserver(upd);
+                mo.observe(c, { childList: true });
+                window.addEventListener('resize', upd);
+                upd();
+            }
+
+            /* ═══ CARD STAGGER ENTRANCE ═════════════════════════════ */
+            function jrStaggerCols() {
+                var cols = document.querySelectorAll('#jrCarousel .jr-col');
+                cols.forEach(function(col, i) {
+                    col.style.animationDelay = (i * 28) + 'ms';
+                });
+            }
+            /* hook into render cycle */
+            var _origBuild = window.jrBuildCarousel;
+            /* (jrBuildCarousel is a local fn, so wrap render instead) */
+            var _origRender = window.jrRender;
+            window.jrRender = function(cat) {
+                _origRender(cat);
+                setTimeout(jrStaggerCols, 105); /* after the 95ms crossfade swap */
+            };
+
             document.addEventListener('DOMContentLoaded', function() {
                 jrComputeCounts();
                 jrUpdateBadges();
                 jrRender('hot');
+                jrInitJackpots();
+                jrInitTicker();
+                jrInitScrollProgress();
             });
 
             /* ── PULL-DOWN FULLSCREEN GESTURE ─────────────────── */
