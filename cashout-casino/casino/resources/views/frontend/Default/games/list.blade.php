@@ -365,9 +365,19 @@
         @endphp
     <!-- ===================== MOBILE CASINO LAYOUT ===================== -->
     @php
-        $allMobGames = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => 0])->whereIn('device', [1, 2])->take(120)->get();
+        /* SHOP-SCOPED GAMES: only show games assigned to the player's shop.
+           Guests see the default shop (id=1) catalog as a teaser, blurred via CSS. */
+        $jrShopId   = \Illuminate\Support\Facades\Auth::check() ? (auth()->user()->shop_id ?: 1) : 1;
+        $jrIsGuest  = !\Illuminate\Support\Facades\Auth::check();
+        $allMobGames = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => $jrShopId])
+            ->whereIn('device', [1, 2])->take(120)->get();
+        /* Fallback: if the shop has no games yet, fall back to shop_id=0 catalog template. */
+        if ($allMobGames->isEmpty()) {
+            $allMobGames = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => 0])
+                ->whereIn('device', [1, 2])->take(120)->get();
+        }
     @endphp
-    <div class="mobile-casino-layout jr-app" id="mobileCasinoLayout">
+    <div class="mobile-casino-layout jr-app {{ $jrIsGuest ? 'jr-app--guest' : '' }}" id="mobileCasinoLayout">
 
         <!-- Animated background orbs -->
         <div class="jr-bg" aria-hidden="true">
@@ -660,6 +670,40 @@
 
             var jrIsLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
             var jrCsrfToken  = '{{ csrf_token() }}';
+            window.jrLoggedIn = jrIsLoggedIn;
+
+            /* Toast-style login gate for guest interactions */
+            window.jrShowLoginGate = function(msg) {
+                var t = document.getElementById('jrLoginGate');
+                if (!t) {
+                    t = document.createElement('div');
+                    t.id = 'jrLoginGate';
+                    t.className = 'jr-login-gate';
+                    t.innerHTML = '<div class="jr-login-gate__inner">'
+                        + '<div class="jr-login-gate__icon">🔒</div>'
+                        + '<div class="jr-login-gate__msg"></div>'
+                        + '<button class="jr-login-gate__btn" onclick="document.getElementById(\'jrLoginGate\').classList.remove(\'show\');if(window.openLoginModal)openLoginModal();">LOG IN</button>'
+                        + '<button class="jr-login-gate__close" onclick="document.getElementById(\'jrLoginGate\').classList.remove(\'show\')">×</button>'
+                        + '</div>';
+                    document.body.appendChild(t);
+                }
+                t.querySelector('.jr-login-gate__msg').textContent = msg || 'Please log in to continue.';
+                t.classList.add('show');
+                clearTimeout(window._jrGateTimer);
+                window._jrGateTimer = setTimeout(function(){ t.classList.remove('show'); }, 6000);
+            };
+
+            /* Game cards: guests see blurred preview with login prompt on click */
+            document.addEventListener('click', function(e) {
+                var card = e.target.closest('.jr-card, .jr-card__inner');
+                if (!card || jrIsLoggedIn) return;
+                var realCard = e.target.closest('.jr-card');
+                if (realCard && realCard.closest('.jr-app--guest')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    jrShowLoginGate('Log in to play ' + (realCard.dataset.name || 'this game') + '.');
+                }
+            }, true);
 
             /* Per-category game counts — computed once from the card pool */
             var jrCatCounts = { hot: 0, slots: 0, fish: 0, table: 0, favorites: 0 };
@@ -1647,10 +1691,13 @@
 
                     <!-- BONUS MODAL POPUP -->
                     @php
-                    $welcomeBonuses = \DB::table('welcomebonuses')->where('shop_id', 1)->get();
-                    $wheelFortune = \DB::table('wheelfortune')->where('shop_id', 1)->where('active', true)->first();
-                    $jackpots = \DB::table('jpg')->where('shop_id', 1)->where('active', true)->get();
-                    $dailyBonuses = \DB::table('daily_bonus')->where('shop_id', 1)->where('active', true)->orderBy('day')->get();
+                    $welcomeBonuses = \DB::table('welcomebonuses')->where('shop_id', $jrShopId)->get();
+                    $wheelFortune = \DB::table('wheelfortune')->where('shop_id', $jrShopId)->where('active', true)->first();
+                    $jackpots = \DB::table('jpg')->where('shop_id', $jrShopId)->where('active', true)->get();
+                    $dailyBonuses = \DB::table('daily_bonus')->where('shop_id', $jrShopId)->where('active', true)->orderBy('day')->get();
+                    if (empty($wheelFortune)) { $wheelFortune = \DB::table('wheelfortune')->where('active', true)->first(); }
+                    if ($jackpots->isEmpty())  { $jackpots = \DB::table('jpg')->where('active', true)->get(); }
+                    if ($dailyBonuses->isEmpty()) { $dailyBonuses = \DB::table('daily_bonus')->where('active', true)->orderBy('day')->get(); }
                     $modalCurrency = Auth::check() && auth()->user()->present()->shop ? auth()->user()->present()->shop->currency : '$';
                     @endphp
                     <div class="bonus-modal-overlay" id="bonusModalOverlay" onclick="closeBonusModal()">
@@ -1847,7 +1894,9 @@
                                 </div>
                                 <!-- DAILY TAB - Dragon Egg Game -->
                                 @php
-                                    $dailyBonusAmount = \DB::table('daily_bonus')->where('shop_id', 1)->where('active', true)->value('reward') ?? 10;
+                                    $dailyBonusAmount = \DB::table('daily_bonus')->where('shop_id', $jrShopId)->where('active', true)->value('reward')
+                                        ?? \DB::table('daily_bonus')->where('active', true)->value('reward')
+                                        ?? 10;
                                 @endphp
                                 <div class="bonus-modal__panel" data-panel="daily">
                                     <div class="dragon-egg-game" id="dragonEggGame">
@@ -2204,7 +2253,10 @@
                 </svg>
 
                 @php
-                    $allGamesForCarousel = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => 0])->whereIn('device', [1, 2])->get();
+                    $allGamesForCarousel = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => $jrShopId])->whereIn('device', [1, 2])->get();
+                    if ($allGamesForCarousel->isEmpty()) {
+                        $allGamesForCarousel = \VanguardLTE\Game::where(['view' => 1, 'shop_id' => 0])->whereIn('device', [1, 2])->get();
+                    }
                     $slotGames = [];
                     $fishGames = [];
                     $tableGames = [];
@@ -2564,6 +2616,10 @@
     var wheelSectors = @json($sectors ?? []);
     function spinPremiumWheel() {
         if (premiumWheelSpinning) return;
+        if (!window.jrLoggedIn) {
+            jrShowLoginGate('Log in to spin the Wheel of Fortune and win real prizes.');
+            return;
+        }
         premiumWheelSpinning = true;
         
         var wheel = document.getElementById('premiumWheel');
@@ -2653,6 +2709,10 @@
     var eggPicked = false;
     function pickDragonEgg(eggNum) {
         if (eggPicked) return;
+        if (!window.jrLoggedIn) {
+            jrShowLoginGate('Log in to claim your daily Dragon Egg reward.');
+            return;
+        }
         eggPicked = true;
         var eggs = document.querySelectorAll('.dragon-egg');
         eggs.forEach(function(egg) {

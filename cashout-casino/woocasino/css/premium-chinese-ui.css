@@ -1311,3 +1311,91 @@ html, body { overscroll-behavior-y: contain; }
   html body .jr-app .jr-sidebar { display: none !important; }
   html body .jr-app .jr-bottom-nav { display: flex !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   GUEST MODE: blurred game cards + login gate toast
+   ═══════════════════════════════════════════════════════════════ */
+.jr-app--guest .jr-card__img {
+  filter: blur(6px) saturate(0.7) brightness(0.55);
+  transition: filter 0.25s ease;
+}
+.jr-app--guest .jr-card__inner::after {
+  content: "🔒 LOG IN TO PLAY";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  color: #FFD700;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 14px rgba(255,215,0,0.5);
+  background: linear-gradient(180deg, rgba(20,8,38,0.45), rgba(20,8,38,0.7));
+  pointer-events: none;
+  z-index: 5;
+  border-radius: inherit;
+}
+.jr-app--guest .jr-card__title { opacity: 0.6; }
+.jr-app--guest .jr-card__play  { display: none !important; }
+
+/* Login gate toast */
+.jr-login-gate {
+  position: fixed;
+  left: 50%;
+  bottom: 90px;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(.2,.9,.3,1.2), opacity 0.25s ease;
+  max-width: calc(100vw - 24px);
+}
+.jr-login-gate.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+.jr-login-gate__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px 12px 16px;
+  background: linear-gradient(135deg, rgba(40,12,68,0.96), rgba(20,8,38,0.96));
+  border: 1.5px solid rgba(212,175,55,0.5);
+  border-radius: 16px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 30px rgba(212,175,55,0.25);
+  backdrop-filter: blur(12px);
+}
+.jr-login-gate__icon { font-size: 22px; }
+.jr-login-gate__msg {
+  font-size: 13px;
+  color: rgba(255,255,255,0.92);
+  flex: 1;
+  min-width: 0;
+}
+.jr-login-gate__btn {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  color: #1A0828;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(212,175,55,0.5);
+  white-space: nowrap;
+}
+.jr-login-gate__btn:active { transform: scale(0.96); }
+.jr-login-gate__close {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
