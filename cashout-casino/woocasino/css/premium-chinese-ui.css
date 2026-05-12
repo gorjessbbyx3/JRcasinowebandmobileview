@@ -635,6 +635,96 @@ phpdebugbar,
   .jr-card__title { font-size: 11px; }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   PROMO SLIDESHOW
+   Sits between the header and the bonus strip. Two image sets per
+   slide (desktop wide + mobile square) — CSS shows the right set
+   based on viewport. Default: desktop image. Mobile-landscape: mobile.
+   ═══════════════════════════════════════════════════════════════ */
+.jr-slider {
+  position: relative;
+  width: 100%;
+  flex-shrink: 0;
+  background: #000;
+  overflow: hidden;
+  /* Default desktop / portrait: aspect ratio of the wide slider gifs (~1310x380 ≈ 3.45:1) */
+  aspect-ratio: 3.45 / 1;
+  max-height: 320px;
+  border-bottom: 1px solid rgba(212,175,55,0.18);
+}
+.jr-slider__track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.jr-slider__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+  pointer-events: none;
+}
+.jr-slider__slide--active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.jr-slider__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Default: show desktop image, hide mobile image */
+.jr-slider__img--mobile  { display: none; }
+.jr-slider__img--desktop { display: block; }
+
+/* Nav arrows */
+.jr-slider__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+  -webkit-tap-highlight-color: transparent;
+}
+.jr-slider__nav:hover { background: rgba(212,175,55,0.85); color: #1A0828; transform: translateY(-50%) scale(1.06); }
+.jr-slider__nav--prev { left: 12px; }
+.jr-slider__nav--next { right: 12px; }
+
+/* Dots */
+.jr-slider__dots {
+  position: absolute;
+  left: 50%; bottom: 10px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 2;
+}
+.jr-slider__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+.jr-slider__dot--active {
+  width: 22px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #D4AF37, #FFD700);
+  box-shadow: 0 0 8px rgba(212,175,55,0.6);
+}
+
 /* ── PHONE LANDSCAPE — Netflix-style horizontal carousel ──────── */
 /* In landscape on a phone the screen is short (≤500px tall). The previous
    layout stretched a single row of tall cards to fill the entire height —
@@ -692,6 +782,23 @@ phpdebugbar,
   /* Hide the lock-overlay text in landscape — too small to read; the blur
      already signals "logged out" */
   .jr-app--guest .jr-card__inner::after { font-size: 7px; letter-spacing: 0.6px; }
+
+  /* Slider in landscape: SWAP to mobile-format gifs and shrink the height
+     so the games carousel still gets the bulk of the viewport. mslider gifs
+     are ~768x640 ≈ 1.2:1, so we pin a small max-height instead. */
+  .jr-slider {
+    aspect-ratio: auto;
+    height: 90px;
+    max-height: 90px;
+  }
+  .jr-slider__img--desktop { display: none; }
+  .jr-slider__img--mobile  { display: block; }
+  .jr-slider__nav { width: 26px; height: 26px; }
+  .jr-slider__nav--prev { left: 6px; }
+  .jr-slider__nav--next { right: 6px; }
+  .jr-slider__dots { bottom: 4px; gap: 5px; }
+  .jr-slider__dot { width: 6px; height: 6px; }
+  .jr-slider__dot--active { width: 16px; }
 }
 
 /* ── BOTTOM NAV component (phone landscape) ──────────────────── */

@@ -472,6 +472,45 @@
                     </div>
                 </header>
 
+                <!-- ═══════════════════════════════════════════════════════════
+                     PROMO SLIDESHOW
+                     - Desktop + mobile portrait → use widescreen slider*.gif
+                     - Mobile landscape          → swap to mobile-format mslider*.gif
+                     The two image sets live in the same DOM; CSS visibility
+                     toggles which set is shown so the user only ever loads
+                     one effective slide per viewport state.
+                   ═══════════════════════════════════════════════════════════ -->
+                <div class="jr-slider" id="jrSlider" aria-label="Promotions">
+                    <div class="jr-slider__track" id="jrSliderTrack">
+                        @for($i = 1; $i <= 4; $i++)
+                            <div class="jr-slider__slide{{ $i === 1 ? ' jr-slider__slide--active' : '' }}"
+                                 data-idx="{{ $i - 1 }}">
+                                <img class="jr-slider__img jr-slider__img--desktop"
+                                     src="/woocasino/slider{{ $i }}.gif"
+                                     alt="Promotion {{ $i }}" loading="lazy">
+                                <img class="jr-slider__img jr-slider__img--mobile"
+                                     src="/woocasino/mslider{{ $i }}.gif"
+                                     alt="Promotion {{ $i }}" loading="lazy">
+                            </div>
+                        @endfor
+                    </div>
+                    <button class="jr-slider__nav jr-slider__nav--prev" type="button"
+                            onclick="jrSliderGo(-1)" aria-label="Previous slide">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <button class="jr-slider__nav jr-slider__nav--next" type="button"
+                            onclick="jrSliderGo(1)" aria-label="Next slide">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                    <div class="jr-slider__dots" id="jrSliderDots">
+                        @for($i = 0; $i < 4; $i++)
+                            <button class="jr-slider__dot{{ $i === 0 ? ' jr-slider__dot--active' : '' }}"
+                                    type="button" onclick="jrSliderSet({{ $i }})"
+                                    aria-label="Go to slide {{ $i + 1 }}"></button>
+                        @endfor
+                    </div>
+                </div>
+
                 <!-- BONUS ICONS STRIP — always visible, sits above cat-bar -->
                 <div class="jr-bonus-strip">
                     <a class="jr-bonus-icon" onclick="if(window.openBonusModal){openBonusModal();if(window.switchBonusTab)switchBonusTab('wheel');}">
@@ -939,6 +978,46 @@
                         location.reload();
                     });
             };
+
+            /* ── Promo slideshow autoplay + manual controls ───────── */
+            (function() {
+                var slides = document.querySelectorAll('#jrSlider .jr-slider__slide');
+                var dots   = document.querySelectorAll('#jrSliderDots .jr-slider__dot');
+                if (slides.length === 0) return;
+                var current = 0;
+                var timer = null;
+                var ROTATE_MS = 5500;
+
+                function show(idx) {
+                    current = (idx + slides.length) % slides.length;
+                    slides.forEach(function(s, i) {
+                        s.classList.toggle('jr-slider__slide--active', i === current);
+                    });
+                    dots.forEach(function(d, i) {
+                        d.classList.toggle('jr-slider__dot--active', i === current);
+                    });
+                }
+                function start() {
+                    stop();
+                    timer = setInterval(function() { show(current + 1); }, ROTATE_MS);
+                }
+                function stop() {
+                    if (timer) { clearInterval(timer); timer = null; }
+                }
+
+                window.jrSliderGo  = function(delta) { show(current + delta); start(); };
+                window.jrSliderSet = function(idx)   { show(idx);              start(); };
+
+                /* Pause auto-rotate on hover for desktop, on touchstart for mobile */
+                var slider = document.getElementById('jrSlider');
+                if (slider) {
+                    slider.addEventListener('mouseenter', stop);
+                    slider.addEventListener('mouseleave', start);
+                    slider.addEventListener('touchstart', stop, { passive: true });
+                    slider.addEventListener('touchend',   start, { passive: true });
+                }
+                start();
+            })();
 
             /* Re-render on orientation change or resize */
             var jrResizeTimer = null;
