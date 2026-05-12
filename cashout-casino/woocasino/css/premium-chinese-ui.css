@@ -582,9 +582,8 @@ footer {
   }
 }
 
-/* ── LANDSCAPE / WIDE ────────────────────────────────────────── */
-@media (min-width: 600px) and (orientation: landscape),
-       (min-width: 800px) {
+/* ── TABLET / DESKTOP — sidebar stays, larger cards ─────────── */
+@media (min-width: 800px) {
   :root {
     --jr-sidebar: 80px;
     --jr-header:  58px;
@@ -598,31 +597,16 @@ footer {
     min-height: 62px;
     border-radius: 14px;
   }
-  .jr-sidebar__icon {
-    width: 22px;
-    height: 22px;
-  }
-  .jr-sidebar__label {
-    font-size: 10px;
-  }
-  .jr-logo-img {
-    height: 42px;
-    max-width: 220px;
-  }
-  .jr-action-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 10px;
-  }
-  .jr-header__right {
-    gap: 8px;
-  }
-  .jr-cat-bar__title {
-    font-size: 13px;
-  }
+  .jr-sidebar__icon { width: 22px; height: 22px; }
+  .jr-sidebar__label { font-size: 10px; }
+  .jr-logo-img { height: 42px; max-width: 220px; }
+  .jr-action-btn { width: 34px; height: 34px; border-radius: 10px; }
+  .jr-header__right { gap: 8px; }
+  .jr-cat-bar__title { font-size: 13px; }
+  .jr-bottom-nav { display: none !important; }
 }
 
-/* ── VERY WIDE (tablet / desktop) ───────────────────────────── */
+/* ── WIDE DESKTOP ────────────────────────────────────────────── */
 @media (min-width: 1100px) {
   :root {
     --jr-sidebar: 88px;
@@ -631,22 +615,166 @@ footer {
     --jr-card-h:  125px;
     --jr-gap:     14px;
   }
-  .jr-sidebar__btn {
-    width: 68px;
-    height: 68px;
-    min-height: 68px;
+  .jr-sidebar__btn { width: 68px; height: 68px; min-height: 68px; }
+  .jr-logo-img { height: 46px; max-width: 260px; }
+  .jr-balance-pill span { font-size: 14px; }
+  .jr-card__title { font-size: 11px; }
+}
+
+/* ── PHONE LANDSCAPE — bottom nav replaces sidebar ───────────── */
+@media (orientation: landscape) and (max-height: 500px) {
+  :root {
+    --jr-header:  44px;
+    --jr-cat-h:   30px;
+    --jr-card-w:  clamp(130px, calc((100vw - 40px) / 3.6), 175px);
+    --jr-card-h:  clamp(88px,  calc((100svh - 114px) / 2), 140px);
+    --jr-gap:     8px;
   }
-  .jr-sidebar__label {
-    font-size: 10px;
+  /* Hide sidebar, show bottom nav */
+  .jr-sidebar  { display: none !important; }
+  .jr-bottom-nav { display: flex !important; }
+
+  /* Compact header */
+  .jr-header { padding: 0 10px; gap: 6px; }
+  .jr-logo-img { height: 28px; max-width: 140px; }
+  .jr-action-btn { width: 28px; height: 28px; min-width: 28px; }
+  .jr-balance-pill { padding: 4px 8px; }
+  .jr-balance-pill span { font-size: 11px; }
+  .jr-cat-bar { padding: 0 10px; }
+  .jr-cat-bar__title { font-size: 11px; }
+
+  /* Tighter carousel padding */
+  .jr-carousel { padding: 6px 8px; gap: 8px; }
+  .jr-col { gap: 8px; }
+
+  /* Game Vault style card frames */
+  .jr-card__inner {
+    border: 1.5px solid rgba(80,160,255,0.55);
+    box-shadow:
+      0 0 10px rgba(60,130,255,0.3),
+      inset 0 0 12px rgba(0,80,200,0.1);
+    border-radius: 10px;
   }
-  .jr-logo-img {
-    height: 46px;
-    max-width: 260px;
+  .jr-card__inner:hover,
+  .jr-card__inner:active {
+    border-color: rgba(160,80,255,0.8);
+    box-shadow:
+      0 0 18px rgba(120,80,255,0.5),
+      inset 0 0 12px rgba(80,40,200,0.15);
   }
-  .jr-balance-pill span {
-    font-size: 14px;
-  }
-  .jr-card__title {
-    font-size: 11px;
-  }
+}
+
+/* ── BOTTOM NAV component (phone landscape) ──────────────────── */
+.jr-bottom-nav {
+  display: none;
+  height: 54px;
+  min-height: 54px;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-items: stretch;
+  background: linear-gradient(180deg, rgba(8,3,22,0.98) 0%, rgba(14,5,32,0.99) 100%);
+  border-top: 1px solid rgba(140,60,240,0.4);
+  box-shadow: 0 -6px 24px rgba(120,40,220,0.2);
+  padding: 0 6px;
+  padding-bottom: env(safe-area-inset-bottom);
+  position: relative;
+  z-index: 20;
+}
+
+.jr-bnav__btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.38);
+  padding: 5px 3px;
+  border-radius: 10px;
+  transition: all 0.18s ease;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+.jr-bnav__btn:active { opacity: 0.7; }
+
+/* Lit-up active pill — glows from behind like Game Vault */
+.jr-bnav__btn.active {
+  color: #fff;
+}
+.jr-bnav__btn.active::before {
+  content: '';
+  position: absolute;
+  inset: 3px 6px;
+  border-radius: 8px;
+  z-index: -1;
+  background: linear-gradient(135deg, rgba(160,32,240,0.75), rgba(255,20,147,0.6));
+  box-shadow: 0 0 14px rgba(160,32,240,0.55);
+}
+.jr-bnav__btn[data-cat="hot"].active::before {
+  background: linear-gradient(135deg, rgba(255,107,53,0.8), rgba(255,51,102,0.65));
+  box-shadow: 0 0 14px rgba(255,107,53,0.5);
+}
+.jr-bnav__btn[data-cat="favorites"].active::before {
+  background: linear-gradient(135deg, rgba(255,20,147,0.8), rgba(160,32,240,0.65));
+  box-shadow: 0 0 14px rgba(255,20,147,0.5);
+}
+.jr-bnav__btn[data-cat="slots"].active::before {
+  background: linear-gradient(135deg, rgba(180,140,20,0.8), rgba(255,200,0,0.5));
+  box-shadow: 0 0 14px rgba(212,175,55,0.45);
+}
+.jr-bnav__btn[data-cat="fish"].active::before {
+  background: linear-gradient(135deg, rgba(0,130,255,0.8), rgba(0,220,120,0.55));
+  box-shadow: 0 0 14px rgba(0,153,255,0.5);
+}
+.jr-bnav__btn[data-cat="table"].active::before {
+  background: linear-gradient(135deg, rgba(130,20,220,0.8), rgba(0,130,255,0.55));
+  box-shadow: 0 0 14px rgba(130,20,220,0.5);
+}
+
+.jr-bnav__icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: filter 0.18s ease;
+}
+.jr-bnav__btn.active .jr-bnav__icon {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.jr-bnav__label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ── PULL-DOWN FULLSCREEN INDICATOR ─────────────────────────── */
+.jr-pull-indicator {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: rgba(212,175,55,0.25);
+  border-radius: 0 0 4px 4px;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  z-index: 20;
+}
+.jr-pull-indicator.pulling {
+  background: rgba(212,175,55,0.7);
+  box-shadow: 0 0 8px rgba(212,175,55,0.5);
+}
+.jr-pull-ripple {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0;
+  background: linear-gradient(180deg, rgba(212,175,55,0.15) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 15;
+  transition: height 0.05s ease;
 }

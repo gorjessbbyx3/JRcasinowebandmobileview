@@ -473,6 +473,44 @@
             </div><!-- end .jr-content -->
         </div><!-- end .jr-layout -->
 
+        <!-- PULL-DOWN FULLSCREEN INDICATOR -->
+        <div class="jr-pull-indicator" id="jrPullIndicator"></div>
+        <div class="jr-pull-ripple"    id="jrPullRipple"></div>
+
+        <!-- BOTTOM NAV — shown in phone landscape (Game Vault style) -->
+        <nav class="jr-bottom-nav" id="jrBottomNav">
+            <button class="jr-bnav__btn active" data-cat="hot" onclick="jrSelectCat('hot',this)">
+                <svg class="jr-bnav__icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/>
+                </svg>
+                <span class="jr-bnav__label">Hot</span>
+            </button>
+            <button class="jr-bnav__btn" data-cat="slots" onclick="jrSelectCat('slots',this)">
+                <svg class="jr-bnav__icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span class="jr-bnav__label">Slots</span>
+            </button>
+            <button class="jr-bnav__btn" data-cat="fish" onclick="jrSelectCat('fish',this)">
+                <svg class="jr-bnav__icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.17 3.25Q21.5 3.25 21.76 3.5C23.24 5 23.29 7.26 22.5 9.21C21.76 11 20.25 12.5 18.5 13.5L13 16.5L7.59 21.91C7.19 22.3 6.56 22.3 6.16 21.91L2.09 17.84C1.7 17.44 1.7 16.81 2.09 16.41L7.5 11L10.5 5.5C11.5 3.75 13 2.24 14.79 1.5C16.74 0.71 19 0.76 20.5 2.24Q20.76 2.5 20.76 2.83V3.25H21.17M17 10A1 1 0 0 0 18 9A1 1 0 0 0 17 8A1 1 0 0 0 16 9A1 1 0 0 0 17 10Z"/>
+                </svg>
+                <span class="jr-bnav__label">Fishing</span>
+            </button>
+            <button class="jr-bnav__btn" data-cat="table" onclick="jrSelectCat('table',this)">
+                <svg class="jr-bnav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                </svg>
+                <span class="jr-bnav__label">Other</span>
+            </button>
+            <button class="jr-bnav__btn" data-cat="favorites" onclick="jrSelectCat('favorites',this)">
+                <svg class="jr-bnav__icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span class="jr-bnav__label">Favorite</span>
+            </button>
+        </nav>
+
         <!-- HIDDEN CARD POOL — all games pre-rendered, JS pulls from here -->
         <div id="jrCardPool" hidden aria-hidden="true">
             @foreach($allMobGames as $game)
@@ -560,10 +598,13 @@
             }
 
             window.jrSelectCat = function(cat, btn) {
-                document.querySelectorAll('.jr-sidebar__btn').forEach(function(b) {
+                /* Sync ALL nav buttons (sidebar + bottom nav) */
+                document.querySelectorAll('.jr-sidebar__btn, .jr-bnav__btn').forEach(function(b) {
                     b.classList.remove('active');
                 });
-                btn.classList.add('active');
+                document.querySelectorAll('[data-cat="' + cat + '"]').forEach(function(b) {
+                    b.classList.add('active');
+                });
                 jrRender(cat);
             };
 
@@ -640,6 +681,73 @@
             document.addEventListener('DOMContentLoaded', function() {
                 jrRender('hot');
             });
+
+            /* ── PULL-DOWN FULLSCREEN GESTURE ─────────────────── */
+            (function() {
+                var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (!isMobile) return;
+
+                var indicator = document.getElementById('jrPullIndicator');
+                var ripple    = document.getElementById('jrPullRipple');
+                var startY = null, pulling = false;
+                var THRESHOLD = 65;
+
+                function tryFullscreen() {
+                    var el = document.documentElement;
+                    var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+                    if (req) {
+                        req.call(el).then(function() {
+                            localStorage.setItem('jr_fs_dismissed', '1');
+                            var bar = document.getElementById('jrFsBar');
+                            if (bar) bar.style.display = 'none';
+                        }).catch(function() {});
+                    }
+                }
+
+                document.addEventListener('touchstart', function(e) {
+                    /* Only trigger pull when touch starts near the top (within 55px) */
+                    if (e.touches[0].clientY < 55) {
+                        startY = e.touches[0].clientY;
+                        pulling = true;
+                    }
+                }, { passive: true });
+
+                document.addEventListener('touchmove', function(e) {
+                    if (!pulling || startY === null) return;
+                    var dy = e.touches[0].clientY - startY;
+                    if (dy < 0) { pulling = false; return; }
+
+                    var pct = Math.min(dy / THRESHOLD, 1);
+
+                    if (indicator) {
+                        indicator.style.width = (60 + pct * 160) + 'px';
+                        indicator.style.opacity = 0.3 + pct * 0.7;
+                        indicator.classList.toggle('pulling', pct > 0.5);
+                    }
+                    if (ripple) {
+                        ripple.style.height = (dy * 0.5) + 'px';
+                    }
+                }, { passive: true });
+
+                document.addEventListener('touchend', function(e) {
+                    if (!pulling || startY === null) return;
+                    var dy = e.changedTouches[0].clientY - startY;
+
+                    if (dy >= THRESHOLD) {
+                        tryFullscreen();
+                    }
+
+                    /* Reset visual */
+                    if (indicator) {
+                        indicator.style.width = '60px';
+                        indicator.style.opacity = '';
+                        indicator.classList.remove('pulling');
+                    }
+                    if (ripple) ripple.style.height = '0';
+                    pulling = false;
+                    startY = null;
+                }, { passive: true });
+            })();
         })();
         </script>
 
