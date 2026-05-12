@@ -1337,7 +1337,18 @@ html, body { overscroll-behavior-y: contain; }
   z-index: 5;
   border-radius: inherit;
 }
-.jr-app--guest .jr-card__title { opacity: 0.6; }
+/* Hide game names for guests — the actual catalog is shop-specific, so the
+   names a logged-out visitor would see do not necessarily reflect what they'll
+   get after signing in to their assigned shop. Avoid leaking misleading titles. */
+.jr-app--guest .jr-card__title,
+.jr-app--guest .netflix-game-card__title { display: none !important; }
+
+/* Same reasoning for the per-category counters next to "Hot Games", "Slots", etc.
+   and the small numeric badges on the side/bottom nav (Hot 17, Slots 32, etc.). */
+.jr-app--guest .jr-count-badge,
+.jr-app--guest .jr-cat-bar__count,
+.jr-app--guest #jrCatCount { display: none !important; }
+
 .jr-app--guest .jr-card__play  { display: none !important; }
 
 /* Login gate toast */

@@ -1075,37 +1075,75 @@
                 var TRIGGER_ZONE = 110;          /* generous top zone — finger lands here */
                 var hapticFired = false;
 
+                function showToast(html, ms) {
+                    var t = document.getElementById('jrFsToast');
+                    if (!t) return;
+                    t.innerHTML = html;
+                    t.classList.add('jr-show');
+                    clearTimeout(t._hideT);
+                    t._hideT = setTimeout(function() { t.classList.remove('jr-show'); }, ms || 3200);
+                }
+
                 function tryEnterFullscreen() {
-                    /* iOS Safari can't fullscreen non-video — show Add-to-Home prompt */
-                    if (isIOS) {
-                        var bar = document.getElementById('jrFsBar');
-                        if (bar) {
-                            bar.style.display = 'flex';
-                            /* highlight it briefly */
-                            bar.style.animation = 'none';
-                            /* eslint-disable-next-line no-unused-expressions */
-                            bar.offsetWidth;
-                            bar.style.animation = 'jrFadeIn 0.4s ease';
-                        }
-                        return;
-                    }
-                    /* Android / desktop Chrome — real Fullscreen API */
+                    var isLandscape = window.matchMedia('(orientation: landscape)').matches;
+
+                    /* Try the real Fullscreen API first on every platform that supports
+                       it (Android Chrome/Firefox, desktop browsers). iOS Safari returns
+                       no requestFullscreen on documentElement — we fall through to the
+                       toast below. */
                     var el = document.documentElement;
                     var req = el.requestFullscreen || el.webkitRequestFullscreen
                            || el.mozRequestFullScreen || el.msRequestFullscreen;
-                    if (!req) return;
-                    var p = req.call(el);
-                    if (p && p.then) {
-                        p.then(function() {
-                            localStorage.setItem('jr_fs_dismissed', '1');
-                            var bar = document.getElementById('jrFsBar');
-                            if (bar) bar.style.display = 'none';
-                            /* lock orientation to landscape if available */
-                            if (screen.orientation && screen.orientation.lock) {
-                                screen.orientation.lock('landscape').catch(function(){});
+                    if (req && !isIOS) {
+                        try {
+                            var p = req.call(el);
+                            if (p && p.then) {
+                                p.then(function() {
+                                    localStorage.setItem('jr_fs_dismissed', '1');
+                                    var bar = document.getElementById('jrFsBar');
+                                    if (bar) bar.classList.remove('jr-fs-show');
+                                    if (screen.orientation && screen.orientation.lock) {
+                                        screen.orientation.lock('landscape').catch(function(){});
+                                    }
+                                }).catch(function() {
+                                    /* Permission denied or unsupported — show toast */
+                                    showToast('Tap the <strong style="color:#D4AF37">⛶ Fullscreen</strong> button below to enter fullscreen mode.');
+                                });
+                                return;
                             }
-                        }).catch(function(){});
+                            /* No promise returned — assume sync success */
+                            return;
+                        } catch (err) { /* fall through */ }
                     }
+
+                    /* iOS path (or Fullscreen API missing) — show contextual toast.
+                       This is what makes the gesture work in landscape on iPhone:
+                       the persistent banner is suppressed in landscape, but the
+                       toast pops in the center of the screen so the user gets
+                       feedback that their swipe registered. */
+                    if (isIOS) {
+                        if (isLandscape) {
+                            showToast('To play fullscreen on iPhone:<br><br>'
+                                + '1. Rotate to portrait<br>'
+                                + '2. Tap <strong style="color:#D4AF37">Share</strong> in Safari<br>'
+                                + '3. Tap <strong style="color:#D4AF37">Add to Home Screen</strong>',
+                                4500);
+                        } else {
+                            /* Portrait — surface the existing banner */
+                            var bar = document.getElementById('jrFsBar');
+                            if (bar) {
+                                bar.classList.add('jr-fs-show');
+                                bar.style.animation = 'none';
+                                /* eslint-disable-next-line no-unused-expressions */
+                                bar.offsetWidth;
+                                bar.style.animation = 'jrFadeIn 0.4s ease';
+                            }
+                        }
+                        return;
+                    }
+
+                    /* Last-resort fallback */
+                    showToast('Fullscreen mode is not supported on this browser.');
                 }
 
                 function reset() {
@@ -1182,23 +1220,30 @@
             <button id="jrFsBtn" onclick="jrEnterFullscreen()"></button>
             <button id="jrFsDismiss" onclick="jrDismissFs()">✕</button>
         </div>
+        <!-- Transient toast used by swipe gesture (esp. in landscape on iOS where the
+             persistent banner is suppressed and the Fullscreen API is unavailable). -->
+        <div id="jrFsToast"></div>
 
         <style>
+        /* The banner is hidden by default (inline style="display:none") and only revealed
+           by JS when isMobile && !standalone && !dismissed. The 'jr-fs-show' class is
+           toggled to actually display it — never use !important here, otherwise the
+           banner blackouts the page before JS fills its text. */
         #jrFsBar {
             position: fixed;
-            /* Sits flush to the bottom by default (desktop / non-bottom-nav viewports). */
             bottom: env(safe-area-inset-bottom, 0);
             left: 0; right: 0;
-            z-index: 50; /* below the bottom-nav (z=20) is fine — but keep above feed content */
+            z-index: 50;
             background: rgba(10,5,20,0.97);
             border-top: 1px solid rgba(212,175,55,0.4);
             backdrop-filter: blur(12px);
-            display: flex !important;
+            -webkit-backdrop-filter: blur(12px);
             align-items: center;
             gap: 10px;
             padding: 10px 16px;
             animation: jrFadeIn 0.4s ease;
         }
+        #jrFsBar.jr-fs-show { display: flex; }
         /* On phone widths the .jr-bottom-nav (54px) is visible — lift the banner above it
            so it does NOT cover the Hot/Slots/Fish/Tables/Favorites category buttons. */
         @media (max-width: 480px) {
@@ -1240,9 +1285,38 @@
         .jr-app {
             padding-bottom: env(safe-area-inset-bottom);
         }
-        /* Hide the install/fullscreen prompt in landscape — only show in portrait */
+        /* In landscape we hide the persistent banner — the swipe gesture itself
+           triggers the fullscreen action, no need for the always-on prompt. */
         @media (orientation: landscape) {
-            #jrFsBar { display: none !important; }
+            #jrFsBar.jr-fs-show { display: none; }
+            /* Transient swipe-confirmation toast (used in landscape too) */
+        }
+        /* Floating toast used by the swipe gesture in landscape (iOS Safari has no
+           Fullscreen API, so we fall back to a brief on-screen instruction). */
+        #jrFsToast {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            z-index: 100000;
+            background: rgba(10,5,20,0.96);
+            border: 1px solid rgba(212,175,55,0.55);
+            border-radius: 14px;
+            padding: 18px 22px;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.45;
+            text-align: center;
+            max-width: 86vw;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 24px rgba(212,175,55,0.25);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        #jrFsToast.jr-show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
         </style>
 
@@ -1264,7 +1338,7 @@
 
             window.jrDismissFs = function() {
                 localStorage.setItem('jr_fs_dismissed', '1');
-                if (bar) bar.style.display = 'none';
+                if (bar) bar.classList.remove('jr-fs-show');
             };
 
             if (isIOS) {
@@ -1274,7 +1348,7 @@
                     alert('To play fullscreen on iPhone:\n\n1. Tap the Share button (□↑) in Safari\n2. Scroll down and tap "Add to Home Screen"\n3. Tap Add — then open the app from your home screen');
                 };
                 setTimeout(function() {
-                    if (bar) bar.style.display = 'flex';
+                    if (bar) bar.classList.add('jr-fs-show');
                 }, 2500);
             } else if (isAndroid) {
                 msg.textContent = 'Tap Fullscreen for the best gaming experience.';
@@ -1284,18 +1358,18 @@
                     var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
                     if (req) {
                         req.call(el).then(function() {
-                            if (bar) bar.style.display = 'none';
+                            if (bar) bar.classList.remove('jr-fs-show');
                             localStorage.setItem('jr_fs_dismissed', '1');
                         }).catch(function() {});
                     }
                 };
                 setTimeout(function() {
-                    if (bar) bar.style.display = 'flex';
+                    if (bar) bar.classList.add('jr-fs-show');
                 }, 1500);
 
                 document.addEventListener('fullscreenchange', function() {
                     if (!document.fullscreenElement && bar) {
-                        bar.style.display = 'flex';
+                        bar.classList.add('jr-fs-show');
                     }
                 });
             }
