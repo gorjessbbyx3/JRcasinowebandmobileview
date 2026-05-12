@@ -664,7 +664,7 @@
                    ═══════════════════════════════════════════════════════════ -->
                 <div class="jr-slider" id="jrSlider" aria-label="Promotions">
                     <div class="jr-slider__track" id="jrSliderTrack">
-                        @php $tallMap = [1=>1, 2=>2, 3=>1, 4=>2]; @endphp
+                        @php $tallMap = [1=>1, 2=>2, 3=>3, 4=>4]; @endphp
                         @for($i = 1; $i <= 4; $i++)
                             <div class="jr-slider__slide{{ $i === 1 ? ' jr-slider__slide--active' : '' }}"
                                  data-idx="{{ $i - 1 }}">
@@ -1170,7 +1170,7 @@
                 if (slides.length === 0) return;
                 var current = 0;
                 var timer = null;
-                var ROTATE_MS = 5500;
+                var ROTATE_MS = 7000;
 
                 function show(idx) {
                     current = (idx + slides.length) % slides.length;
